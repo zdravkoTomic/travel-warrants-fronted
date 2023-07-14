@@ -1,3 +1,3 @@
 export default function CatalogDepartmentPage() {
-    return <h1>CatalogDepartmentPage</h1>
+    return <h1>In development</h1>
 }

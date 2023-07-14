@@ -1,16 +1,17 @@
 import React from "react";
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
+import {Link} from "react-router-dom";
 
 export default function AppNavbar() {
     return (
         <Navbar expand="lg" variant="dark" className="bg-dark nav-link">
             <Container>
-                <Navbar.Brand className="nav-link" href="/">Travel Warrants</Navbar.Brand>
+                <Navbar.Brand className="nav-link" href="/personal/initial">Travel Warrants</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavDropdown title="Nalozi" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="/">Otvoreni</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to="/personal/initial">Otvoreni</NavDropdown.Item>
                             <NavDropdown.Item href="/personal_calculation">Obračun</NavDropdown.Item>
                             <NavDropdown.Item href="/personal_closed">Zatvoreni</NavDropdown.Item>
                         </NavDropdown>

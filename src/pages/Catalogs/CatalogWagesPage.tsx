@@ -1,3 +1,3 @@
 export default function CatalogWagesPage() {
-    return <h1>CatalogWagesPage</h1>
+    return <h1>In development</h1>
 }

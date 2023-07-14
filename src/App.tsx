@@ -17,6 +17,8 @@ import ApprovingCalculationPage from "./pages/ApprovingWarrants/ApprovingCalcula
 import ApprovingInitialPage from "./pages/ApprovingWarrants/ApprovingInitialPage";
 import ApplicationParametersPage from "./pages/Administration/ApplicationParametersPage";
 import UserRolesPage from "./pages/Administration/UserRolesPage";
+import CountryAddPage from "./pages/Catalogs/Item/CountryAddPage";
+import CountryEditPage from "./pages/Catalogs/Item/CountryEditPage";
 import { Route, Routes } from "react-router-dom"
 
 function App() {
@@ -25,7 +27,7 @@ function App() {
           <AppNavbar />
           <div className="container">
               <Routes>
-                  <Route path="/" element={<HomePage />} />
+                  <Route path="/personal/:groupStatusId" element={<HomePage />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/personal_calculation" element={<PersonalCalculationPage />} />
                   <Route path="/personal_closed" element={<PersonalClosedWarrantsPage />} />
@@ -41,6 +43,12 @@ function App() {
                   <Route path="/catalog_wages" element={<CatalogWagesPage />} />
                   <Route path="/user_roles" element={<UserRolesPage />} />
                   <Route path="/application_parameters" element={<ApplicationParametersPage />} />
+
+                  {/*Adding data routes*/}
+                  <Route path="/country_add" element={<CountryAddPage />} />
+
+                  {/*Adding data routes*/}
+                  <Route path="/country_edit/:id" element={<CountryEditPage />} />
               </Routes>
           </div>
       </>

@@ -3,3 +3,19 @@
     font-weight: 700;
 }
 
+div.fade.in.modal {
+    display:flex !important;
+}
+
+.modal-dialog {
+    margin: auto;
+}
+
+.flex-display {
+    display: flex
+}
+
+.add-new-record-btn {
+    margin-left: auto;
+    margin-top: 2px;
+}

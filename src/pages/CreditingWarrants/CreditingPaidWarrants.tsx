@@ -1,3 +1,3 @@
 export default function CreditingPaidWarrants() {
-    return <h1>CreditingPaidWarrants</h1>
+    return <h1>In development</h1>
 }

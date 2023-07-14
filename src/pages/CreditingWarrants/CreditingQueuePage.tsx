@@ -1,3 +1,3 @@
 export default function CreditingQueuePage() {
-    return <h1>CreditingQueuePage</h1>
+    return <h1>In development</h1>
 }
