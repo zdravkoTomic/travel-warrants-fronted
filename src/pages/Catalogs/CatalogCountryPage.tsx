@@ -7,6 +7,7 @@ import {Link} from "react-router-dom";
 import {ToastContainer} from "react-toastify";
 import {ICountry, ICountryModalData} from "../../types/Catalog/catalogTypes";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
+import Spinner from "../../components/Utils/Spinner";
 
 export default function CatalogCountryPage() {
     const [countries, setCountries] = useState<ICountry[]>([]);
@@ -17,7 +18,8 @@ export default function CatalogCountryPage() {
     const [orderQuery, setOrderQuery] = useState<String>();
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState<ICountryModalData>();
-    const [tableAction, setTableAction] = useState('');
+    const [tableAction, setTableAction] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     const toggleShowModal = (countryId: number) => {
         fetch(
@@ -110,26 +112,36 @@ export default function CatalogCountryPage() {
             order = '&order[name]=asc'
         }
 
+        const sessionCookie = localStorage.getItem('sessionCookie');
+
         fetch(
-            api.getUri() + `/countries?page=${encodeURIComponent(page)}&itemsperpage=${encodeURIComponent(perPage)}${order}`
+            api.getUri() + `/countries?page=${encodeURIComponent(page)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
+            {headers: {
+                    'Content-Type': 'application/json',
+                    Cookie: `PHPSESSID=${sessionCookie}`, // Include the session cookie in the request headers
+                },
+                credentials: 'include',
+            }
         )
             .then(response => response.json())
             .then(response => {
                 setCountries(response['hydra:member'])
                 setTotalRows(response['hydra:totalItems'])
             })
-            .then(() => {
-                setLoading(false)
-            })
             .catch((error) => {
-                alert(error) //TODO
-            });
+                // alert(error) //TODO
+            }).finally(() => {
+            setLoading(false);
+        });
 
         setPerPage(perPage)
     }, []);
 
     const handlePageChange = (page: any) => {
-        setTableAction('page');
+        if (!mounted) {
+            return
+        }
+        setTableAction(true);
         if (!orderQuery) {
             setOrderQuery('&order[name]=asc')
         }
@@ -138,7 +150,10 @@ export default function CatalogCountryPage() {
     };
 
     const handlePerRowsChange = (newPerPage: any, page: any) => {
-        setTableAction('perPage');
+        if (!mounted) {
+            return
+        }
+        setTableAction(true);
         if (!orderQuery) {
             setOrderQuery('&order[name]=asc')
         }
@@ -147,7 +162,10 @@ export default function CatalogCountryPage() {
     };
 
     const handleSort = (column: any, sortDirection: any) => {
-        setTableAction('sort');
+        if (!mounted) {
+            return
+        }
+        setTableAction(true);
         if (!orderQuery) {
             setOrderQuery('&order[name]=asc')
         }
@@ -165,9 +183,12 @@ export default function CatalogCountryPage() {
 
         if (!tableAction) {
             fetchData(page, perPage, orderQuery);
-            setTableAction('');
+            setMounted(false)
+            setTableAction(false);
         }
-    }, [tableAction]);
+
+        setMounted(true)
+    }, [fetchData, page, perPage, orderQuery, tableAction]);
 
     return (
         <div>
@@ -188,6 +209,7 @@ export default function CatalogCountryPage() {
                 columns={columns}
                 data={countries}
                 progressPending={loading}
+                progressComponent={<Spinner />}
                 highlightOnHover
                 fixedHeader
                 fixedHeaderScrollHeight="550px"

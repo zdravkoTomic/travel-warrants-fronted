@@ -40,6 +40,11 @@ export default function AppNavbar() {
                             <NavDropdown.Item href="/application_parameters">Parametri aplikacije</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
+                    <Nav className="ml-auto">
+                        <Nav.Link as={Link} to="/logout">
+                            Logout
+                        </Nav.Link>
+                    </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar>

@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import AppNavbar from "./AppNavbar";
 import HomePage from './pages/PersonalWarrants/HomePage';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/Security/LoginPage';
 import PersonalCalculationPage from "./pages/PersonalWarrants/PersonalCalculationPage";
 import PersonalClosedWarrantsPage from "./pages/PersonalWarrants/PersonalClosedWarrantsPage";
 import CreditingAdvancesPage from "./pages/CreditingWarrants/CreditingAdvancesPage";
@@ -20,15 +20,16 @@ import UserRolesPage from "./pages/Administration/UserRolesPage";
 import CountryAddPage from "./pages/Catalogs/Item/CountryAddPage";
 import CountryEditPage from "./pages/Catalogs/Item/CountryEditPage";
 import { Route, Routes } from "react-router-dom"
+import LogoutUser from "./components/Security/LogoutUser";
 
 function App() {
+
   return (
       <>
           <AppNavbar />
           <div className="container">
               <Routes>
                   <Route path="/personal/:groupStatusId" element={<HomePage />} />
-                  <Route path="/login" element={<LoginPage />} />
                   <Route path="/personal_calculation" element={<PersonalCalculationPage />} />
                   <Route path="/personal_closed" element={<PersonalClosedWarrantsPage />} />
                   <Route path="/approving_initial" element={<ApprovingInitialPage />} />
@@ -49,6 +50,10 @@ function App() {
 
                   {/*Adding data routes*/}
                   <Route path="/country_edit/:id" element={<CountryEditPage />} />
+
+                  {/*Security*/}
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/logout" element={<LogoutUser />} />
               </Routes>
           </div>
       </>
