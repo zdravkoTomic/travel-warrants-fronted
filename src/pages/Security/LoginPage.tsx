@@ -23,25 +23,40 @@ export default function LoginPage() {
             credentials: 'include',
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Invalid email or password');
-                }
-                const cookies = response.headers.get('Set-Cookie');
+                if (response.ok) {
+                    const cookies = response.headers.get('Set-Cookie');
 
-                if (cookies) {
-                    localStorage.setItem('sessionCookie', cookies);
+                    if (cookies) {
+                        localStorage.setItem('sessionCookie', cookies);
+                    }
+                }
+
+                if (response.status !== 401) {
+                    throw new Error('Invalid credentials');
                 }
 
                 return response.json();
             })
             .then((response) => {
-                setUser(response.user);
+                if (response.error) {
+                    setErrors({email: response.error})
+                } else {
+                    setUser(response.user);
 
-                navigate('/personal/initial')
+                    navigate('/personal/initial')
+                }
             })
             .catch((error) => {
-                // Handle the error, e.g., show error message, redirect to login page, etc.
-                console.error(error);
+                toast.error('Greška! Pokušajte kasnije', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: true,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
             });
     };
 
