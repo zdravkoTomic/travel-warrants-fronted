@@ -4,6 +4,8 @@ import { IFormCountryValueErrors, IFormCountryValues} from "../../../types/Catal
 import api from "../../../components/api";
 import {toast} from "react-toastify";
 import CountryForm from "../../../components/Catalog/Country/CountryForm";
+import {successToastMessage} from "../../../components/Utils/successToastMessage";
+import {alertToastMessage} from "../../../components/Utils/alertToastMessage";
 
 export default function CountryEditPage() {
     const { id } = useParams<{ id: any }>();
@@ -17,24 +19,13 @@ export default function CountryEditPage() {
             headers: {
                 'Content-Type': 'application/ld+json',
             },
+            credentials: 'include',
             body: JSON.stringify(values),
         })
             .then((response) => {
                 if (response.ok) {
                     navigate('/catalog_countries')
-                    setTimeout(() => {
-                        toast.success('Zapis uspješno ažuriran', {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: true,
-                            closeOnClick: false,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
-                    }, 1);
-
+                    successToastMessage('Zapis uspješno ažuriran')
                 }
 
                 return response.json()
@@ -53,7 +44,7 @@ export default function CountryEditPage() {
                 }
             })
             .catch((error) => {
-                alert(error) //TODO
+                alertToastMessage(null);
             });
     };
 

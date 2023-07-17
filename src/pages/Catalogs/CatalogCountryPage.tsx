@@ -1,15 +1,17 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import api from "../../components/api";
 import DataTable from 'react-data-table-component';
 import {Alert, Button, ButtonGroup, Dropdown} from "react-bootstrap";
 import BaseDetailsModal from "../../components/BaseDetailsModal";
 import {Link} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
 import {ICountry, ICountryModalData} from "../../types/Catalog/catalogTypes";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Spinner from "../../components/Utils/Spinner";
 import {isAuthorized} from "../../components/Security/UserAuth";
 import {useHandleNonAuthenticated} from "../../components/Security/HandleNonAuthenticated";
+import {alertDanger} from "../../components/Utils/alertDanger";
+import UnauthorizedPage from "../Security/UnauthorizedPage";
+import {alertToastMessage} from "../../components/Utils/alertToastMessage";
 
 export default function CatalogCountryPage() {
     useHandleNonAuthenticated();
@@ -18,17 +20,15 @@ export default function CatalogCountryPage() {
     const [totalRows, setTotalRows] = useState(0);
     const [loading, setLoading] = useState(false);
     const [perPage, setPerPage] = useState(25);
-    const [page, setPage] = useState(1);
+    const [datatablePage, setDatatablePage] = useState(1);
     const [orderQuery, setOrderQuery] = useState<String>();
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState<ICountryModalData>();
-    const [tableAction, setTableAction] = useState(false);
-    const [mounted, setMounted] = useState(false);
 
     const toggleShowModal = (countryId: number) => {
         fetch(
-            api.getUri()
-            + `/countries/${encodeURIComponent(countryId)}`
+            api.getUri() + `/countries/${encodeURIComponent(countryId)}`,
+            {credentials: 'include'}
         )
             .then(response => response.json())
             .then(response => {
@@ -57,7 +57,7 @@ export default function CatalogCountryPage() {
                 setShowModal(!showModal);
             })
             .catch((error) => {
-                alert(error) //TODO
+                alertToastMessage(null);
             });
     };
 
@@ -109,21 +109,16 @@ export default function CatalogCountryPage() {
         }
     ];
 
-    const fetchData = useCallback((page: any, perPage: any, order: any | null) => {
+    const fetchData = () => {
         setLoading(true);
 
-        if (!order) {
-            order = '&order[name]=asc'
-        }
-
-        const sessionCookie = localStorage.getItem('sessionCookie');
+        let order = !orderQuery ? '&order[name]=asc' : orderQuery
 
         fetch(
-            api.getUri() + `/countries?page=${encodeURIComponent(page)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
+            api.getUri() + `/countries?page=${encodeURIComponent(datatablePage)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
             {
                 headers: {
-                    'Content-Type': 'application/json',
-                    Cookie: `PHPSESSID=${sessionCookie}`, // Include the session cookie in the request headers
+                    'Content-Type': 'application/json'
                 },
                 credentials: 'include',
             }
@@ -134,74 +129,39 @@ export default function CatalogCountryPage() {
                 setTotalRows(response['hydra:totalItems'])
             })
             .catch((error) => {
-                // alert(error) //TODO
+                alertToastMessage(null);
             }).finally(() => {
             setLoading(false);
         });
-
-        setPerPage(perPage)
-    }, []);
-
-    const handlePageChange = (page: any) => {
-        if (!mounted) {
-            return
-        }
-        setTableAction(true);
-        if (!orderQuery) {
-            setOrderQuery('&order[name]=asc')
-        }
-        setPage(page)
-        fetchData(page, perPage, orderQuery);
     };
 
-    const handlePerRowsChange = (newPerPage: any, page: any) => {
-        if (!mounted) {
-            return
+    const handlePageChange = (page: any) => {
+        if (datatablePage !== page) {
+            setDatatablePage(page)
         }
-        setTableAction(true);
-        if (!orderQuery) {
-            setOrderQuery('&order[name]=asc')
-        }
-        fetchData(page, newPerPage, orderQuery);
+    };
+
+    const handlePerRowsChange = (newPerPage: any) => {
         setPerPage(newPerPage);
     };
 
     const handleSort = (column: any, sortDirection: any) => {
-        if (!mounted) {
-            return
+        if (column.id) {
+            const newOrderQuery = `&order[${column.id}]=${encodeURIComponent(sortDirection)}`;
+            setOrderQuery(newOrderQuery);
         }
-        setTableAction(true);
-        if (!orderQuery) {
-            setOrderQuery('&order[name]=asc')
-        }
-        setOrderQuery(`&order[${column.id}]=${encodeURIComponent(sortDirection)}`)
-
-        let order = `&order[${column.id}]=${encodeURIComponent(sortDirection)}`;
-
-        fetchData(page, perPage, order);
     };
 
     useEffect(() => {
-        if (!orderQuery) {
-            setOrderQuery('&order[name]=asc');
-        }
-
-        if (!tableAction) {
-            fetchData(page, perPage, orderQuery);
-            setMounted(false)
-            setTableAction(false);
-        }
-
-        setMounted(true)
-    }, [fetchData, page, perPage, orderQuery, tableAction]);
+        fetchData();
+    }, [datatablePage, perPage, orderQuery]);
 
     return (
         <div>
             {isAuthorized(['ROLE_ADMIN']) ? (
                 <div>
-                    <ToastContainer/>
                     <BaseDetailsModal title="Država info" show={showModal} modalData={modalData}
-                                      onCloseButtonClick={toggleShowModal}/>
+                                      onCloseButtonClick={()=>{setShowModal(false)}}/>
                     <DataTable
                         title={
                             <>
@@ -235,12 +195,7 @@ export default function CatalogCountryPage() {
                     />
                 </div>
             ) : (
-                <div>
-                    <br/>
-                    <Alert variant="danger">
-                        Nemate pravo pristupa ovom ekranu!
-                    </Alert>
-                </div>
+                UnauthorizedPage()
             )
             }
         </div>

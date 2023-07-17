@@ -5,6 +5,8 @@ import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import CountryForm from "../../../components/Catalog/Country/CountryForm";
 import {IFormCountryValueErrors, IFormCountryValues} from "../../../types/Catalog/catalogTypes";
+import {successToastMessage} from "../../../components/Utils/successToastMessage";
+import {alertToastMessage} from "../../../components/Utils/alertToastMessage";
 
 export default function CountryAddPage() {
     const [errors, setErrors] = useState<IFormCountryValueErrors>();
@@ -17,23 +19,12 @@ export default function CountryAddPage() {
                 'Content-Type': 'application/ld+json',
             },
             body: JSON.stringify(values),
+            credentials: 'include'
         })
             .then((response) => {
                 if (response.ok) {
                     navigate('/catalog_countries')
-                    setTimeout(() => {
-                        toast.success('Zapis uspješno dodan', {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: true,
-                            closeOnClick: false,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
-                    }, 1);
-
+                    successToastMessage('Zapis uspješno dodan')
                 }
 
                 return response.json()
@@ -52,7 +43,7 @@ export default function CountryAddPage() {
                 }
             })
             .catch((error) => {
-                alert(error) //TODO
+                alertToastMessage(null);
             });
     };
 

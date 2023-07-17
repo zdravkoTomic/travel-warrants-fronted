@@ -4,6 +4,7 @@ import api from "../../components/api";
 import {toast, ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
 import {IFormLoginValueErrors, IFormLoginValues} from "../../types/loginTypes";
+import {alertToastMessage} from "../../components/Utils/alertToastMessage";
 
 export default function LoginPage() {
     const [errors, setErrors] = useState<IFormLoginValueErrors>();
@@ -47,16 +48,7 @@ export default function LoginPage() {
                 }
             })
             .catch((error) => {
-                toast.error('Greška! Pokušajte kasnije', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: true,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
+                alertToastMessage(null);
             });
     };
 
@@ -77,7 +69,6 @@ export default function LoginPage() {
 
     return (
         <div>
-            <ToastContainer/>
             <div className="row">
                 <h1 className="mx-auto col-10 col-md-8 col-lg-6">Login</h1>
             </div>

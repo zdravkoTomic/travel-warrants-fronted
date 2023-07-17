@@ -3,6 +3,7 @@ import {Field, Form, Formik} from "formik";
 import {ICountry} from "../../../types/Catalog/catalogTypes";
 import {useEffect, useState} from "react";
 import api from "../../api";
+import {alertToastMessage} from "../../Utils/alertToastMessage";
 
 export default function CountryForm(
     handleSubmit: any,
@@ -12,15 +13,10 @@ export default function CountryForm(
 ) {
     const [country, setCountry] = useState<ICountry>();
 
-
     useEffect(() => {
         if (id) {
-            fetch(api.getUri() + `/countries/${encodeURIComponent(id)}`)
+            fetch(api.getUri() + `/countries/${encodeURIComponent(id)}`, {credentials: 'include'})
                 .then((response) => {
-                    if (!response.ok) {
-                        alert(response.status) //TODO
-                    }
-
                     return response.json()
                 })
                 .then(response => {
@@ -28,8 +24,7 @@ export default function CountryForm(
                     }
                 )
                 .catch((error) => {
-                    // TODO
-                    alert(error);
+                    alertToastMessage(null);
                 });
         }
     }, [id]);

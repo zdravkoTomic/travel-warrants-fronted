@@ -5,6 +5,8 @@ import {toast, ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
 import {Alert} from "react-bootstrap";
 import {IFormResetPasswordValueErrors, IFormResetPasswordValues} from "../../types/resetPasswordTypes";
+import {alertDanger} from "../../components/Utils/alertDanger";
+import {alertToastMessage} from "../../components/Utils/alertToastMessage";
 
 export default function ResetPasswordPage() {
     const {employeeId} = useParams();
@@ -38,17 +40,7 @@ export default function ResetPasswordPage() {
                 }
             })
             .catch((error) => {
-                console.log(values)
-                toast.error('Greška! Pokušajte kasnije', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: true,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
+                alertToastMessage(null);
             });
     };
 
@@ -73,16 +65,13 @@ export default function ResetPasswordPage() {
 
     return (
         <div>
-            <ToastContainer/>
             <div className="row">
                 <h1 className="mx-auto col-10 col-md-8 col-lg-6">Reset Lozinke</h1>
             </div>
 
             <div className="row">
                 <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                    <Alert variant="danger">
-                        Kako biste u potpunosti aktivirali svoj korisnički račun morate promijeniti svoju lozinku
-                    </Alert>
+                    {alertDanger('Kako biste u potpunosti aktivirali svoj korisnički račun morate promijeniti svoju lozinku')}
                 </div>
             </div>
 

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import {useNavigate} from "react-router-dom";
 import api from "../api";
 import Spinner from "../Utils/Spinner";
+import {alertToastMessage} from "../Utils/alertToastMessage";
 
 
 export default function LogoutUser() {
@@ -19,7 +20,7 @@ export default function LogoutUser() {
                 window.location.reload();
             })
             .catch((error) => {
-
+                alertToastMessage(null);
             });
     })
 

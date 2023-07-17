@@ -27,11 +27,14 @@ import CatalogCurrencyPage from "./pages/Catalogs/CatalogCurrencyPage";
 import CatalogExpenseTypePage from "./pages/Catalogs/CatalogExpenseTypePage";
 import CatalogPredefinedExpenses from "./pages/Catalogs/CatalogPredefinedExpenses";
 import CatalogVehicleTypePage from "./pages/Catalogs/CatalogVehicleTypePage";
+import UnauthorizedPage from "./pages/Security/UnauthorizedPage";
+import {ToastContainer} from "react-toastify";
 
 function App() {
 
     return (
         <>
+            <ToastContainer/>
             <AppNavbar/>
             <div className="container">
                 <Routes>
@@ -76,6 +79,7 @@ function App() {
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/logout" element={<LogoutUser/>}/>
                     <Route path="/password_reset/:employeeId" element={<ResetPasswordPage/>}/>
+                    <Route path="/unauthorized" element={<UnauthorizedPage/>}/>
                 </Routes>
             </div>
         </>
