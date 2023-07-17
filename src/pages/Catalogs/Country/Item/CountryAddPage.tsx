@@ -1,12 +1,12 @@
-import api from "../../../components/api";
+import api from "../../../../components/api";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import CountryForm from "../../../components/Catalog/Country/CountryForm";
-import {IFormCountryValueErrors, IFormCountryValues} from "../../../types/Catalog/catalogTypes";
-import {successToastMessage} from "../../../components/Utils/successToastMessage";
-import {alertToastMessage} from "../../../components/Utils/alertToastMessage";
+import CountryForm from "../../../../components/Forms/Country/CountryForm";
+import {IFormCountryValueErrors, IFormCountryValues} from "../../../../types/Catalog/countryTypes";
+import {successToastMessage} from "../../../../components/Utils/successToastMessage";
+import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
+import {countryFormErrors} from "./countryFormErrors";
 
 export default function CountryAddPage() {
     const [errors, setErrors] = useState<IFormCountryValueErrors>();
@@ -31,9 +31,14 @@ export default function CountryAddPage() {
             })
             .then((response) => {
                 if (Array.isArray(response['violations'])) {
-                    const serverErrors: IFormCountryValueErrors = {name: null, code: null, active: null, domicile: null};
+                    const serverErrors: IFormCountryValueErrors = {
+                        name: null,
+                        code: null,
+                        active: null,
+                        domicile: null
+                    };
 
-                    response['violations'].forEach( (violation) => {
+                    response['violations'].forEach((violation) => {
                         if (violation.propertyPath! in serverErrors && violation.propertyPath !== null) {
                             serverErrors[violation.propertyPath as string] = violation.message
                         }
@@ -48,21 +53,7 @@ export default function CountryAddPage() {
     };
 
     const validateForm = (values: IFormCountryValues) => {
-        const errors: Partial<IFormCountryValues> = {};
-
-        if (!values.name) {
-            errors.name = 'Obavezan unos';
-        }
-
-        if (!values.code) {
-            errors.code = 'Obavezan unos';
-        }
-
-        if (values.code.length > 3) {
-            errors.code = 'Maximilan unos 3 znakova';
-        }
-
-        setErrors(errors)
+        setErrors(countryFormErrors(values))
         return errors;
     };
 

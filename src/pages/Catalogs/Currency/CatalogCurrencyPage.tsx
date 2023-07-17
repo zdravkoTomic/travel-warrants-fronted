@@ -1,54 +1,53 @@
+import {useHandleNonAuthenticated} from "../../../components/Security/HandleNonAuthenticated";
 import React, {useEffect, useState} from "react";
-import api from "../../components/api";
-import DataTable from 'react-data-table-component';
-import {Alert, Button, ButtonGroup, Dropdown} from "react-bootstrap";
-import BaseDetailsModal from "../../components/BaseDetailsModal";
+import {ICurrency, ICurrencyModalData} from "../../../types/Catalog/currencyTypes";
+import api from "../../../components/api";
+import {alertToastMessage} from "../../../components/Utils/alertToastMessage";
+import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import {ICountry, ICountryModalData} from "../../types/Catalog/catalogTypes";
-import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
-import Spinner from "../../components/Utils/Spinner";
-import {isAuthorized} from "../../components/Security/UserAuth";
-import {useHandleNonAuthenticated} from "../../components/Security/HandleNonAuthenticated";
-import {alertDanger} from "../../components/Utils/alertDanger";
-import UnauthorizedPage from "../Security/UnauthorizedPage";
-import {alertToastMessage} from "../../components/Utils/alertToastMessage";
+import {isAuthorized} from "../../../components/Security/UserAuth";
+import BaseDetailsModal from "../../../components/BaseDetailsModal";
+import DataTable from "react-data-table-component";
+import Spinner from "../../../components/Utils/Spinner";
+import {customStyles, paginationComponentOptions} from "../../../components/DataTableCustomStyle";
+import UnauthorizedPage from "../../Security/UnauthorizedPage";
 
-export default function CatalogCountryPage() {
+export default function CatalogCurrencyPage() {
     useHandleNonAuthenticated();
 
-    const [countries, setCountries] = useState<ICountry[]>([]);
+    const [currencies, setCurrencies] = useState<ICurrency[]>([]);
     const [totalRows, setTotalRows] = useState(0);
     const [loading, setLoading] = useState(false);
     const [perPage, setPerPage] = useState(25);
     const [datatablePage, setDatatablePage] = useState(1);
     const [orderQuery, setOrderQuery] = useState<String>();
     const [showModal, setShowModal] = useState(false);
-    const [modalData, setModalData] = useState<ICountryModalData>();
+    const [modalData, setModalData] = useState<ICurrencyModalData>();
 
-    const toggleShowModal = (countryId: number) => {
+    const toggleShowModal = (currencyId: number) => {
         fetch(
-            api.getUri() + `/countries/${encodeURIComponent(countryId)}`,
+            api.getUri() + `/currencies/${encodeURIComponent(currencyId)}`,
             {credentials: 'include'}
         )
             .then(response => response.json())
             .then(response => {
                     setModalData({
                         name: {
-                            title: 'Ime države',
+                            title: 'Ime valute',
                             value: response.name
                         },
                         code: {
                             title: 'Službena međunarodna skraćenica',
                             value: response.code
                         },
+                        codeNumeric: {
+                            title: 'Službena međunarodna brojčana skraćenica',
+                            value: response.codeNumeric
+                        },
                         active: {
                             title: 'Aktivnost',
                             value: response.active ? 'Aktivno' : 'Nekativno'
                         },
-                        domicile: {
-                            title: 'Status države',
-                            value: response.domicile ? 'Domicilna država' : 'Inozemna država'
-                        }
                     })
                 }
             )
@@ -73,7 +72,7 @@ export default function CatalogCountryPage() {
                 <Dropdown.Toggle split variant="primary" size="sm" id="dropdown-split-basic"/>
 
                 <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to={`/country_edit/${props.id}`}>Ažuriraj</Dropdown.Item>
+                    <Dropdown.Item as={Link} to={`/currency_edit/${props.id}`}>Ažuriraj</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>,
             ignoreRowClick: true,
@@ -90,6 +89,12 @@ export default function CatalogCountryPage() {
             sortable: true,
         },
         {
+            id: 'codeNumeric',
+            name: 'SKRAĆENICA BR.',
+            selector: (row: any) => row.codeNumeric,
+            sortable: true,
+        },
+        {
             id: 'name',
             name: 'NAZIV',
             selector: (row: any) => row.name,
@@ -100,12 +105,6 @@ export default function CatalogCountryPage() {
             name: 'AKTIVNOST',
             selector: (row: any) => row.active ? 'Aktivno' : 'Nekativno',
             sortable: true,
-        },
-        {
-            id: 'domicile',
-            name: 'STATUS DRŽAVE',
-            selector: (row: any) => row.domicile ? 'Domicilna država' : 'Inozemna država',
-            sortable: true,
         }
     ];
 
@@ -115,7 +114,7 @@ export default function CatalogCountryPage() {
         let order = !orderQuery ? '&order[name]=asc' : orderQuery
 
         fetch(
-            api.getUri() + `/countries?page=${encodeURIComponent(datatablePage)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
+            api.getUri() + `/currencies?page=${encodeURIComponent(datatablePage)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
             {
                 headers: {
                     'Content-Type': 'application/json'
@@ -125,7 +124,7 @@ export default function CatalogCountryPage() {
         )
             .then(response => response.json())
             .then(response => {
-                setCountries(response['hydra:member'])
+                setCurrencies(response['hydra:member'])
                 setTotalRows(response['hydra:totalItems'])
             })
             .catch((error) => {
@@ -160,13 +159,15 @@ export default function CatalogCountryPage() {
         <div>
             {isAuthorized(['ROLE_ADMIN']) ? (
                 <div>
-                    <BaseDetailsModal title="Država info" show={showModal} modalData={modalData}
-                                      onCloseButtonClick={()=>{setShowModal(false)}}/>
+                    <BaseDetailsModal title="Valuta info" show={showModal} modalData={modalData}
+                                      onCloseButtonClick={() => {
+                                          setShowModal(false)
+                                      }}/>
                     <DataTable
                         title={
                             <>
-                                <h2 className="flex-display">Katalog - Države
-                                    <Link className="add-new-record-btn" to="/country_add">
+                                <h2 className="flex-display">Katalog - Valute
+                                    <Link className="add-new-record-btn" to="/currency_add">
                                         <Button variant="primary">
                                             Dodaj Novi Zapis
                                         </Button>
@@ -175,7 +176,7 @@ export default function CatalogCountryPage() {
                             </>
                         }
                         columns={columns}
-                        data={countries}
+                        data={currencies}
                         progressPending={loading}
                         progressComponent={<Spinner/>}
                         highlightOnHover
@@ -201,4 +202,3 @@ export default function CatalogCountryPage() {
         </div>
     );
 }
-

@@ -1,6 +1,6 @@
 import {ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
-import {ICountry} from "../../../types/Catalog/catalogTypes";
+import {ICountry} from "../../../types/Catalog/countryTypes";
 import {useEffect, useState} from "react";
 import api from "../../api";
 import {alertToastMessage} from "../../Utils/alertToastMessage";
@@ -50,12 +50,13 @@ export default function CountryForm(
                 onSubmit={handleSubmit}
                 validate={validateForm}
             >
+                {({ touched, errors }) => (
                 <Form>
                     <div className="row">
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                             <label className="form-label" htmlFor="code">Službeni međunarodni kod države:</label>
                             <Field className="form-control" type="text" id="code" name="code"/>
-                            {errors?.code ? <span className="text-danger">{errors.code}</span> : ''}
+                            {touched.code && errors?.code ? <span className="text-danger">{errors.code}</span> : ''}
                         </div>
                     </div>
 
@@ -63,7 +64,7 @@ export default function CountryForm(
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                             <label className="form-label" htmlFor="name">Naziv države:</label>
                             <Field className="form-control" type="text" id="name" name="name"/>
-                            {errors?.name ? <span className="text-danger">{errors.name}</span> : ''}
+                            {touched.name && errors?.name ? <span className="text-danger">{errors.name}</span> : ''}
                         </div>
                     </div>
 
@@ -71,7 +72,7 @@ export default function CountryForm(
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
                             <label className="form-check-label" htmlFor="domicile">Domicilna država</label>
                             <Field name="domicile" type="checkbox" className="form-check-input" id="domicile"/>
-                            {errors?.domicile ? <span className="text-danger">{errors.domicile}</span> : ''}
+                            {touched.domicile && errors?.domicile ? <span className="text-danger">{errors.domicile}</span> : ''}
                         </div>
                     </div>
 
@@ -79,7 +80,7 @@ export default function CountryForm(
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
                             <label className="form-check-label" htmlFor="active">Aktivno</label>
                             <Field name="active" type="checkbox" className="form-check-input" id="active"/>
-                            {errors?.active ? <span className="text-danger">{errors.active}</span> : ''}
+                            {touched.active && errors?.active ? <span className="text-danger">{errors.active}</span> : ''}
                         </div>
                     </div>
 
@@ -90,6 +91,7 @@ export default function CountryForm(
                     </div>
 
                 </Form>
+                )}
             </Formik>
         </div>
     );

@@ -1,14 +1,14 @@
 import {useNavigate, useParams} from "react-router-dom";
-import { useState } from "react";
-import { IFormCountryValueErrors, IFormCountryValues} from "../../../types/Catalog/catalogTypes";
-import api from "../../../components/api";
-import {toast} from "react-toastify";
-import CountryForm from "../../../components/Catalog/Country/CountryForm";
-import {successToastMessage} from "../../../components/Utils/successToastMessage";
-import {alertToastMessage} from "../../../components/Utils/alertToastMessage";
+import {useState} from "react";
+import {IFormCountryValueErrors, IFormCountryValues} from "../../../../types/Catalog/countryTypes";
+import api from "../../../../components/api";
+import CountryForm from "../../../../components/Forms/Country/CountryForm";
+import {successToastMessage} from "../../../../components/Utils/successToastMessage";
+import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
+import {countryFormErrors} from "./countryFormErrors";
 
 export default function CountryEditPage() {
-    const { id } = useParams<{ id: any }>();
+    const {id} = useParams<{ id: any }>();
 
     const [errors, setErrors] = useState<IFormCountryValueErrors>();
     const navigate = useNavigate();
@@ -32,9 +32,14 @@ export default function CountryEditPage() {
             })
             .then((response) => {
                 if (Array.isArray(response['violations'])) {
-                    const serverErrors: IFormCountryValueErrors = {name: null, code: null, active: null, domicile: null};
+                    const serverErrors: IFormCountryValueErrors = {
+                        name: null,
+                        code: null,
+                        active: null,
+                        domicile: null
+                    };
 
-                    response['violations'].forEach( (violation) => {
+                    response['violations'].forEach((violation) => {
                         if (violation.propertyPath! in serverErrors && violation.propertyPath !== null) {
                             serverErrors[violation.propertyPath as string] = violation.message
                         }
@@ -49,21 +54,7 @@ export default function CountryEditPage() {
     };
 
     const validateForm = (values: IFormCountryValues) => {
-        const errors: Partial<IFormCountryValues> = {};
-
-        if (!values.name) {
-            errors.name = 'Obavezan unos';
-        }
-
-        if (!values.code) {
-            errors.code = 'Obavezan unos';
-        }
-
-        if (values.code.length > 3) {
-            errors.code = 'Maximilan unos 3 znakova';
-        }
-
-        setErrors(errors)
+        setErrors(countryFormErrors(values))
         return errors;
     };
 
