@@ -1,15 +1,19 @@
 import React, {useCallback, useEffect, useState} from "react";
 import api from "../../components/api";
 import DataTable from 'react-data-table-component';
-import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
+import {Alert, Button, ButtonGroup, Dropdown} from "react-bootstrap";
 import BaseDetailsModal from "../../components/BaseDetailsModal";
 import {Link} from "react-router-dom";
 import {ToastContainer} from "react-toastify";
 import {ICountry, ICountryModalData} from "../../types/Catalog/catalogTypes";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Spinner from "../../components/Utils/Spinner";
+import {isAuthorized} from "../../components/Security/UserAuth";
+import {useHandleNonAuthenticated} from "../../components/Security/HandleNonAuthenticated";
 
 export default function CatalogCountryPage() {
+    useHandleNonAuthenticated();
+
     const [countries, setCountries] = useState<ICountry[]>([]);
     const [totalRows, setTotalRows] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -28,25 +32,25 @@ export default function CatalogCountryPage() {
         )
             .then(response => response.json())
             .then(response => {
-                setModalData({
-                    name: {
-                        title: 'Ime države',
-                        value: response.name
-                    },
-                    code: {
-                        title: 'Službena međunarodna skraćenica',
-                        value: response.code
-                    },
-                    active: {
-                        title: 'Aktivnost',
-                        value: response.active ? 'Aktivno' : 'Nekativno'
-                    },
-                    domicile: {
-                        title: 'Status države',
-                        value: response.domicile ? 'Domicilna država' : 'Inozemna država'
-                    }
-                })
-            }
+                    setModalData({
+                        name: {
+                            title: 'Ime države',
+                            value: response.name
+                        },
+                        code: {
+                            title: 'Službena međunarodna skraćenica',
+                            value: response.code
+                        },
+                        active: {
+                            title: 'Aktivnost',
+                            value: response.active ? 'Aktivno' : 'Nekativno'
+                        },
+                        domicile: {
+                            title: 'Status države',
+                            value: response.domicile ? 'Domicilna država' : 'Inozemna država'
+                        }
+                    })
+                }
             )
             .then(() => {
                 setLoading(false)
@@ -116,7 +120,8 @@ export default function CatalogCountryPage() {
 
         fetch(
             api.getUri() + `/countries?page=${encodeURIComponent(page)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
-            {headers: {
+            {
+                headers: {
                     'Content-Type': 'application/json',
                     Cookie: `PHPSESSID=${sessionCookie}`, // Include the session cookie in the request headers
                 },
@@ -192,39 +197,52 @@ export default function CatalogCountryPage() {
 
     return (
         <div>
-            <ToastContainer />
-            <BaseDetailsModal title="Država info" show={showModal} modalData={modalData} onCloseButtonClick={toggleShowModal}/>
-            <DataTable
-                title={
-                    <>
-                        <h2 className="flex-display">Katalog - Države
-                            <Link className="add-new-record-btn" to="/country_add">
-                            <Button variant="primary">
-                                Dodaj Novi Zapis
-                            </Button>
-                            </Link>
-                        </h2>
-                    </>
-                }
-                columns={columns}
-                data={countries}
-                progressPending={loading}
-                progressComponent={<Spinner />}
-                highlightOnHover
-                fixedHeader
-                fixedHeaderScrollHeight="550px"
-                customStyles={customStyles}
-                pagination
-                paginationServer
-                paginationComponentOptions={paginationComponentOptions}
-                paginationTotalRows={totalRows}
-                paginationRowsPerPageOptions={[5, 10, 25, 50, 100, 250]}
-                paginationPerPage={perPage}
-                sortServer
-                onSort={handleSort}
-                onChangeRowsPerPage={handlePerRowsChange}
-                onChangePage={handlePageChange}
-            />
+            {isAuthorized(['ROLE_ADMIN']) ? (
+                <div>
+                    <ToastContainer/>
+                    <BaseDetailsModal title="Država info" show={showModal} modalData={modalData}
+                                      onCloseButtonClick={toggleShowModal}/>
+                    <DataTable
+                        title={
+                            <>
+                                <h2 className="flex-display">Katalog - Države
+                                    <Link className="add-new-record-btn" to="/country_add">
+                                        <Button variant="primary">
+                                            Dodaj Novi Zapis
+                                        </Button>
+                                    </Link>
+                                </h2>
+                            </>
+                        }
+                        columns={columns}
+                        data={countries}
+                        progressPending={loading}
+                        progressComponent={<Spinner/>}
+                        highlightOnHover
+                        fixedHeader
+                        fixedHeaderScrollHeight="550px"
+                        customStyles={customStyles}
+                        pagination
+                        paginationServer
+                        paginationComponentOptions={paginationComponentOptions}
+                        paginationTotalRows={totalRows}
+                        paginationRowsPerPageOptions={[5, 10, 25, 50, 100, 250]}
+                        paginationPerPage={perPage}
+                        sortServer
+                        onSort={handleSort}
+                        onChangeRowsPerPage={handlePerRowsChange}
+                        onChangePage={handlePageChange}
+                    />
+                </div>
+            ) : (
+                <div>
+                    <br/>
+                    <Alert variant="danger">
+                        Nemate pravo pristupa ovom ekranu!
+                    </Alert>
+                </div>
+            )
+            }
         </div>
     );
 }

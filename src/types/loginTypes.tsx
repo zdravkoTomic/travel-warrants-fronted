@@ -1,5 +1,6 @@
 export interface IFormLoginValueErrors {
     [key: string]: string | undefined | null | boolean;
+
     email?: string | null;
     password?: string | null;
 }

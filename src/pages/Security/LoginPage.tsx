@@ -1,16 +1,13 @@
 import React, {useState} from 'react';
-import { Container, Button } from 'react-bootstrap';
 import {useNavigate} from "react-router-dom";
 import api from "../../components/api";
 import {toast, ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
 import {IFormLoginValueErrors, IFormLoginValues} from "../../types/loginTypes";
-import Spinner from "../../components/Utils/Spinner";
 
 export default function LoginPage() {
     const [errors, setErrors] = useState<IFormLoginValueErrors>();
     const navigate = useNavigate();
-    const [user, setUser] = useState();
 
 
     const handleSubmit = (values: IFormLoginValues) => {
@@ -29,10 +26,8 @@ export default function LoginPage() {
                     if (cookies) {
                         localStorage.setItem('sessionCookie', cookies);
                     }
-                }
-
-                if (response.status !== 401) {
-                    throw new Error('Invalid credentials');
+                } else if (response.status !== 401 && !response.ok) {
+                    throw new Error('Server side error');
                 }
 
                 return response.json();
@@ -41,9 +36,14 @@ export default function LoginPage() {
                 if (response.error) {
                     setErrors({email: response.error})
                 } else {
-                    setUser(response.user);
+                    localStorage.setItem('user', JSON.stringify(response.user))
 
-                    navigate('/personal/initial')
+                    if (response.user.fullyAuthorized) {
+                        navigate('/personal/initial')
+                        window.location.reload();
+                    } else {
+                        navigate(`/password_reset/${response.user.id}`)
+                    }
                 }
             })
             .catch((error) => {
@@ -101,8 +101,9 @@ export default function LoginPage() {
 
                     <div className="row">
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                            <label className="form-label" htmlFor="name">Loznika:</label>
-                            <Field className="form-control" type="text" placeholder="Password" id="name" name="password"/>
+                            <label className="form-label" htmlFor="password">Loznika:</label>
+                            <Field className="form-control" type="password" placeholder="Password" id="name"
+                                   name="password"/>
                             {errors?.password ? <span className="text-danger">{errors.password}</span> : ''}
                         </div>
                     </div>
