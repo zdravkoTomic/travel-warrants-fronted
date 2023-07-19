@@ -1,20 +1,22 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
-import {IFormCountryValueErrors, IFormCountryValues} from "../countryTypes";
+import {IFormDepartmentValueErrors, IFormDepartmentValues} from "../departmentTypes";
 import api from "../../../../components/api";
-import CountryForm from "./CountryForm";
 import {successToastMessage} from "../../../../components/Utils/successToastMessage";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
-import {countryFormErrors} from "./countryFormErrors";
+import {departmentFormErrors} from "./departmentFormErrors";
+import DepartmentForm from "../../Department/Item/DepartmentForm";
 
-export default function CountryEditPage() {
+export default function DepartmentEditPage() {
     const {id} = useParams<{ id: any }>();
 
-    const [errors, setErrors] = useState<IFormCountryValueErrors>();
+    const [errors, setErrors] = useState<IFormDepartmentValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormDepartmentValueErrors>();
+
     const navigate = useNavigate();
 
-    const handleSubmit = (values: IFormCountryValues) => {
-        fetch(api.getUri() + `/countries/${id}`, {
+    const handleSubmit = (values: IFormDepartmentValues) => {
+        fetch(api.getUri() + `/departments/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/ld+json',
@@ -24,7 +26,7 @@ export default function CountryEditPage() {
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate('/catalog_countries')
+                    navigate('/catalog_department')
                     successToastMessage('Zapis uspješno ažuriran')
                 }
 
@@ -32,11 +34,11 @@ export default function CountryEditPage() {
             })
             .then((response) => {
                 if (Array.isArray(response['violations'])) {
-                    const serverErrors: IFormCountryValueErrors = {
-                        name: null,
+                    const serverErrors: IFormDepartmentValueErrors = {
                         code: null,
-                        active: null,
-                        domicile: null
+                        name: null,
+                        parent: null,
+                        active: null
                     };
 
                     response['violations'].forEach((violation) => {
@@ -45,7 +47,7 @@ export default function CountryEditPage() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -53,10 +55,10 @@ export default function CountryEditPage() {
             });
     };
 
-    const validateForm = (values: IFormCountryValues) => {
-        setErrors(countryFormErrors(values))
+    const validateForm = (values: IFormDepartmentValues) => {
+        setErrors(departmentFormErrors(values))
         return errors;
     };
 
-    return CountryForm(handleSubmit, validateForm, errors, id)
+    return DepartmentForm(handleSubmit, validateForm, errors, serverSideErrors, id)
 }

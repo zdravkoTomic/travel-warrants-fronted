@@ -1,10 +1,10 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
-import {IFormCurrencyValueErrors, IFormCurrencyValues} from "../../../../types/Catalog/currencyTypes";
+import {IFormCurrencyValueErrors, IFormCurrencyValues} from "../currencyTypes";
 import api from "../../../../components/api";
 import {successToastMessage} from "../../../../components/Utils/successToastMessage";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
-import CurrencyForm from "../../../../components/Forms/Currency/CurrencyForm";
+import CurrencyForm from "./CurrencyForm";
 import {currencyFormErrors} from "./currencyFormErrors";
 
 export default function CurrencyEditPage() {

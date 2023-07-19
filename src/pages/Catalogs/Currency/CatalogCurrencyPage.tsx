@@ -1,6 +1,6 @@
 import {useHandleNonAuthenticated} from "../../../components/Security/HandleNonAuthenticated";
 import React, {useEffect, useState} from "react";
-import {ICurrency, ICurrencyModalData} from "../../../types/Catalog/currencyTypes";
+import {ICurrency, ICurrencyModalData} from "./currencyTypes";
 import api from "../../../components/api";
 import {alertToastMessage} from "../../../components/Utils/alertToastMessage";
 import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
@@ -32,13 +32,13 @@ export default function CatalogCurrencyPage() {
             .then(response => response.json())
             .then(response => {
                     setModalData({
-                        name: {
-                            title: 'Ime valute',
-                            value: response.name
-                        },
                         code: {
                             title: 'Službena međunarodna skraćenica',
                             value: response.code
+                        },
+                        name: {
+                            title: 'Ime valute',
+                            value: response.name
                         },
                         codeNumeric: {
                             title: 'Službena međunarodna brojčana skraćenica',

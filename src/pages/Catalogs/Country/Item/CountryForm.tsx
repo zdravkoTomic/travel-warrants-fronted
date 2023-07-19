@@ -1,9 +1,9 @@
 import {ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
-import {ICountry} from "../../../types/Catalog/countryTypes";
+import {ICountry} from "../countryTypes";
 import {useEffect, useState} from "react";
-import api from "../../api";
-import {alertToastMessage} from "../../Utils/alertToastMessage";
+import api from "../../../../components/api";
+import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
 
 export default function CountryForm(
     handleSubmit: any,

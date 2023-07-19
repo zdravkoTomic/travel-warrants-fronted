@@ -1,18 +1,19 @@
 import {useState} from "react";
-import {IFormCurrencyValueErrors, IFormCurrencyValues} from "../currencyTypes";
+import {IFormCountryWageValueErrors, IFormCountryWageValues} from "../countryWageTypes";
 import {useNavigate} from "react-router-dom";
 import api from "../../../../components/api";
 import {successToastMessage} from "../../../../components/Utils/successToastMessage";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
-import CurrencyForm from "./CurrencyForm";
-import {currencyFormErrors} from "./currencyFormErrors";
+import {countryWageFormErrors} from "./countryWageFormErrors";
+import CountryWageForm from "../../CountryWage/Item/CountryWageForm";
 
-export default function CurrencyAddPage() {
-    const [errors, setErrors] = useState<IFormCurrencyValueErrors>();
+export default function CountryWageAddPage() {
+    const [errors, setErrors] = useState<IFormCountryWageValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormCountryWageValueErrors>();
     const navigate = useNavigate();
 
-    const handleSubmit = (values: IFormCurrencyValues) => {
-        fetch(api.getUri() + '/currencies', {
+    const handleSubmit = (values: IFormCountryWageValues) => {
+        fetch(api.getUri() + '/country-wages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
@@ -22,18 +23,22 @@ export default function CurrencyAddPage() {
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate('/catalog_currencies')
+                    navigate('/catalog_country_wages')
                     successToastMessage('Zapis uspješno dodan')
+                }
+
+                if (!response.ok && response.status !== 422) {
+                    throw new Error('Server side error');
                 }
 
                 return response.json()
             })
             .then((response) => {
                 if (Array.isArray(response['violations'])) {
-                    const serverErrors: IFormCurrencyValueErrors = {
-                        name: null,
-                        code: null,
-                        codeNumeric: null,
+                    const serverErrors: IFormCountryWageValueErrors = {
+                        country: null,
+                        currency: null,
+                        amount: null,
                         active: null
                     };
 
@@ -43,7 +48,7 @@ export default function CurrencyAddPage() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -51,10 +56,10 @@ export default function CurrencyAddPage() {
             });
     };
 
-    const validateForm = (values: IFormCurrencyValues) => {
-        setErrors(currencyFormErrors(values))
+    const validateForm = (values: IFormCountryWageValues) => {
+        setErrors(countryWageFormErrors(values))
         return errors;
     };
 
-    return CurrencyForm(handleSubmit, validateForm, errors, null)
+    return CountryWageForm(handleSubmit, validateForm, errors, serverSideErrors, null)
 }

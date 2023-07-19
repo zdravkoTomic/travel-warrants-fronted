@@ -1,42 +1,39 @@
-import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
-import {IFormCountryValueErrors, IFormCountryValues} from "../countryTypes";
+import {IFormWorkPositionValueErrors, IFormWorkPositionValues} from "../workPositionTypes";
+import {useNavigate} from "react-router-dom";
 import api from "../../../../components/api";
-import CountryForm from "./CountryForm";
 import {successToastMessage} from "../../../../components/Utils/successToastMessage";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
-import {countryFormErrors} from "./countryFormErrors";
+import {workPositionFormErrors} from "./workPositionFormErrors";
+import WorkPositionForm from "./WorkPositionForm";
 
-export default function CountryEditPage() {
-    const {id} = useParams<{ id: any }>();
-
-    const [errors, setErrors] = useState<IFormCountryValueErrors>();
+export default function WorkPositionAddPage() {
+    const [errors, setErrors] = useState<IFormWorkPositionValueErrors>();
     const navigate = useNavigate();
 
-    const handleSubmit = (values: IFormCountryValues) => {
-        fetch(api.getUri() + `/countries/${id}`, {
-            method: 'PUT',
+    const handleSubmit = (values: IFormWorkPositionValues) => {
+        fetch(api.getUri() + '/work-positions', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
             },
-            credentials: 'include',
             body: JSON.stringify(values),
+            credentials: 'include'
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate('/catalog_countries')
-                    successToastMessage('Zapis uspješno ažuriran')
+                    navigate('/catalog_work_positions')
+                    successToastMessage('Zapis uspješno dodan')
                 }
 
                 return response.json()
             })
             .then((response) => {
                 if (Array.isArray(response['violations'])) {
-                    const serverErrors: IFormCountryValueErrors = {
+                    const serverErrors: IFormWorkPositionValueErrors = {
                         name: null,
                         code: null,
-                        active: null,
-                        domicile: null
+                        active: null
                     };
 
                     response['violations'].forEach((violation) => {
@@ -53,10 +50,10 @@ export default function CountryEditPage() {
             });
     };
 
-    const validateForm = (values: IFormCountryValues) => {
-        setErrors(countryFormErrors(values))
+    const validateForm = (values: IFormWorkPositionValues) => {
+        setErrors(workPositionFormErrors(values))
         return errors;
     };
 
-    return CountryForm(handleSubmit, validateForm, errors, id)
+    return WorkPositionForm(handleSubmit, validateForm, errors, null)
 }

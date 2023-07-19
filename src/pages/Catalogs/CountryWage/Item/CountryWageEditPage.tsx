@@ -1,20 +1,22 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
-import {IFormCountryValueErrors, IFormCountryValues} from "../countryTypes";
+import {IFormCountryWageValueErrors, IFormCountryWageValues} from "../countryWageTypes";
 import api from "../../../../components/api";
-import CountryForm from "./CountryForm";
 import {successToastMessage} from "../../../../components/Utils/successToastMessage";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
-import {countryFormErrors} from "./countryFormErrors";
+import {countryWageFormErrors} from "./countryWageFormErrors";
+import CountryWageForm from "../../CountryWage/Item/CountryWageForm";
 
-export default function CountryEditPage() {
+export default function CountryWageEditPage() {
     const {id} = useParams<{ id: any }>();
 
-    const [errors, setErrors] = useState<IFormCountryValueErrors>();
+    const [errors, setErrors] = useState<IFormCountryWageValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormCountryWageValueErrors>();
+
     const navigate = useNavigate();
 
-    const handleSubmit = (values: IFormCountryValues) => {
-        fetch(api.getUri() + `/countries/${id}`, {
+    const handleSubmit = (values: IFormCountryWageValues) => {
+        fetch(api.getUri() + `/country-wages/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/ld+json',
@@ -24,7 +26,7 @@ export default function CountryEditPage() {
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate('/catalog_countries')
+                    navigate('/catalog_country_wages')
                     successToastMessage('Zapis uspješno ažuriran')
                 }
 
@@ -32,11 +34,11 @@ export default function CountryEditPage() {
             })
             .then((response) => {
                 if (Array.isArray(response['violations'])) {
-                    const serverErrors: IFormCountryValueErrors = {
-                        name: null,
-                        code: null,
-                        active: null,
-                        domicile: null
+                    const serverErrors: IFormCountryWageValueErrors = {
+                        country: null,
+                        currency: null,
+                        amount: null,
+                        active: null
                     };
 
                     response['violations'].forEach((violation) => {
@@ -45,7 +47,7 @@ export default function CountryEditPage() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -53,10 +55,10 @@ export default function CountryEditPage() {
             });
     };
 
-    const validateForm = (values: IFormCountryValues) => {
-        setErrors(countryFormErrors(values))
+    const validateForm = (values: IFormCountryWageValues) => {
+        setErrors(countryWageFormErrors(values))
         return errors;
     };
 
-    return CountryForm(handleSubmit, validateForm, errors, id)
+    return CountryWageForm(handleSubmit, validateForm, errors, serverSideErrors, id)
 }

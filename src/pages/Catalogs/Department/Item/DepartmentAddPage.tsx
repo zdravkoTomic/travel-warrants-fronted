@@ -1,18 +1,23 @@
 import {useState} from "react";
-import {IFormCurrencyValueErrors, IFormCurrencyValues} from "../currencyTypes";
+import {IFormDepartmentValueErrors, IFormDepartmentValues} from "../departmentTypes";
 import {useNavigate} from "react-router-dom";
 import api from "../../../../components/api";
 import {successToastMessage} from "../../../../components/Utils/successToastMessage";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
-import CurrencyForm from "./CurrencyForm";
-import {currencyFormErrors} from "./currencyFormErrors";
+import {departmentFormErrors} from "./departmentFormErrors";
+import DepartmentForm from "../../Department/Item/DepartmentForm";
 
-export default function CurrencyAddPage() {
-    const [errors, setErrors] = useState<IFormCurrencyValueErrors>();
+export default function DepartmentAddPage() {
+    const [errors, setErrors] = useState<IFormDepartmentValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormDepartmentValueErrors>();
     const navigate = useNavigate();
 
-    const handleSubmit = (values: IFormCurrencyValues) => {
-        fetch(api.getUri() + '/currencies', {
+    const handleSubmit = (values: IFormDepartmentValues) => {
+        if (values.parent && Object.keys(values.parent).length === 0) {
+           values.parent = null
+        }
+
+        fetch(api.getUri() + '/departments', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
@@ -22,18 +27,22 @@ export default function CurrencyAddPage() {
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate('/catalog_currencies')
+                    navigate('/catalog_department')
                     successToastMessage('Zapis uspješno dodan')
+                }
+
+                if (!response.ok && response.status !== 422) {
+                    throw new Error('Server side error');
                 }
 
                 return response.json()
             })
             .then((response) => {
                 if (Array.isArray(response['violations'])) {
-                    const serverErrors: IFormCurrencyValueErrors = {
-                        name: null,
+                    const serverErrors: IFormDepartmentValueErrors = {
                         code: null,
-                        codeNumeric: null,
+                        name: null,
+                        parent: null,
                         active: null
                     };
 
@@ -43,7 +52,7 @@ export default function CurrencyAddPage() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -51,10 +60,10 @@ export default function CurrencyAddPage() {
             });
     };
 
-    const validateForm = (values: IFormCurrencyValues) => {
-        setErrors(currencyFormErrors(values))
+    const validateForm = (values: IFormDepartmentValues) => {
+        setErrors(departmentFormErrors(values))
         return errors;
     };
 
-    return CurrencyForm(handleSubmit, validateForm, errors, null)
+    return DepartmentForm(handleSubmit, validateForm, errors, serverSideErrors, null)
 }

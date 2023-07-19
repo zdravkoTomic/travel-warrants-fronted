@@ -40,7 +40,7 @@ export default function AppNavbar() {
                             {isAuthorized(['ROLE_PROCURATOR', 'ROLE_ADMIN']) && (
                                 <NavDropdown title="Šifrarnici" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/catalog_countries">Države</NavDropdown.Item>
-                                    <NavDropdown.Item href="/catalog_wages">Dnevnice</NavDropdown.Item>
+                                    <NavDropdown.Item href="/catalog_country_wages">Dnevnice</NavDropdown.Item>
                                     <NavDropdown.Item href="/catalog_currencies">Valute</NavDropdown.Item>
                                     <NavDropdown.Item href="/catalog_expense_types">Troškovi</NavDropdown.Item>
                                     <NavDropdown.Item href="/catalog_predefined_expenses">Predefinirani

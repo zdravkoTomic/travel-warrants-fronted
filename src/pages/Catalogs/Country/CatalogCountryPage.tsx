@@ -4,7 +4,7 @@ import DataTable from 'react-data-table-component';
 import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
 import BaseDetailsModal from "../../../components/BaseDetailsModal";
 import {Link} from "react-router-dom";
-import {ICountry, ICountryModalData} from "../../../types/Catalog/countryTypes";
+import {ICountry, ICountryModalData} from "./countryTypes";
 import {customStyles, paginationComponentOptions} from "../../../components/DataTableCustomStyle";
 import Spinner from "../../../components/Utils/Spinner";
 import {isAuthorized} from "../../../components/Security/UserAuth";
@@ -32,13 +32,13 @@ export default function CatalogCountryPage() {
             .then(response => response.json())
             .then(response => {
                     setModalData({
-                        name: {
-                            title: 'Ime države',
-                            value: response.name
-                        },
                         code: {
                             title: 'Službena međunarodna skraćenica',
                             value: response.code
+                        },
+                        name: {
+                            title: 'Ime države',
+                            value: response.name
                         },
                         active: {
                             title: 'Aktivnost',

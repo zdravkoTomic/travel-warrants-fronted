@@ -1,4 +1,4 @@
-import {IFormCountryValueErrors, IFormCountryValues} from "../../../../types/Catalog/countryTypes";
+import {IFormCountryValueErrors, IFormCountryValues} from "../countryTypes";
 
 export function countryFormErrors (values: IFormCountryValues) {
     const errors: Partial<IFormCountryValueErrors> = {};

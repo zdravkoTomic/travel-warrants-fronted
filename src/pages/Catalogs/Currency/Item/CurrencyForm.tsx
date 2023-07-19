@@ -1,9 +1,9 @@
 import {ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
-import {ICurrency} from "../../../types/Catalog/currencyTypes";
+import {ICurrency} from "../currencyTypes";
 import {useEffect, useState} from "react";
-import api from "../../api";
-import {alertToastMessage} from "../../Utils/alertToastMessage";
+import api from "../../../../components/api";
+import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
 
 export default function CurrencyForm(
     handleSubmit: any,
@@ -43,7 +43,7 @@ export default function CurrencyForm(
             <Formik
                 initialValues={{
                     code: currency?.code ? currency.code : '',
-                    codeNumeric: currency?.name ? currency.name : '',
+                    codeNumeric: currency?.codeNumeric ? currency.codeNumeric : '',
                     name: currency?.name ? currency.name : '',
                     active: currency?.active ? currency.active : true,
                 }}

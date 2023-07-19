@@ -1,42 +1,39 @@
-import {useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
-import {IFormCountryValueErrors, IFormCountryValues} from "../countryTypes";
+import {IFormExpenseTypeValueErrors, IFormExpenseTypeValues} from "../expenseTypes";
+import {useNavigate} from "react-router-dom";
 import api from "../../../../components/api";
-import CountryForm from "./CountryForm";
 import {successToastMessage} from "../../../../components/Utils/successToastMessage";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
-import {countryFormErrors} from "./countryFormErrors";
+import {expenseTypeFormErrors} from "./expenseTypeFormErrors";
+import ExpenseTypeForm from "./ExpenseTypeForm";
 
-export default function CountryEditPage() {
-    const {id} = useParams<{ id: any }>();
-
-    const [errors, setErrors] = useState<IFormCountryValueErrors>();
+export default function ExpenseTypeAddPage() {
+    const [errors, setErrors] = useState<IFormExpenseTypeValueErrors>();
     const navigate = useNavigate();
 
-    const handleSubmit = (values: IFormCountryValues) => {
-        fetch(api.getUri() + `/countries/${id}`, {
-            method: 'PUT',
+    const handleSubmit = (values: IFormExpenseTypeValues) => {
+        fetch(api.getUri() + '/expense-types', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
             },
-            credentials: 'include',
             body: JSON.stringify(values),
+            credentials: 'include'
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate('/catalog_countries')
-                    successToastMessage('Zapis uspješno ažuriran')
+                    navigate('/catalog_expense_types')
+                    successToastMessage('Zapis uspješno dodan')
                 }
 
                 return response.json()
             })
             .then((response) => {
                 if (Array.isArray(response['violations'])) {
-                    const serverErrors: IFormCountryValueErrors = {
+                    const serverErrors: IFormExpenseTypeValueErrors = {
                         name: null,
                         code: null,
-                        active: null,
-                        domicile: null
+                        active: null
                     };
 
                     response['violations'].forEach((violation) => {
@@ -53,10 +50,10 @@ export default function CountryEditPage() {
             });
     };
 
-    const validateForm = (values: IFormCountryValues) => {
-        setErrors(countryFormErrors(values))
+    const validateForm = (values: IFormExpenseTypeValues) => {
+        setErrors(expenseTypeFormErrors(values))
         return errors;
     };
 
-    return CountryForm(handleSubmit, validateForm, errors, id)
+    return ExpenseTypeForm(handleSubmit, validateForm, errors, null)
 }
