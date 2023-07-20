@@ -4,11 +4,13 @@ import api from "../../../../components/api";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
 import {ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
+import {handleFormErrors} from "../../../../components/Utils/handleFormErrors";
 
 export default function WorkPositionForm(
     handleSubmit: any,
     validateForm: any,
     errors: any,
+    serverSideErrors: any,
     id: any
 ) {
     const [workPosition, setWorkPosition] = useState<IWorkPosition>();
@@ -49,32 +51,31 @@ export default function WorkPositionForm(
                 onSubmit={handleSubmit}
                 validate={validateForm}
             >
-                {({ touched, errors }) => (
+                {({touched, errors}) => (
                     <Form>
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="code">Kod troška:</label>
-                                <Field className="form-control" type="text" id="code" name="code"/>
-                                {touched.code && errors?.code ? <span className="text-danger">{errors.code}</span> : ''}
+                                <Field className="form-control" type="text" id="floatingInput" name="code"/>
+                                {handleFormErrors(errors?.code, serverSideErrors?.code, touched.code)}
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="name">Naziv troška:</label>
-                                <Field className="form-control" type="text" id="name" name="name"/>
-                                {touched.name && errors?.name ? <span className="text-danger">{errors.name}</span> : ''}
+                                <Field className="form-control" type="text" id="floatingInput" name="name"/>
+                                {handleFormErrors(errors?.name, serverSideErrors?.name, touched.name)}
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
                                 <label className="form-check-label" htmlFor="active">Aktivno</label>
-                                <Field name="active" type="checkbox" className="form-check-input" id="active"/>
-                                {touched.active && errors?.active ? <span className="text-danger">{errors.active}</span> : ''}
+                                <Field id="floatingInput" name="active" type="checkbox" className="form-check-input"/>
+                                {handleFormErrors(errors?.active, serverSideErrors?.active, touched.active)}
                             </div>
                         </div>
-
 
                         <div className="row">
                             <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary" type="submit">Submit

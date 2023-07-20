@@ -75,24 +75,24 @@ export default function DepartmentForm(
                 onSubmit={handleSubmit}
                 validate={validateForm}
             >
-                {({ touched, errors}) => (
+                {({touched, errors}) => (
                     <Form>
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="code">Kod organizacijskog dijela:</label>
-                                <Field className="form-control" type="text" id="code" name="code"/>
+                                <Field id="floatingInput" className="form-control" type="text" name="code"/>
                                 {handleFormErrors(errors?.code, serverSideErrors?.code, touched.code)}
                             </div>
                         </div>
-                        
+
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="name">Naziv organizacijskog dijela:</label>
-                                <Field className="form-control" type="text" id="name" name="name"/>
+                                <Field id="floatingInput" className="form-control" type="text" name="name"/>
                                 {handleFormErrors(errors?.name, serverSideErrors?.name, touched.name)}
                             </div>
                         </div>
-                        
+
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="parent">Nadređeni organizacijski dio:</label>
@@ -111,7 +111,7 @@ export default function DepartmentForm(
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
                                 <label className="form-check-label" htmlFor="active">Aktivno</label>
-                                <Field name="active" type="checkbox" className="form-check-input" id="active"/>
+                                <Field id="floatingInput" name="active" type="checkbox" className="form-check-input"/>
                                 {handleFormErrors(errors?.active, serverSideErrors?.active, touched.active)}
                             </div>
                         </div>

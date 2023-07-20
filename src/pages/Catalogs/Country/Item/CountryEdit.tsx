@@ -11,6 +11,8 @@ export default function CountryEdit() {
     const {id} = useParams<{ id: any }>();
 
     const [errors, setErrors] = useState<IFormCountryValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormCountryValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormCountryValues) => {
@@ -45,7 +47,7 @@ export default function CountryEdit() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -58,5 +60,5 @@ export default function CountryEdit() {
         return errors;
     };
 
-    return CountryForm(handleSubmit, validateForm, errors, id)
+    return CountryForm(handleSubmit, validateForm, errors, serverSideErrors, id)
 }

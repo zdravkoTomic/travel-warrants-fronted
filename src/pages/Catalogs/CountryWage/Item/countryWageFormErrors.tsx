@@ -1,4 +1,4 @@
-export function countryWageFormErrors (values: any) {
+export function countryWageFormErrors(values: any) {
     const errors: Partial<any> = {};
 
     if (!values.country) {

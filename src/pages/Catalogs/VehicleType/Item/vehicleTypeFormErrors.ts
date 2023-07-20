@@ -1,6 +1,6 @@
 import {IFormVehicleTypeValues} from "../vehicleTypes";
 
-export function vehicleTypeFormErrors (values: IFormVehicleTypeValues) {
+export function vehicleTypeFormErrors(values: IFormVehicleTypeValues) {
     const errors: Partial<IFormVehicleTypeValues> = {};
 
     if (!values.name) {

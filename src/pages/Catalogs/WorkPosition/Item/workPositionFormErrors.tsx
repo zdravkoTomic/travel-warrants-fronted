@@ -1,6 +1,6 @@
 import {IFormWorkPositionValues} from "../workPositionTypes";
 
-export function workPositionFormErrors (values: IFormWorkPositionValues) {
+export function workPositionFormErrors(values: IFormWorkPositionValues) {
     const errors: Partial<IFormWorkPositionValues> = {};
 
     if (!values.name) {

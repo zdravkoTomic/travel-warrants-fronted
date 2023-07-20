@@ -1,4 +1,4 @@
-export function departmentFormErrors (values: any) {
+export function departmentFormErrors(values: any) {
     const errors: Partial<any> = {};
 
     if (!values.code) {

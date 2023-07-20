@@ -1,5 +1,6 @@
 export interface IFormDepartmentValues {
     [key: string]: any | object | number | boolean | null;
+
     code: string,
     name: string,
     parent?: {

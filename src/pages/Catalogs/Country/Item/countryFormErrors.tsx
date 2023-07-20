@@ -1,6 +1,6 @@
 import {IFormCountryValueErrors, IFormCountryValues} from "../countryTypes";
 
-export function countryFormErrors (values: IFormCountryValues) {
+export function countryFormErrors(values: IFormCountryValues) {
     const errors: Partial<IFormCountryValueErrors> = {};
 
     if (!values.name) {

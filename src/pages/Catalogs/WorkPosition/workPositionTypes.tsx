@@ -5,7 +5,7 @@ export interface IFormWorkPositionValues {
 }
 
 export interface IFormWorkPositionValueErrors {
-    [key: string]: string | undefined | null |  boolean;
+    [key: string]: string | undefined | null | boolean;
 
     name?: string | null;
     code?: string | null;

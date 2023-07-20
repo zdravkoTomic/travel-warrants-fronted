@@ -11,6 +11,8 @@ export default function CurrencyEdit() {
     const {id} = useParams<{ id: any }>();
 
     const [errors, setErrors] = useState<IFormCurrencyValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormCurrencyValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormCurrencyValues) => {
@@ -45,7 +47,7 @@ export default function CurrencyEdit() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -58,5 +60,5 @@ export default function CurrencyEdit() {
         return errors;
     };
 
-    return CurrencyForm(handleSubmit, validateForm, errors, id)
+    return CurrencyForm(handleSubmit, validateForm, errors, serverSideErrors, id)
 }

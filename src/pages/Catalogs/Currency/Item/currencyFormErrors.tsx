@@ -1,6 +1,6 @@
 import {IFormCurrencyValues} from "../currencyTypes";
 
-export function currencyFormErrors (values: IFormCurrencyValues) {
+export function currencyFormErrors(values: IFormCurrencyValues) {
     const errors: Partial<IFormCurrencyValues> = {};
 
     if (!values.name) {

@@ -1,6 +1,6 @@
 import {IFormExpenseTypeValues} from "../expenseTypes";
 
-export function expenseTypeFormErrors (values: IFormExpenseTypeValues) {
+export function expenseTypeFormErrors(values: IFormExpenseTypeValues) {
     const errors: Partial<IFormExpenseTypeValues> = {};
 
     if (!values.name) {

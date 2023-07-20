@@ -6,7 +6,7 @@ export interface IFormCurrencyValues {
 }
 
 export interface IFormCurrencyValueErrors {
-    [key: string]: string | undefined | null |  boolean;
+    [key: string]: string | undefined | null | boolean;
 
     name?: string | null;
     code?: string | null;

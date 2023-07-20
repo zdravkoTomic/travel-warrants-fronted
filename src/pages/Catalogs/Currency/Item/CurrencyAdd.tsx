@@ -9,6 +9,8 @@ import {currencyFormErrors} from "./currencyFormErrors";
 
 export default function CurrencyAdd() {
     const [errors, setErrors] = useState<IFormCurrencyValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormCurrencyValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormCurrencyValues) => {
@@ -43,7 +45,7 @@ export default function CurrencyAdd() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -56,5 +58,5 @@ export default function CurrencyAdd() {
         return errors;
     };
 
-    return CurrencyForm(handleSubmit, validateForm, errors, null)
+    return CurrencyForm(handleSubmit, validateForm, errors, serverSideErrors, null)
 }

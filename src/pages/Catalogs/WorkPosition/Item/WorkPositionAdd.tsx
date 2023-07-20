@@ -9,6 +9,8 @@ import WorkPositionForm from "./WorkPositionForm";
 
 export default function WorkPositionAdd() {
     const [errors, setErrors] = useState<IFormWorkPositionValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormWorkPositionValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormWorkPositionValues) => {
@@ -42,7 +44,7 @@ export default function WorkPositionAdd() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -55,5 +57,5 @@ export default function WorkPositionAdd() {
         return errors;
     };
 
-    return WorkPositionForm(handleSubmit, validateForm, errors, null)
+    return WorkPositionForm(handleSubmit, validateForm, errors, serverSideErrors, null)
 }

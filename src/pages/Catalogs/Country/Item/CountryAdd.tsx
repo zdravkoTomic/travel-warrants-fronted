@@ -10,6 +10,7 @@ import {countryFormErrors} from "./countryFormErrors";
 
 export default function CountryAdd() {
     const [errors, setErrors] = useState<IFormCountryValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormCountryValueErrors>();
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormCountryValues) => {
@@ -44,7 +45,7 @@ export default function CountryAdd() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -57,5 +58,5 @@ export default function CountryAdd() {
         return errors;
     };
 
-    return CountryForm(handleSubmit, validateForm, errors, null)
+    return CountryForm(handleSubmit, validateForm, errors, serverSideErrors, null)
 }

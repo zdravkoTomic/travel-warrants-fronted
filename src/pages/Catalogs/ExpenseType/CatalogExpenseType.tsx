@@ -1,6 +1,6 @@
 import {useHandleNonAuthenticated} from "../../../components/Security/HandleNonAuthenticated";
 import React, {useEffect, useState} from "react";
-import {IExpenseTypeModalData, IExpenseType} from "./expenseTypes";
+import {IExpenseType, IExpenseTypeModalData} from "./expenseTypes";
 import api from "../../../components/api";
 import {alertToastMessage} from "../../../components/Utils/alertToastMessage";
 import {Button, ButtonGroup, Dropdown} from "react-bootstrap";

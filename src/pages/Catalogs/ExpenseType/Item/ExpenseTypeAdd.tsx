@@ -9,6 +9,8 @@ import ExpenseTypeForm from "./ExpenseTypeForm";
 
 export default function ExpenseTypeAdd() {
     const [errors, setErrors] = useState<IFormExpenseTypeValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormExpenseTypeValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormExpenseTypeValues) => {
@@ -42,7 +44,7 @@ export default function ExpenseTypeAdd() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -55,5 +57,5 @@ export default function ExpenseTypeAdd() {
         return errors;
     };
 
-    return ExpenseTypeForm(handleSubmit, validateForm, errors, null)
+    return ExpenseTypeForm(handleSubmit, validateForm, errors, serverSideErrors,null)
 }

@@ -1,8 +1,8 @@
-export function userRoleFormErrors (values: any) {
+export function userRoleFormErrors(values: any) {
     const errors: Partial<any> = {};
 
     if (!values.employee) {
-        errors.country = 'Obavezan unos';
+        errors.employee = 'Obavezan unos';
     }
 
     if (!values.role) {

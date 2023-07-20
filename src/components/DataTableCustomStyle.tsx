@@ -1,12 +1,12 @@
 export const customStyles = {
     rows: {
         style: {
-            minHeight: '72px', // override the row height
+            minHeight: '72px',
         },
     },
     headCells: {
         style: {
-            paddingLeft: '8px', // override the cell padding for head cells
+            paddingLeft: '8px',
             paddingRight: '8px',
             background: '#000000',
             fontWeight: 800,
@@ -16,7 +16,7 @@ export const customStyles = {
     },
     cells: {
         style: {
-            paddingLeft: '8px', // override the cell padding for data cells
+            paddingLeft: '8px',
             paddingRight: '8px',
         },
     }

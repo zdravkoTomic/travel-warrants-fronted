@@ -14,7 +14,7 @@ export default function DepartmentAdd() {
 
     const handleSubmit = (values: IFormDepartmentValues) => {
         if (values.parent && Object.keys(values.parent).length === 0) {
-           values.parent = null
+            values.parent = null
         }
 
         fetch(api.getUri() + '/departments', {

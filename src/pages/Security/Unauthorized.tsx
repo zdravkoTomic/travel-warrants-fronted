@@ -1,5 +1,3 @@
-import {Alert} from "react-bootstrap";
-import React from "react";
 import {alertDanger} from "../../components/Utils/alertDanger";
 
 export default function Unauthorized() {

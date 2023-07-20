@@ -5,7 +5,7 @@ export interface IFormVehicleTypeValues {
 }
 
 export interface IFormVehicleTypeValueErrors {
-    [key: string]: string | undefined | null |  boolean;
+    [key: string]: string | undefined | null | boolean;
 
     name?: string | null;
     code?: string | null;

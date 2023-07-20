@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import api from "../../components/api";
-import {toast, ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
-import {Alert} from "react-bootstrap";
 import {IFormResetPasswordValueErrors, IFormResetPasswordValues} from "../../types/resetPasswordTypes";
 import {alertDanger} from "../../components/Utils/alertDanger";
 import {alertToastMessage} from "../../components/Utils/alertToastMessage";
@@ -88,7 +86,7 @@ export default function ResetPassword() {
                     <div className="row">
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                             <label className="form-label" htmlFor="password">Loznika:</label>
-                            <Field className="form-control" type="password" placeholder="Password" id="name"
+                            <Field id="floatingInput" className="form-control" type="password" placeholder="Password"
                                    name="password"/>
                             {errors?.password ? <span className="text-danger">{errors.password}</span> : ''}
                         </div>
@@ -98,8 +96,9 @@ export default function ResetPassword() {
                     <div className="row">
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                             <label className="form-label" htmlFor="password_confirm">Ponovljena lozinka:</label>
-                            <Field className="form-control" type="password" placeholder="Password confirm"
-                                   id="password_confirm" name="password_confirm"/>
+                            <Field id="floatingInput" className="form-control" type="password"
+                                   placeholder="Password confirm"
+                                   name="password_confirm"/>
                             {errors?.password_confirm ?
                                 <span className="text-danger">{errors.password_confirm}</span> : ''}
                         </div>

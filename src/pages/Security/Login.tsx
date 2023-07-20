@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import api from "../../components/api";
-import {toast, ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
 import {IFormLoginValueErrors, IFormLoginValues} from "../../types/loginTypes";
 import {alertToastMessage} from "../../components/Utils/alertToastMessage";
@@ -85,7 +84,8 @@ export default function Login() {
                     <div className="row">
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                             <label className="form-label" htmlFor="code">Email:</label>
-                            <Field className="form-control" type="email" placeholder="Email" id="code" name="email"/>
+                            <Field id="floatingInput" className="form-control" type="email" placeholder="Email"
+                                   name="email"/>
                             {errors?.email ? <span className="text-danger">{errors.email}</span> : ''}
                         </div>
                     </div>
@@ -93,7 +93,7 @@ export default function Login() {
                     <div className="row">
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                             <label className="form-label" htmlFor="password">Loznika:</label>
-                            <Field className="form-control" type="password" placeholder="Password" id="name"
+                            <Field id="floatingInput" className="form-control" type="password" placeholder="Password"
                                    name="password"/>
                             {errors?.password ? <span className="text-danger">{errors.password}</span> : ''}
                         </div>

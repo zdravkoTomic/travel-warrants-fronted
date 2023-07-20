@@ -109,7 +109,7 @@ export default function EmployeeForm(
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="code">Jedinstveni kod zaposlenika:</label>
-                                <Field className="form-control" type="text" id="code" name="code"/>
+                                <Field id="floatingInput" className="form-control" type="text" name="code"/>
                                 {handleFormErrors(errors?.code, serverSideErrors?.code, touched.code)}
                             </div>
                         </div>
@@ -117,35 +117,32 @@ export default function EmployeeForm(
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="name">Ime zaposlenika:</label>
-                                <Field className="form-control" type="text" id="name" name="name"/>
-                                {touched.name && errors?.name ? <span className="text-danger">{errors.name}</span> : ''}
+                                <Field id="floatingInput" className="form-control" type="text" name="name"/>
+                                {handleFormErrors(errors?.name, serverSideErrors?.name, touched.name)}
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="surname">Prezime zaposlenika:</label>
-                                <Field className="form-control" type="text" name="surname" id="surname"/>
-                                {touched.surname && errors?.surname ?
-                                    <span className="text-danger">{errors.surname}</span> : ''}
+                                <Field id="floatingInput" className="form-control" type="text" name="surname"/>
+                                {handleFormErrors(errors?.surname, serverSideErrors?.surname, touched.surname)}
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="username">Korisničko ime:</label>
-                                <Field className="form-control" type="text" id="username" name="username"/>
-                                {touched.username && errors?.username ?
-                                    <span className="text-danger">{errors.username}</span> : ''}
+                                <Field id="floatingInput" className="form-control" type="text" name="username"/>
+                                {handleFormErrors(errors?.username, serverSideErrors?.username, touched.username)}
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="email">Email zaposlenika:</label>
-                                <Field className="form-control" type="email" id="email" name="email"/>
-                                {touched.email && errors?.email ?
-                                    <span className="text-danger">{errors.email}</span> : ''}
+                                <Field id="floatingInput" className="form-control" type="email" name="email"/>
+                                {handleFormErrors(errors?.email, serverSideErrors?.email, touched.email)}
                             </div>
                         </div>
 
@@ -184,7 +181,7 @@ export default function EmployeeForm(
                                 <label className="form-label" htmlFor="dateOfBirth">
                                     Date of Birth:
                                 </label>
-                                <Field name="dateOfBirth">
+                                <Field id="floatingInput" name="dateOfBirth">
                                     {({field, form}: FieldProps) => {
                                         const selectedDate = field.value ? new Date(field.value) : null;
                                         return (
@@ -205,7 +202,7 @@ export default function EmployeeForm(
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
                                 <label className="form-check-label" htmlFor="active">Aktivno</label>
-                                <Field name="active" type="checkbox" className="form-check-input" id="active"/>
+                                <Field id="floatingInput" name="active" type="checkbox" className="form-check-input"/>
                                 {handleFormErrors(errors?.active, serverSideErrors?.active, touched.active)}
                             </div>
                         </div>

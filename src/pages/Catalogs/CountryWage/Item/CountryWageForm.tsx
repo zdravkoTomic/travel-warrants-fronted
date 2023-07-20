@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {ICountryWage, IFormCountryWageValueErrors} from "../countryWageTypes";
+import {ICountryWage} from "../countryWageTypes";
 import api from "../../../../components/api";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
 import {ToastContainer} from "react-toastify";
@@ -25,12 +25,12 @@ export default function CountryWageForm(
                 },
                 credentials: 'include',
             }
-            )
+        )
             .then((response) => {
                 return response.json()
             })
             .then(response => {
-                setCountryCatalog(response['hydra:member']);
+                    setCountryCatalog(response['hydra:member']);
                 }
             )
             .catch((error) => {
@@ -95,12 +95,12 @@ export default function CountryWageForm(
                 onSubmit={handleSubmit}
                 validate={validateForm}
             >
-                {({ touched, errors}) => (
+                {({touched, errors}) => (
                     <Form>
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="country">Država:</label>
-                                <Field className="form-select" id="floatingInput" name="country" as="select">
+                                <Field id="floatingInput" className="form-select" name="country" as="select">
                                     <option value="">Odaberite državu</option>
                                     {countryCatalog?.map((country) => (
                                         <option key={country.id} value={country["@id"]}>
@@ -114,7 +114,7 @@ export default function CountryWageForm(
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="currency">Valuta:</label>
-                                <Field className="form-select" id="floatingInput" name="currency" as="select">
+                                <Field id="floatingInput" className="form-select" name="currency" as="select">
                                     <option value="">Odaberite valutu</option>
                                     {currencyCatalog?.map((currency) => (
                                         <option key={currency.id} value={currency["@id"]}>
@@ -129,7 +129,7 @@ export default function CountryWageForm(
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                 <label className="form-label" htmlFor="name">Iznos:</label>
-                                <Field className="form-control" type="number" id="floatingInput" name="amount"/>
+                                <Field id="floatingInput" className="form-control" type="number" name="amount"/>
                                 {handleFormErrors(errors?.amount, serverSideErrors?.amount, touched.amount)}
                             </div>
                         </div>
@@ -137,7 +137,7 @@ export default function CountryWageForm(
                         <div className="row">
                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
                                 <label className="form-check-label" htmlFor="active">Aktivno</label>
-                                <Field name="active" type="checkbox" className="form-check-input" id="active"/>
+                                <Field id="floatingInput" name="active" type="checkbox" className="form-check-input"/>
                                 {handleFormErrors(errors?.active, serverSideErrors?.active, touched.active)}
                             </div>
                         </div>

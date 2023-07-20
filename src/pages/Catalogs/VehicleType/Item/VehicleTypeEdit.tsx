@@ -11,6 +11,8 @@ export default function VehicleTypeEdit() {
     const {id} = useParams<{ id: any }>();
 
     const [errors, setErrors] = useState<IFormVehicleTypeValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormVehicleTypeValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormVehicleTypeValues) => {
@@ -45,7 +47,7 @@ export default function VehicleTypeEdit() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -58,5 +60,5 @@ export default function VehicleTypeEdit() {
         return errors;
     };
 
-    return VehicleTypeForm(handleSubmit, validateForm, errors, id)
+    return VehicleTypeForm(handleSubmit, validateForm, errors, serverSideErrors, id)
 }

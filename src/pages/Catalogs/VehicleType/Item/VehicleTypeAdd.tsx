@@ -9,6 +9,8 @@ import VehicleTypeForm from "./VehicleTypeForm";
 
 export default function VehicleTypeAdd() {
     const [errors, setErrors] = useState<IFormVehicleTypeValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormVehicleTypeValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormVehicleTypeValues) => {
@@ -42,7 +44,7 @@ export default function VehicleTypeAdd() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -55,5 +57,5 @@ export default function VehicleTypeAdd() {
         return errors;
     };
 
-    return VehicleTypeForm(handleSubmit, validateForm, errors, null)
+    return VehicleTypeForm(handleSubmit, validateForm, errors, serverSideErrors, null)
 }

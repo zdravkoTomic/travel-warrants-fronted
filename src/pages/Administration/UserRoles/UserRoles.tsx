@@ -46,7 +46,7 @@ export default function CatalogUserRole() {
                         },
                         employeeWorkPosition: {
                             title: 'Radno mjesto zaposlenika',
-                            value:  response.employee.workPosition.name
+                            value: response.employee.workPosition.name
                         },
                         employeeDepartment: {
                             title: 'Korisnikov organizacijski dio',

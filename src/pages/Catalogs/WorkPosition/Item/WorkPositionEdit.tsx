@@ -4,13 +4,15 @@ import {IFormWorkPositionValueErrors, IFormWorkPositionValues} from "../workPosi
 import api from "../../../../components/api";
 import {successToastMessage} from "../../../../components/Utils/successToastMessage";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
-import {workPositionFormErrors} from "../../WorkPosition/Item/workPositionFormErrors";
+import {workPositionFormErrors} from "./workPositionFormErrors";
 import WorkPositionForm from "./WorkPositionForm";
 
 export default function WorkPositionEdit() {
     const {id} = useParams<{ id: any }>();
 
     const [errors, setErrors] = useState<IFormWorkPositionValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormWorkPositionValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormWorkPositionValues) => {
@@ -45,7 +47,7 @@ export default function WorkPositionEdit() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -58,5 +60,5 @@ export default function WorkPositionEdit() {
         return errors;
     };
 
-    return WorkPositionForm(handleSubmit, validateForm, errors, id)
+    return WorkPositionForm(handleSubmit, validateForm, errors, serverSideErrors, id)
 }

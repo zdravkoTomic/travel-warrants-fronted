@@ -11,6 +11,8 @@ export default function ExpenseTypeEdit() {
     const {id} = useParams<{ id: any }>();
 
     const [errors, setErrors] = useState<IFormExpenseTypeValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormExpenseTypeValueErrors>();
+
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormExpenseTypeValues) => {
@@ -45,7 +47,7 @@ export default function ExpenseTypeEdit() {
                         }
                     });
 
-                    setErrors(serverErrors)
+                    setServerSideErrors(serverErrors)
                 }
             })
             .catch((error) => {
@@ -58,5 +60,5 @@ export default function ExpenseTypeEdit() {
         return errors;
     };
 
-    return ExpenseTypeForm(handleSubmit, validateForm, errors, id)
+    return ExpenseTypeForm(handleSubmit, validateForm, errors, serverSideErrors, id)
 }
