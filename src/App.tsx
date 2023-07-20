@@ -1,48 +1,51 @@
 import React from 'react';
 import './App.css';
 import AppNavbar from "./AppNavbar";
-import PersonalWarrantsPage from './pages/PersonalWarrants/PersonalWarrantsPage';
-import LoginPage from './pages/Security/LoginPage';
-import PersonalCalculationPage from "./pages/PersonalWarrants/PersonalCalculationPage";
-import PersonalClosedWarrantsPage from "./pages/PersonalWarrants/PersonalClosedWarrantsPage";
-import CreditingAdvancesPage from "./pages/CreditingWarrants/CreditingAdvancesPage";
-import CreditingCalculationsPage from "./pages/CreditingWarrants/CreditingCalculationsPage";
+import PersonalWarrants from './pages/PersonalWarrants/PersonalWarrants';
+import Login from './pages/Security/Login';
+import PersonalCalculation from "./pages/PersonalWarrants/PersonalCalculation";
+import PersonalClosedWarrants from "./pages/PersonalWarrants/PersonalClosedWarrants";
+import CreditingAdvances from "./pages/CreditingWarrants/CreditingAdvances";
+import CreditingCalculations from "./pages/CreditingWarrants/CreditingCalculations";
 import CreditingPaidWarrants from "./pages/CreditingWarrants/CreditingPaidWarrants";
-import CreditingQueuePage from "./pages/CreditingWarrants/CreditingQueuePage";
-import CatalogCountryPage from "./pages/Catalogs/Country/CatalogCountryPage";
-import CatalogDepartmentPage from "./pages/Catalogs/Department/CatalogDepartmentPage";
-import CatalogEmployeePage from "./pages/Catalogs/Employee/CatalogEmployeePage";
-import CatalogCountryWagesPage from "./pages/Catalogs/CountryWage/CatalogCountryWagesPage";
-import ApprovingCalculationPage from "./pages/ApprovingWarrants/ApprovingCalculationPage";
-import ApprovingInitialPage from "./pages/ApprovingWarrants/ApprovingInitialPage";
+import CreditingQueue from "./pages/CreditingWarrants/CreditingQueue";
+import CatalogCountry from "./pages/Catalogs/Country/CatalogCountry";
+import CatalogDepartment from "./pages/Catalogs/Department/CatalogDepartment";
+import CatalogEmployee from "./pages/Catalogs/Employee/CatalogEmployee";
+import CatalogCountryWage from "./pages/Catalogs/CountryWage/CatalogCountryWage";
+import ApprovingCalculation from "./pages/ApprovingWarrants/ApprovingCalculation";
+import ApprovingInitial from "./pages/ApprovingWarrants/ApprovingInitial";
 import ApplicationParameters from "./pages/Administration/ApplicationParameters";
-import UserRolesPage from "./pages/Administration/UserRolesPage";
-import CountryAddPage from "./pages/Catalogs/Country/Item/CountryAddPage";
-import CountryEditPage from "./pages/Catalogs/Country/Item/CountryEditPage";
+import UserRoles from "./pages/Administration/UserRoles/UserRoles";
+import CountryAdd from "./pages/Catalogs/Country/Item/CountryAdd";
+import CountryEdit from "./pages/Catalogs/Country/Item/CountryEdit";
 import {Route, Routes} from "react-router-dom"
 import LogoutUser from "./components/Security/LogoutUser";
-import ResetPasswordPage from "./pages/Security/ResetPasswordPage";
-import CatalogWorkPositionsPage from "./pages/Catalogs/WorkPosition/CatalogWorkPositionsPage";
-import CatalogCurrencyPage from "./pages/Catalogs/Currency/CatalogCurrencyPage";
-import CatalogExpenseTypePage from "./pages/Catalogs/ExpenseType/CatalogExpenseTypePage";
+import ResetPassword from "./pages/Security/ResetPassword";
+import CatalogWorkPosition from "./pages/Catalogs/WorkPosition/CatalogWorkPosition";
+import CatalogCurrency from "./pages/Catalogs/Currency/CatalogCurrency";
+import CatalogExpenseType from "./pages/Catalogs/ExpenseType/CatalogExpenseType";
 import CatalogPredefinedExpenses from "./pages/Catalogs/PredefinedExpense/CatalogPredefinedExpenses";
-import CatalogVehicleTypePage from "./pages/Catalogs/VehicleType/CatalogVehicleTypePage";
-import UnauthorizedPage from "./pages/Security/UnauthorizedPage";
+import CatalogVehicleType from "./pages/Catalogs/VehicleType/CatalogVehicleType";
+import Unauthorized from "./pages/Security/Unauthorized";
 import {ToastContainer} from "react-toastify";
-import CurrencyAddPage from "./pages/Catalogs/Currency/Item/CurrencyAddPage";
-import CurrencyEditPage from "./pages/Catalogs/Currency/Item/CurrencyEditPage";
-import ExpenseTypeEditPage from "./pages/Catalogs/ExpenseType/Item/ExpenseTypeEditPage";
-import ExpenseTypeAddPage from "./pages/Catalogs/ExpenseType/Item/ExpenseTypeAddPage";
-import WorkPositionAddPage from "./pages/Catalogs/WorkPosition/Item/WorkPositionAddPage";
-import WorkPositionEditPage from "./pages/Catalogs/WorkPosition/Item/WorkPositionEditPage";
-import VehicleTypeAddPage from "./pages/Catalogs/VehicleType/Item/VehicleTypeAddPage";
-import VehicleTypeEditPage from "./pages/Catalogs/VehicleType/Item/VehicleTypeEditPage";
-import CountryWageAddPage from "./pages/Catalogs/CountryWage/Item/CountryWageAddPage";
-import CountryWageEditPage from "./pages/Catalogs/CountryWage/Item/CountryWageEditPage";
-import DepartmentAddPage from "./pages/Catalogs/Department/Item/DepartmentAddPage";
-import DepartmentEditPage from "./pages/Catalogs/Department/Item/DepartmentEditPage";
-import EmployeeAddPage from "./pages/Catalogs/Employee/Item/EmployeeAddPage";
-import EmployeeEditPage from "./pages/Catalogs/Employee/Item/EmployeeEditPage";
+import CurrencyAdd from "./pages/Catalogs/Currency/Item/CurrencyAdd";
+import CurrencyEdit from "./pages/Catalogs/Currency/Item/CurrencyEdit";
+import ExpenseTypeEdit from "./pages/Catalogs/ExpenseType/Item/ExpenseTypeEdit";
+import ExpenseTypeAdd from "./pages/Catalogs/ExpenseType/Item/ExpenseTypeAdd";
+import WorkPositionAdd from "./pages/Catalogs/WorkPosition/Item/WorkPositionAdd";
+import WorkPositionEdit from "./pages/Catalogs/WorkPosition/Item/WorkPositionEdit";
+import VehicleTypeAdd from "./pages/Catalogs/VehicleType/Item/VehicleTypeAdd";
+import VehicleTypeEdit from "./pages/Catalogs/VehicleType/Item/VehicleTypeEdit";
+import CountryWageAdd from "./pages/Catalogs/CountryWage/Item/CountryWageAdd";
+import CountryWageEdit from "./pages/Catalogs/CountryWage/Item/CountryWageEdit";
+import DepartmentAdd from "./pages/Catalogs/Department/Item/DepartmentAdd";
+import DepartmentEdit from "./pages/Catalogs/Department/Item/DepartmentEdit";
+import EmployeeAdd from "./pages/Catalogs/Employee/Item/EmployeeAdd";
+import EmployeeEdit from "./pages/Catalogs/Employee/Item/EmployeeEdit";
+import UserRoleAdd from "./pages/Administration/UserRoles/Item/UserRoleAdd";
+import UserRoleEdit from "./pages/Administration/UserRoles/Item/UserRoleEdit";
+import {UserRoleDelete} from "./pages/Administration/UserRoles/Item/UserRoleDelete";
 
 function App() {
 
@@ -53,61 +56,66 @@ function App() {
             <div className="container">
                 <Routes>
                     {/*Personal warrants*/}
-                    <Route path="/" element={<PersonalWarrantsPage/>}/>
-                    <Route path="/personal/:groupStatusId" element={<PersonalWarrantsPage/>}/>
-                    <Route path="/personal_calculation" element={<PersonalCalculationPage/>}/>
-                    <Route path="/personal_closed" element={<PersonalClosedWarrantsPage/>}/>
+                    <Route path="/" element={<PersonalWarrants/>}/>
+                    <Route path="/personal/:groupStatusId" element={<PersonalWarrants/>}/>
+                    <Route path="/personal_calculation" element={<PersonalCalculation/>}/>
+                    <Route path="/personal_closed" element={<PersonalClosedWarrants/>}/>
 
                     {/*Warrants for approving*/}
-                    <Route path="/approving_initial" element={<ApprovingInitialPage/>}/>
-                    <Route path="/approving_calculation" element={<ApprovingCalculationPage/>}/>
+                    <Route path="/approving_initial" element={<ApprovingInitial/>}/>
+                    <Route path="/approving_calculation" element={<ApprovingCalculation/>}/>
 
                     {/*Crediting warrants*/}
-                    <Route path="/crediting_advances" element={<CreditingAdvancesPage/>}/>
-                    <Route path="/crediting_calculation" element={<CreditingCalculationsPage/>}/>
-                    <Route path="/crediting_queue" element={<CreditingQueuePage/>}/>
+                    <Route path="/crediting_advances" element={<CreditingAdvances/>}/>
+                    <Route path="/crediting_calculation" element={<CreditingCalculations/>}/>
+                    <Route path="/crediting_queue" element={<CreditingQueue/>}/>
                     <Route path="/crediting_paid" element={<CreditingPaidWarrants/>}/>
 
                     {/*Catalogs*/}
-                    <Route path="/catalog_countries" element={<CatalogCountryPage/>}/>
-                    <Route path="/catalog_country_wages" element={<CatalogCountryWagesPage/>}/>
-                    <Route path="/catalog_currencies" element={<CatalogCurrencyPage/>}/>
-                    <Route path="/catalog_expense_types" element={<CatalogExpenseTypePage/>}/>
+                    <Route path="/catalog_countries" element={<CatalogCountry/>}/>
+                    <Route path="/catalog_country_wages" element={<CatalogCountryWage/>}/>
+                    <Route path="/catalog_currencies" element={<CatalogCurrency/>}/>
+                    <Route path="/catalog_expense_types" element={<CatalogExpenseType/>}/>
                     <Route path="/catalog_predefined_expenses" element={<CatalogPredefinedExpenses/>}/>
-                    <Route path="/catalog_vehicle_types" element={<CatalogVehicleTypePage/>}/>
+                    <Route path="/catalog_vehicle_types" element={<CatalogVehicleType/>}/>
 
                     {/*Admin catalogs*/}
-                    <Route path="/catalog_employees" element={<CatalogEmployeePage/>}/>
-                    <Route path="/catalog_department" element={<CatalogDepartmentPage/>}/>
-                    <Route path="/user_roles" element={<UserRolesPage/>}/>
-                    <Route path="/catalog_work_positions" element={<CatalogWorkPositionsPage/>}/>
+                    <Route path="/catalog_employees" element={<CatalogEmployee/>}/>
+                    <Route path="/catalog_department" element={<CatalogDepartment/>}/>
+                    <Route path="/user_roles" element={<UserRoles/>}/>
+                    <Route path="/catalog_work_positions" element={<CatalogWorkPosition/>}/>
                     <Route path="/application_parameters" element={<ApplicationParameters/>}/>
 
                     {/*Adding data routes*/}
-                    <Route path="/country_add" element={<CountryAddPage/>}/>
-                    <Route path="/currency_add" element={<CurrencyAddPage/>}/>
-                    <Route path="/expense_type_add" element={<ExpenseTypeAddPage/>}/>
-                    <Route path="/work_position_add" element={<WorkPositionAddPage/>}/>
-                    <Route path="/vehicle_type_add" element={<VehicleTypeAddPage/>}/>
-                    <Route path="/country_wage_add" element={<CountryWageAddPage/>}/>
-                    <Route path="/department_add" element={<DepartmentAddPage/>}/>
-                    <Route path="/employee_add" element={<EmployeeAddPage/>}/>
+                    <Route path="/country_add" element={<CountryAdd/>}/>
+                    <Route path="/currency_add" element={<CurrencyAdd/>}/>
+                    <Route path="/expense_type_add" element={<ExpenseTypeAdd/>}/>
+                    <Route path="/work_position_add" element={<WorkPositionAdd/>}/>
+                    <Route path="/vehicle_type_add" element={<VehicleTypeAdd/>}/>
+                    <Route path="/country_wage_add" element={<CountryWageAdd/>}/>
+                    <Route path="/department_add" element={<DepartmentAdd/>}/>
+                    <Route path="/employee_add" element={<EmployeeAdd/>}/>
+                    <Route path="/user_role_add" element={<UserRoleAdd/>}/>
 
                     {/*Editing data routes*/}
-                    <Route path="/country_edit/:id" element={<CountryEditPage/>}/>
-                    <Route path="/currency_edit/:id" element={<CurrencyEditPage/>}/>
-                    <Route path="/expense_type_edit/:id" element={<ExpenseTypeEditPage/>}/>
-                    <Route path="/work_position_edit/:id" element={<WorkPositionEditPage/>}/>
-                    <Route path="/vehicle_type_edit/:id" element={<VehicleTypeEditPage/>}/>
-                    <Route path="/country_wage_edit/:id" element={<CountryWageEditPage/>}/>
-                    <Route path="/department_edit/:id" element={<DepartmentEditPage/>}/>
-                    <Route path="/employee_edit/:id" element={<EmployeeEditPage/>}/>
+                    <Route path="/country_edit/:id" element={<CountryEdit/>}/>
+                    <Route path="/currency_edit/:id" element={<CurrencyEdit/>}/>
+                    <Route path="/expense_type_edit/:id" element={<ExpenseTypeEdit/>}/>
+                    <Route path="/work_position_edit/:id" element={<WorkPositionEdit/>}/>
+                    <Route path="/vehicle_type_edit/:id" element={<VehicleTypeEdit/>}/>
+                    <Route path="/country_wage_edit/:id" element={<CountryWageEdit/>}/>
+                    <Route path="/department_edit/:id" element={<DepartmentEdit/>}/>
+                    <Route path="/employee_edit/:id" element={<EmployeeEdit/>}/>
+                    <Route path="/user_role_edit/:id" element={<UserRoleEdit/>}/>
+
+                    {/*Delete data routes*/}
+                    <Route path="/user_role_delete/:id" element={<UserRoleDelete/>}/>
 
                     {/*Security*/}
-                    <Route path="/login" element={<LoginPage/>}/>
+                    <Route path="/login" element={<Login/>}/>
                     <Route path="/logout" element={<LogoutUser/>}/>
-                    <Route path="/password_reset/:employeeId" element={<ResetPasswordPage/>}/>
-                    <Route path="/unauthorized" element={<UnauthorizedPage/>}/>
+                    <Route path="/password_reset/:employeeId" element={<ResetPassword/>}/>
+                    <Route path="/unauthorized" element={<Unauthorized/>}/>
                 </Routes>
             </div>
         </>

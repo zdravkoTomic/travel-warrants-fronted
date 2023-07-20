@@ -1,7 +1,7 @@
 import React from "react";
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
 import {Link} from "react-router-dom";
-import {isAuthorized} from "./components/Security/UserAuth";
+import {isAuthorized, isFullyAuthenticated} from "./components/Security/UserAuth";
 
 export default function AppNavbar() {
 
@@ -12,6 +12,7 @@ export default function AppNavbar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <>
+                        {isFullyAuthenticated() && (
                         <Nav className="me-auto">
                             {isAuthorized(['ROLE_EMPLOYEE']) && (
                                 <NavDropdown title="Nalozi" id="basic-nav-dropdown">
@@ -61,7 +62,7 @@ export default function AppNavbar() {
                                 </NavDropdown>
                             )}
                         </Nav>
-
+                        )}
                         {isAuthorized(['ROLE_EMPLOYEE']) && (
                             <Nav className="ml-auto">
                                 <Nav.Link as={Link} to="/logout">
