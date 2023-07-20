@@ -147,7 +147,7 @@ export default function CatalogExpenseType() {
 
     return (
         <div>
-            {isAuthorized(['ROLE_ADMIN']) ? (
+            {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Trošak info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {

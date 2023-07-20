@@ -15,7 +15,7 @@ export default function EmployeeEdit() {
 
     const navigate = useNavigate();
 
-    const handleSubmit = (values: IFormEmployeeValues) => {
+    const handleSubmit = (values: IFormEmployeeValues) => {console.log(values);
         fetch(api.getUri() + `/employees/${id}`, {
             method: 'PUT',
             headers: {

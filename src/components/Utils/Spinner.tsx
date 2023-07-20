@@ -10,7 +10,7 @@ export default function Spinner() {
     };
 
     return (
-        <div className="sweet-loading">
+        <div className="sweet-loading overlay">
             <ClipLoader
                 color="#36d7b7"
                 loading={loading}

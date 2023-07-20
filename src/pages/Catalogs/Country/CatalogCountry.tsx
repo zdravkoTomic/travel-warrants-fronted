@@ -157,7 +157,7 @@ export default function CatalogCountry() {
 
     return (
         <div>
-            {isAuthorized(['ROLE_ADMIN']) ? (
+            {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Država info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {

@@ -175,7 +175,7 @@ export default function CatalogCountryWage() {
 
     return (
         <div>
-            {isAuthorized(['ROLE_ADMIN']) ? (
+            {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Dnevnica info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {

@@ -5,6 +5,8 @@ import {alertToastMessage} from "../../../../components/Utils/alertToastMessage"
 import {ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
 import {handleFormErrors} from "../../../../components/Utils/handleFormErrors";
+import {isAuthorized} from "../../../../components/Security/UserAuth";
+import Unauthorized from "../../../Security/Unauthorized";
 
 export default function DepartmentForm(
     handleSubmit: any,
@@ -59,71 +61,81 @@ export default function DepartmentForm(
     }
 
     return (
-        <div>
-            <ToastContainer/>
-            <div className="row">
-                <h1 className="mx-auto col-10 col-md-8 col-lg-6">Organizacijski dijelovi - novi zapis</h1>
-            </div>
+        <>
+            {isAuthorized(['ROLE_ADMIN']) ? (
+                <div>
+                    <ToastContainer/>
+                    <div className="row">
+                        <h1 className="mx-auto col-10 col-md-8 col-lg-6">Organizacijski dijelovi - novi zapis</h1>
+                    </div>
 
-            <Formik
-                initialValues={{
-                    code: department?.code ? department.code : '',
-                    name: department?.name ? department.name : '',
-                    parent: department?.parent ? department.parent["@id"] : {},
-                    active: department?.active ? department.active : true,
-                }}
-                onSubmit={handleSubmit}
-                validate={validateForm}
-            >
-                {({touched, errors}) => (
-                    <Form>
-                        <div className="row">
-                            <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                <label className="form-label" htmlFor="code">Kod organizacijskog dijela:</label>
-                                <Field id="floatingInput" className="form-control" type="text" name="code"/>
-                                {handleFormErrors(errors?.code, serverSideErrors?.code, touched.code)}
-                            </div>
-                        </div>
+                    <Formik
+                        initialValues={{
+                            code: department?.code ? department.code : '',
+                            name: department?.name ? department.name : '',
+                            parent: department?.parent ? department.parent["@id"] : {},
+                            active: department?.active ? department.active : true,
+                        }}
+                        onSubmit={handleSubmit}
+                        validate={validateForm}
+                    >
+                        {({touched, errors}) => (
+                            <Form>
+                                <div className="row">
+                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                        <label className="form-label" htmlFor="code">Kod organizacijskog dijela:</label>
+                                        <Field id="floatingInput" className="form-control" type="text" name="code"/>
+                                        {handleFormErrors(errors?.code, serverSideErrors?.code, touched.code)}
+                                    </div>
+                                </div>
 
-                        <div className="row">
-                            <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                <label className="form-label" htmlFor="name">Naziv organizacijskog dijela:</label>
-                                <Field id="floatingInput" className="form-control" type="text" name="name"/>
-                                {handleFormErrors(errors?.name, serverSideErrors?.name, touched.name)}
-                            </div>
-                        </div>
+                                <div className="row">
+                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                        <label className="form-label" htmlFor="name">Naziv organizacijskog
+                                            dijela:</label>
+                                        <Field id="floatingInput" className="form-control" type="text" name="name"/>
+                                        {handleFormErrors(errors?.name, serverSideErrors?.name, touched.name)}
+                                    </div>
+                                </div>
 
-                        <div className="row">
-                            <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                <label className="form-label" htmlFor="parent">Nadređeni organizacijski dio:</label>
-                                <Field className="form-select" id="floatingInput" name="parent" as="select">
-                                    <option value="">Odaberite nadređeni organizacijski dio</option>
-                                    {departmentCatalog?.map((parent) => (
-                                        <option key={parent.id} value={parent["@id"]}>
-                                            {parent.name}
-                                        </option>
-                                    ))}
-                                </Field>
-                                {handleFormErrors(errors?.parent, serverSideErrors?.parent, touched.parent)}
-                            </div>
-                        </div>
+                                <div className="row">
+                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                        <label className="form-label" htmlFor="parent">Nadređeni organizacijski
+                                            dio:</label>
+                                        <Field className="form-select" id="floatingInput" name="parent" as="select">
+                                            <option value="">Odaberite nadređeni organizacijski dio</option>
+                                            {departmentCatalog?.map((parent) => (
+                                                <option key={parent.id} value={parent["@id"]}>
+                                                    {parent.name}
+                                                </option>
+                                            ))}
+                                        </Field>
+                                        {handleFormErrors(errors?.parent, serverSideErrors?.parent, touched.parent)}
+                                    </div>
+                                </div>
 
-                        <div className="row">
-                            <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
-                                <label className="form-check-label" htmlFor="active">Aktivno</label>
-                                <Field id="floatingInput" name="active" type="checkbox" className="form-check-input"/>
-                                {handleFormErrors(errors?.active, serverSideErrors?.active, touched.active)}
-                            </div>
-                        </div>
+                                <div className="row">
+                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
+                                        <label className="form-check-label" htmlFor="active">Aktivno</label>
+                                        <Field id="floatingInput" name="active" type="checkbox"
+                                               className="form-check-input"/>
+                                        {handleFormErrors(errors?.active, serverSideErrors?.active, touched.active)}
+                                    </div>
+                                </div>
 
-                        <div className="row">
-                            <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary" type="submit">Submit
-                            </button>
-                        </div>
+                                <div className="row">
+                                    <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary"
+                                            type="submit">Submit
+                                    </button>
+                                </div>
 
-                    </Form>
-                )}
-            </Formik>
-        </div>
+                            </Form>
+                        )}
+                    </Formik>
+                </div>
+            ) : (
+                Unauthorized()
+            )}
+        </>
     );
 }

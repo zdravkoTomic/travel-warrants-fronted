@@ -222,8 +222,7 @@ export default function CatalogUserRole() {
                 </div>
             ) : (
                 Unauthorized()
-            )
-            }
+            )}
         </div>
     );
 }

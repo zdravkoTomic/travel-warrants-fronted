@@ -157,7 +157,7 @@ export default function CatalogCurrency() {
 
     return (
         <div>
-            {isAuthorized(['ROLE_ADMIN']) ? (
+            {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Valuta info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {

@@ -147,7 +147,7 @@ export default function CatalogVehicleType() {
 
     return (
         <div>
-            {isAuthorized(['ROLE_ADMIN']) ? (
+            {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Prijevozno sredstvo info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {
