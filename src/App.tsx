@@ -1,10 +1,8 @@
 import React from 'react';
 import './App.css';
 import AppNavbar from "./AppNavbar";
-import PersonalWarrants from './pages/PersonalWarrants/PersonalWarrants';
+import PersonalInitialWarrant from './pages/PersonalWarrants/PersonalWarrants';
 import Login from './pages/Security/Login';
-import PersonalCalculation from "./pages/PersonalWarrants/PersonalCalculation";
-import PersonalClosedWarrants from "./pages/PersonalWarrants/PersonalClosedWarrants";
 import CreditingAdvances from "./pages/CreditingWarrants/CreditingAdvances";
 import CreditingCalculations from "./pages/CreditingWarrants/CreditingCalculations";
 import CreditingPaidWarrants from "./pages/CreditingWarrants/CreditingPaidWarrants";
@@ -56,10 +54,8 @@ function App() {
             <div className="container">
                 <Routes>
                     {/*Personal warrants*/}
-                    <Route path="/" element={<PersonalWarrants/>}/>
-                    <Route path="/personal/:groupStatusId" element={<PersonalWarrants/>}/>
-                    <Route path="/personal_calculation" element={<PersonalCalculation/>}/>
-                    <Route path="/personal_closed" element={<PersonalClosedWarrants/>}/>
+                    <Route path="/" element={<PersonalInitialWarrant/>}/>
+                    <Route path="/personal_warrant/:groupStatusCode" element={<PersonalInitialWarrant/>}/>
 
                     {/*Warrants for approving*/}
                     <Route path="/approving_initial" element={<ApprovingInitial/>}/>

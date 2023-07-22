@@ -39,7 +39,7 @@ export default function Login() {
                     localStorage.setItem('user', JSON.stringify(response.user))
 
                     if (response.user.fullyAuthorized) {
-                        navigate('/personal/initial')
+                        navigate('/personal_warrant/initial')
                         window.location.reload();
                     } else {
                         navigate(`/password_reset/${response.user.id}`)
@@ -58,8 +58,8 @@ export default function Login() {
             errors.email = 'Obavezan unos';
         }
 
-        if (!values.email) {
-            errors.email = 'Obavezan unos';
+        if (!values.password) {
+            errors.password = 'Obavezan unos';
         }
 
         setErrors(errors)
@@ -80,13 +80,14 @@ export default function Login() {
                 onSubmit={handleSubmit}
                 validate={validateForm}
             >
+                {({touched, errors}) => (
                 <Form>
                     <div className="row">
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                             <label className="form-label" htmlFor="code">Email:</label>
                             <Field id="floatingInput" className="form-control" type="email" placeholder="Email"
                                    name="email"/>
-                            {errors?.email ? <span className="text-danger">{errors.email}</span> : ''}
+                            {touched.email && errors?.email ? <span className="text-danger">{errors.email}</span> : ''}
                         </div>
                     </div>
 
@@ -95,7 +96,7 @@ export default function Login() {
                             <label className="form-label" htmlFor="password">Loznika:</label>
                             <Field id="floatingInput" className="form-control" type="password" placeholder="Password"
                                    name="password"/>
-                            {errors?.password ? <span className="text-danger">{errors.password}</span> : ''}
+                            {touched.password && errors?.password ? <span className="text-danger">{errors.password}</span> : ''}
                         </div>
                     </div>
 
@@ -106,6 +107,7 @@ export default function Login() {
                     </div>
 
                 </Form>
+                )}
             </Formik>
         </div>
     );

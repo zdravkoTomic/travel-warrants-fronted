@@ -1,13 +1,6 @@
 export interface IFormCountryWageValues {
-    country: {
-        code: string,
-        name: string
-    }
-    currency: {
-        code: string,
-        codeNumeric: string,
-        name: string
-    }
+    country: {}
+    currency: {}
     amount: number;
     active: boolean;
 }

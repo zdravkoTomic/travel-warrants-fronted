@@ -25,7 +25,7 @@ export default function ResetPassword() {
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate('/personal/initial')
+                    navigate('/personal_warrant/initial')
                     const currentUser = localStorage.getItem('user')
                     let user = (currentUser !== null) ? JSON.parse(currentUser) : null
                     if (user) {
@@ -82,13 +82,14 @@ export default function ResetPassword() {
                 onSubmit={handleSubmit}
                 validate={validateForm}
             >
+                {({touched, errors}) => (
                 <Form>
                     <div className="row">
                         <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                             <label className="form-label" htmlFor="password">Loznika:</label>
                             <Field id="floatingInput" className="form-control" type="password" placeholder="Password"
                                    name="password"/>
-                            {errors?.password ? <span className="text-danger">{errors.password}</span> : ''}
+                            {touched.password && errors?.password ? <span className="text-danger">{errors.password}</span> : ''}
                         </div>
                     </div>
 
@@ -99,8 +100,7 @@ export default function ResetPassword() {
                             <Field id="floatingInput" className="form-control" type="password"
                                    placeholder="Password confirm"
                                    name="password_confirm"/>
-                            {errors?.password_confirm ?
-                                <span className="text-danger">{errors.password_confirm}</span> : ''}
+                            {touched.password_confirm && errors?.password_confirm ? <span className="text-danger">{errors.password_confirm}</span> : ''}
                         </div>
                     </div>
 
@@ -112,6 +112,7 @@ export default function ResetPassword() {
                     </div>
 
                 </Form>
+                )}
             </Formik>
         </div>
     );
