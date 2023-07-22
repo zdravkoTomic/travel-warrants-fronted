@@ -25,6 +25,7 @@ export default function CatalogEmployee() {
     const [modalData, setModalData] = useState<IEmployeeModalData>();
 
     const toggleShowModal = (employeeId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/employees/${encodeURIComponent(employeeId)}`,
             {credentials: 'include'}
@@ -205,6 +206,8 @@ export default function CatalogEmployee() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN']) ? (
                 <div>
                     <BaseDetailsModal title="Zaposlenik info" show={showModal} modalData={modalData}
@@ -225,8 +228,6 @@ export default function CatalogEmployee() {
                         }
                         columns={columns}
                         data={employees}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"

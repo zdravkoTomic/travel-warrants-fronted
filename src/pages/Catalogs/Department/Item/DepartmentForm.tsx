@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {IDepartment} from "../departmentTypes";
 import api from "../../../../components/api";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
@@ -7,6 +7,7 @@ import {Field, Form, Formik} from "formik";
 import {handleFormErrors} from "../../../../components/Utils/handleFormErrors";
 import {isAuthorized} from "../../../../components/Security/UserAuth";
 import Unauthorized from "../../../Security/Unauthorized";
+import Spinner from "../../../../components/Utils/Spinner";
 
 export default function DepartmentForm(
     handleSubmit: any,
@@ -57,7 +58,7 @@ export default function DepartmentForm(
     }, [id]);
 
     if (!department && id) {
-        return <div>Loading...</div>;
+        return <Spinner/>;
     }
 
     return (

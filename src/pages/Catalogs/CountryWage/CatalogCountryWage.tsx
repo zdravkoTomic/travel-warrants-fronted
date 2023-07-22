@@ -25,6 +25,7 @@ export default function CatalogCountryWage() {
     const [modalData, setModalData] = useState<ICountryWageModalData>();
 
     const toggleShowModal = (countryWageId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/country-wages/${encodeURIComponent(countryWageId)}`,
             {credentials: 'include'}
@@ -175,6 +176,8 @@ export default function CatalogCountryWage() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Dnevnica info" show={showModal} modalData={modalData}
@@ -195,8 +198,6 @@ export default function CatalogCountryWage() {
                         }
                         columns={columns}
                         data={countryWages}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"

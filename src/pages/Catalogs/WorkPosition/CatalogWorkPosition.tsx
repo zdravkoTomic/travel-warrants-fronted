@@ -25,6 +25,7 @@ export default function CatalogWorkPosition() {
     const [modalData, setModalData] = useState<IWorkPositionModalData>();
 
     const toggleShowModal = (workPositionId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/work-positions/${encodeURIComponent(workPositionId)}`,
             {credentials: 'include'}
@@ -147,6 +148,8 @@ export default function CatalogWorkPosition() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN']) ? (
                 <div>
                     <BaseDetailsModal title="Radno mjesto info" show={showModal} modalData={modalData}
@@ -167,8 +170,6 @@ export default function CatalogWorkPosition() {
                         }
                         columns={columns}
                         data={workPositions}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"

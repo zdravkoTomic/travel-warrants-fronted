@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {IVehicleType} from "../vehicleTypes";
 import api from "../../../../components/api";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
@@ -7,6 +7,7 @@ import {Field, Form, Formik} from "formik";
 import {handleFormErrors} from "../../../../components/Utils/handleFormErrors";
 import {isAuthorized} from "../../../../components/Security/UserAuth";
 import Unauthorized from "../../../Security/Unauthorized";
+import Spinner from "../../../../components/Utils/Spinner";
 
 export default function VehicleTypeForm(
     handleSubmit: any,
@@ -34,7 +35,7 @@ export default function VehicleTypeForm(
     }, [id]);
 
     if (!vehicleType && id) {
-        return <div>Loading...</div>;
+        return <Spinner/>;
     }
 
     return (

@@ -25,6 +25,7 @@ export default function CatalogVehicleType() {
     const [modalData, setModalData] = useState<IVehicleTypeModalData>();
 
     const toggleShowModal = (vehicleTypeId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/vehicle-types/${encodeURIComponent(vehicleTypeId)}`,
             {credentials: 'include'}
@@ -147,6 +148,8 @@ export default function CatalogVehicleType() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Prijevozno sredstvo info" show={showModal} modalData={modalData}
@@ -167,8 +170,6 @@ export default function CatalogVehicleType() {
                         }
                         columns={columns}
                         data={vehicleTypes}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"

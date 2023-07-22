@@ -1,12 +1,13 @@
 import {ToastContainer} from "react-toastify";
 import {Field, Form, Formik} from "formik";
 import {IExpenseType} from "../expenseTypes";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import api from "../../../../components/api";
 import {alertToastMessage} from "../../../../components/Utils/alertToastMessage";
 import {handleFormErrors} from "../../../../components/Utils/handleFormErrors";
 import {isAuthorized} from "../../../../components/Security/UserAuth";
 import Unauthorized from "../../../Security/Unauthorized";
+import Spinner from "../../../../components/Utils/Spinner";
 
 export default function ExpenseTypeForm(
     handleSubmit: any,
@@ -34,7 +35,7 @@ export default function ExpenseTypeForm(
     }, [id]);
 
     if (!expenseType && id) {
-        return <div>Loading...</div>;
+        return <Spinner/>;
     }
 
     return (

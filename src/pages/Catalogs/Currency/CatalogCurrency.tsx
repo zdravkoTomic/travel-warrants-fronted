@@ -25,6 +25,7 @@ export default function CatalogCurrency() {
     const [modalData, setModalData] = useState<ICurrencyModalData>();
 
     const toggleShowModal = (currencyId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/currencies/${encodeURIComponent(currencyId)}`,
             {credentials: 'include'}
@@ -157,6 +158,8 @@ export default function CatalogCurrency() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Valuta info" show={showModal} modalData={modalData}
@@ -177,8 +180,6 @@ export default function CatalogCurrency() {
                         }
                         columns={columns}
                         data={currencies}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"

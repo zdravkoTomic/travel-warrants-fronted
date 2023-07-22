@@ -25,6 +25,7 @@ export default function CatalogExpenseType() {
     const [modalData, setModalData] = useState<IExpenseTypeModalData>();
 
     const toggleShowModal = (expenseTypeId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/expense-types/${encodeURIComponent(expenseTypeId)}`,
             {credentials: 'include'}
@@ -147,6 +148,8 @@ export default function CatalogExpenseType() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Trošak info" show={showModal} modalData={modalData}
@@ -167,8 +170,6 @@ export default function CatalogExpenseType() {
                         }
                         columns={columns}
                         data={expenseTypes}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"

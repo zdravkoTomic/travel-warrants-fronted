@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import {isAuthorized} from "../../../../components/Security/UserAuth";
 import Unauthorized from "../../../Security/Unauthorized";
+import Spinner from "../../../../components/Utils/Spinner";
 
 export default function EmployeeForm(
     handleSubmit: any,
@@ -79,7 +80,7 @@ export default function EmployeeForm(
     }, [id]);
 
     if (!employee && id) {
-        return <div>Loading...</div>;
+        return <Spinner/>;
     }
 
     return (

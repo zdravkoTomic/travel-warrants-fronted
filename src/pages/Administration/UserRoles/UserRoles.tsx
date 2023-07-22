@@ -25,6 +25,7 @@ export default function CatalogUserRole() {
     const [modalData, setModalData] = useState<IUserRoleModalData>();
 
     const toggleShowModal = (userRoleId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/employee-roles/${encodeURIComponent(userRoleId)}`,
             {credentials: 'include'}
@@ -182,6 +183,8 @@ export default function CatalogUserRole() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN']) ? (
                 <div>
                     <BaseDetailsModal title="Korisničko pravo info" show={showModal} modalData={modalData}
@@ -202,8 +205,6 @@ export default function CatalogUserRole() {
                         }
                         columns={columns}
                         data={userRoles}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"

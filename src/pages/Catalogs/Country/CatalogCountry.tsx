@@ -25,6 +25,7 @@ export default function CatalogCountry() {
     const [modalData, setModalData] = useState<ICountryModalData>();
 
     const toggleShowModal = (countryId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/countries/${encodeURIComponent(countryId)}`,
             {credentials: 'include'}
@@ -157,6 +158,8 @@ export default function CatalogCountry() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
                     <BaseDetailsModal title="Država info" show={showModal} modalData={modalData}
@@ -177,8 +180,6 @@ export default function CatalogCountry() {
                         }
                         columns={columns}
                         data={countries}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"

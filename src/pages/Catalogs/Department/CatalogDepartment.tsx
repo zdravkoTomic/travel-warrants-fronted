@@ -25,6 +25,7 @@ export default function CatalogDepartment() {
     const [modalData, setModalData] = useState<IDepartmentModalData>();
 
     const toggleShowModal = (departmentId: number) => {
+        setLoading(true)
         fetch(
             api.getUri() + `/departments/${encodeURIComponent(departmentId)}`,
             {credentials: 'include'}
@@ -161,6 +162,8 @@ export default function CatalogDepartment() {
 
     return (
         <div>
+            {loading && <Spinner/>}
+
             {isAuthorized(['ROLE_ADMIN']) ? (
                 <div>
                     <BaseDetailsModal title="Organizacijski dio info" show={showModal} modalData={modalData}
@@ -181,8 +184,6 @@ export default function CatalogDepartment() {
                         }
                         columns={columns}
                         data={departments}
-                        progressPending={loading}
-                        progressComponent={<Spinner/>}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"
