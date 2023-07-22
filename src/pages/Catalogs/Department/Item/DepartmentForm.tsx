@@ -75,7 +75,7 @@ export default function DepartmentForm(
                             code: department?.code ? department.code : '',
                             name: department?.name ? department.name : '',
                             parent: department?.parent ? department.parent["@id"] : {},
-                            active: department?.active ? department.active : true,
+                            active: department?.active || false,
                         }}
                         onSubmit={handleSubmit}
                         validate={validateForm}

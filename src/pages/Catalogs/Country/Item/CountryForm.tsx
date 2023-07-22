@@ -51,8 +51,8 @@ export default function CountryForm(
                         initialValues={{
                             code: country?.code ? country.code : '',
                             name: country?.name ? country.name : '',
-                            domicile: country?.domicile ? country.domicile : false,
-                            active: country?.active ? country.active : true,
+                            domicile: country?.domicile || false,
+                            active: country?.active || false,
                         }}
                         onSubmit={handleSubmit}
                         validate={validateForm}

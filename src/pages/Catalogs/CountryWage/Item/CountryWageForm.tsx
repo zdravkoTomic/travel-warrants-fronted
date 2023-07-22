@@ -95,7 +95,7 @@ export default function CountryWageForm(
                             country: countryWage?.country ? countryWage.country["@id"] : '',
                             currency: countryWage?.currency ? countryWage.currency["@id"] : '',
                             amount: countryWage?.amount ? countryWage.amount : '',
-                            active: countryWage?.active ? countryWage.active : true,
+                            active: countryWage?.active || false,
                         }}
                         onSubmit={handleSubmit}
                         validate={validateForm}

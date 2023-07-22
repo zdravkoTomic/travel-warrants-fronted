@@ -52,7 +52,7 @@ export default function CurrencyForm(
                             code: currency?.code ? currency.code : '',
                             codeNumeric: currency?.codeNumeric ? currency.codeNumeric : '',
                             name: currency?.name ? currency.name : '',
-                            active: currency?.active ? currency.active : true,
+                            active: currency?.active || false,
                         }}
                         onSubmit={handleSubmit}
                         validate={validateForm}

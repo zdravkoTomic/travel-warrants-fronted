@@ -51,7 +51,7 @@ export default function WorkPositionForm(
                         initialValues={{
                             code: workPosition?.code ? workPosition.code : '',
                             name: workPosition?.name ? workPosition.name : '',
-                            active: workPosition?.active ? workPosition.active : true,
+                            active: workPosition?.active || false,
                         }}
                         onSubmit={handleSubmit}
                         validate={validateForm}

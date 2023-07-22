@@ -51,7 +51,7 @@ export default function ExpenseTypeForm(
                         initialValues={{
                             code: expenseType?.code ? expenseType.code : '',
                             name: expenseType?.name ? expenseType.name : '',
-                            active: expenseType?.active ? expenseType.active : true,
+                            active: expenseType?.active || false,
                         }}
                         onSubmit={handleSubmit}
                         validate={validateForm}

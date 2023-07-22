@@ -51,7 +51,7 @@ export default function VehicleTypeForm(
                         initialValues={{
                             code: vehicleType?.code ? vehicleType.code : '',
                             name: vehicleType?.name ? vehicleType.name : '',
-                            active: vehicleType?.active ? vehicleType.active : true,
+                            active: vehicleType?.active || false,
                         }}
                         onSubmit={handleSubmit}
                         validate={validateForm}

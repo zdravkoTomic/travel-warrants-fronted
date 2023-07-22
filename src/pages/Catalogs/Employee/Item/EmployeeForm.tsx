@@ -104,7 +104,7 @@ export default function EmployeeForm(
                             dateOfBirth: employee?.dateOfBirth
                                 ? employee.dateOfBirth
                                 : '',
-                            active: employee?.active ? employee.active : true,
+                            active: employee?.active || false,
                         }}
                         onSubmit={handleSubmit}
                         validate={validateForm}
