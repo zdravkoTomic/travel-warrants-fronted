@@ -87,7 +87,7 @@ export default function CountryWageForm(
                 <div>
                     <ToastContainer/>
                     <div className="row">
-                        <h1 className="mx-auto col-10 col-md-8 col-lg-6">Valute - novi zapis</h1>
+                        <h1 className="mx-auto col-10 col-md-8 col-lg-6">Dnevnice - novi zapis</h1>
                     </div>
 
                     <Formik
@@ -150,7 +150,7 @@ export default function CountryWageForm(
 
                                 <div className="row">
                                     <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary"
-                                            type="submit">Submit
+                                            type="submit">Spremi
                                     </button>
                                 </div>
 

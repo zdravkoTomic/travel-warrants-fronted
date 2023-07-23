@@ -85,7 +85,7 @@ export default function WorkPositionForm(
 
                                 <div className="row">
                                     <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary"
-                                            type="submit">Submit
+                                            type="submit">Spremi
                                     </button>
                                 </div>
 

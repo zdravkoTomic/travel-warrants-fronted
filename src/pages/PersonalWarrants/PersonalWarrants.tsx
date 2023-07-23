@@ -1,6 +1,6 @@
 import {useHandleNonAuthenticated} from "../../components/Security/HandleNonAuthenticated";
 import React, {useEffect, useState} from "react";
-import {IPersonalInitialWarrant, IPersonalInitialWarrantModalData} from "./personaWarrantTypes";
+import {IInitialWarrant, IInitialWarrantModalData} from "./initialWarrantTypes";
 import api from "../../components/api";
 import {alertToastMessage} from "../../components/Utils/alertToastMessage";
 import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
@@ -11,7 +11,8 @@ import DataTable from "react-data-table-component";
 import Spinner from "../../components/Utils/Spinner";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Unauthorized from "../Security/Unauthorized";
-import {VehicleType} from "../../components/Constants";
+import {VehicleType, WarrantGroupStatus, WarrantStatus} from "../../components/Constants";
+import {successToastMessage} from "../../components/Utils/successToastMessage";
 
 export default function CatalogPersonalInitialWarrant() {
     useHandleNonAuthenticated();
@@ -19,14 +20,15 @@ export default function CatalogPersonalInitialWarrant() {
     const {groupStatusCode} = useParams<{ groupStatusCode: any }>();
     const location = useLocation();
 
-    const [personalInitialWarrants, setPersonalInitialWarrants] = useState<IPersonalInitialWarrant[]>([]);
+    const [personalInitialWarrants, setPersonalInitialWarrants] = useState<IInitialWarrant[]>([]);
     const [totalRows, setTotalRows] = useState(0);
     const [loading, setLoading] = useState(false);
     const [perPage, setPerPage] = useState(25);
     const [datatablePage, setDatatablePage] = useState(1);
     const [orderQuery, setOrderQuery] = useState<String>();
     const [showModal, setShowModal] = useState(false);
-    const [modalData, setModalData] = useState<IPersonalInitialWarrantModalData>();
+    const [modalData, setModalData] = useState<IInitialWarrantModalData>();
+    const [refresh, setRefresh] = useState(0);
 
     const toggleShowModal = (personalInitialWarrantId: number) => {
         setLoading(true)
@@ -67,7 +69,7 @@ export default function CatalogPersonalInitialWarrant() {
                         },
                         vehicleType: {
                             title: 'Najavljena vrsta vozila',
-                            value: response.vehicleType.code === VehicleType.OTHER ? `${response.vehicleType.name} (${response.vehicleDescription})` : response.vehicleType.code
+                            value: response.vehicleType.code === VehicleType.OTHER ? `${response.vehicleType.name} (${response.vehicleDescription})` : response.vehicleType.name
                         },
                         departurePoint: {
                             title: 'Mjesto polaska',
@@ -125,6 +127,51 @@ export default function CatalogPersonalInitialWarrant() {
             });
     };
 
+    const sendToApprovement = (warrantId: number) => {
+        setLoading(true)
+        fetch(
+            api.getUri() + `/warrant-statuses/code/${WarrantStatus.APPROVING}`,
+            {
+                headers: {
+                    'Content-Type': 'application/ld+json'
+                },
+                credentials: 'include',
+            }
+        )
+            .then(response => response.json())
+            .then(response => {
+                const values = {
+                    "status": `/travel-warrants/public/api/warrant-statuses/${response.id}`
+                }
+                fetch(api.getUri() + `/warrants/${warrantId}/change_status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(values),
+                    credentials: 'include',
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            successToastMessage('Poslano na odobravanje')
+                        } else {
+                            throw new Error('Server side error');
+                        }
+                    })
+                    .catch((error) => {
+                        alertToastMessage(null);
+                    });
+            })
+            .catch((error) => {
+                alertToastMessage(null);
+            })
+            .finally(() => {
+                    setLoading(false)
+                    setRefresh(prevState => prevState + 1)
+                }
+            )
+    };
+
     const columns = [
         {
             name: 'AKCIJA',
@@ -137,15 +184,35 @@ export default function CatalogPersonalInitialWarrant() {
                 <Dropdown.Toggle split variant="primary" size="sm" id="dropdown-split-basic"/>
 
                 <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to={`/country_wage_edit/${props.id}`}>Ažuriraj</Dropdown.Item>
+                    {props.status.code === WarrantStatus.NEW && (
+                        <>
+                            <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
+                                Ažuriraj
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => sendToApprovement(props.id)}>
+                                Pošalji na odobravanje
+                            </Dropdown.Item>
+                        </>
+                    )}
+                    <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
+                        Preuzmi PDF
+                    </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>,
             ignoreRowClick: true,
             allowOverflow: true,
-            minWidth: '200px',
+            minWidth: '100px',
             center: true,
             button: true,
+            width: '120px',
             selector: (row: any) => row.id
+        },
+        {
+            id: 'code',
+            name: 'KOD',
+            selector: (row: any) => row.code,
+            sortable: true,
+            width: '90px'
         },
         {
             id: 'travelType.name',
@@ -159,6 +226,7 @@ export default function CatalogPersonalInitialWarrant() {
             name: 'MJESTO POLASKA',
             selector: (row: any) => row.departurePoint,
             sortable: true,
+            width: '180px'
         },
         {
             id: 'destination',
@@ -188,6 +256,7 @@ export default function CatalogPersonalInitialWarrant() {
             name: 'STATUS',
             selector: (row: any) => row.status.name,
             sortable: true,
+            width: '150px'
         },
 
     ];
@@ -256,7 +325,7 @@ export default function CatalogPersonalInitialWarrant() {
 
     useEffect(() => {
         fetchData();
-    }, [datatablePage, perPage, orderQuery, location.pathname]);
+    }, [datatablePage, perPage, orderQuery, location.pathname, refresh]);
 
     return (
         <div>
@@ -264,20 +333,36 @@ export default function CatalogPersonalInitialWarrant() {
 
             {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
                 <div>
-                    <BaseDetailsModal title="Dnevnica info" show={showModal} modalData={modalData}
+                    <BaseDetailsModal title="Putni nalog info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {
                                           setShowModal(false)
                                       }}/>
                     <DataTable
                         title={
                             <>
-                                <h2 className="flex-display">Katalog - Dnevnice
-                                    <Link className="add-new-record-btn" to="/country_wage_add">
-                                        <Button variant="primary">
-                                            Dodaj Novi Zapis
-                                        </Button>
-                                    </Link>
-                                </h2>
+                                {groupStatusCode.toLowerCase() === WarrantGroupStatus.INITIAL.toLowerCase() &&
+                                    <h2 className="flex-display">Novi nalozi
+                                        <Link className="add-new-record-btn" to="/initial_warrant_add">
+                                            <Button variant="primary">
+                                                Novi nalog
+                                            </Button>
+                                        </Link>
+                                    </h2>
+                                }
+                                {groupStatusCode.toLowerCase() === WarrantGroupStatus.CALCULATION.toLowerCase() &&
+                                    <h2 className="flex-display">Obračun
+                                        <Link className="add-new-record-btn" to="/calculation_add">
+                                            <Button variant="primary">
+                                                Ispuni obračun
+                                            </Button>
+                                        </Link>
+                                    </h2>
+                                }
+                                {groupStatusCode.toLowerCase() === WarrantGroupStatus.CLOSED.toLowerCase() &&
+                                    <h2 className="flex-display">
+                                        Zatvoreni nalozi
+                                    </h2>
+                                }
                             </>
                         }
                         columns={columns}

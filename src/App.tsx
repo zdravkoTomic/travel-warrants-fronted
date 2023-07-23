@@ -44,6 +44,8 @@ import EmployeeEdit from "./pages/Catalogs/Employee/Item/EmployeeEdit";
 import UserRoleAdd from "./pages/Administration/UserRoles/Item/UserRoleAdd";
 import UserRoleEdit from "./pages/Administration/UserRoles/Item/UserRoleEdit";
 import {UserRoleDelete} from "./pages/Administration/UserRoles/Item/UserRoleDelete";
+import InitialWarrantAdd from "./pages/PersonalWarrants/ItemInitial/InitialWarrantAdd";
+import InitialWarrantEdit from "./pages/PersonalWarrants/ItemInitial/InitialWarrantEdit";
 
 function App() {
 
@@ -92,6 +94,7 @@ function App() {
                     <Route path="/department_add" element={<DepartmentAdd/>}/>
                     <Route path="/employee_add" element={<EmployeeAdd/>}/>
                     <Route path="/user_role_add" element={<UserRoleAdd/>}/>
+                    <Route path="/initial_warrant_add" element={<InitialWarrantAdd/>}/>
 
                     {/*Editing data routes*/}
                     <Route path="/country_edit/:id" element={<CountryEdit/>}/>
@@ -103,6 +106,7 @@ function App() {
                     <Route path="/department_edit/:id" element={<DepartmentEdit/>}/>
                     <Route path="/employee_edit/:id" element={<EmployeeEdit/>}/>
                     <Route path="/user_role_edit/:id" element={<UserRoleEdit/>}/>
+                    <Route path="/initial_warrant_edit/:id" element={<InitialWarrantEdit/>}/>
 
                     {/*Delete data routes*/}
                     <Route path="/user_role_delete/:id" element={<UserRoleDelete/>}/>

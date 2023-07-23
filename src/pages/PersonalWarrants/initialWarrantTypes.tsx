@@ -1,4 +1,4 @@
-export interface IFormPersonalInitialWarrantValues {
+export interface IFormInitialWarrantValues {
     employee: {},
     destinationCountry: {},
     vehicleType: {},
@@ -11,7 +11,7 @@ export interface IFormPersonalInitialWarrantValues {
     departureDate: string
 }
 
-export interface IFormPersonalInitialWarrantValueErrors {
+export interface IFormInitialWarrantValueErrors {
     [key: string]: any | object | number | boolean;
 
     employee?: string | null;
@@ -26,7 +26,7 @@ export interface IFormPersonalInitialWarrantValueErrors {
     departureDate?: number | null;
 }
 
-export interface IPersonalInitialWarrant {
+export interface IInitialWarrant {
     employee: {
         '@id': string,
         code: string,
@@ -40,7 +40,8 @@ export interface IPersonalInitialWarrant {
     }
     vehicleType: {
         '@id': string,
-        name: string
+        name: string,
+        code: string
     }
     status: {
         '@id': string,
@@ -72,7 +73,7 @@ export interface IPersonalInitialWarrant {
     departureDate: string
 }
 
-export interface IPersonalInitialWarrantModalData {
+export interface IInitialWarrantModalData {
     employee: {
         title: string,
         value: string

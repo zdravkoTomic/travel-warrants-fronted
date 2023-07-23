@@ -102,7 +102,7 @@ export default function Login() {
 
 
                     <div className="row">
-                        <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary" type="submit">Submit
+                        <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary" type="submit">Log in
                         </button>
                     </div>
 
