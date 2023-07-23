@@ -1,4 +1,5 @@
 export const customStyles = {
+    height: '500px',
     rows: {
         style: {
             minHeight: '72px',

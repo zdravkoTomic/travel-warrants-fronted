@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import AppNavbar from "./AppNavbar";
-import PersonalInitialWarrant from './pages/PersonalWarrants/PersonalWarrants';
+import PersonalWarrant from './pages/PersonalWarrants/PersonalWarrants';
 import Login from './pages/Security/Login';
 import CreditingAdvances from "./pages/CreditingWarrants/CreditingAdvances";
 import CreditingCalculations from "./pages/CreditingWarrants/CreditingCalculations";
@@ -11,8 +11,7 @@ import CatalogCountry from "./pages/Catalogs/Country/CatalogCountry";
 import CatalogDepartment from "./pages/Catalogs/Department/CatalogDepartment";
 import CatalogEmployee from "./pages/Catalogs/Employee/CatalogEmployee";
 import CatalogCountryWage from "./pages/Catalogs/CountryWage/CatalogCountryWage";
-import ApprovingCalculation from "./pages/ApprovingWarrants/ApprovingCalculation";
-import ApprovingInitial from "./pages/ApprovingWarrants/ApprovingInitial";
+import ApprovingWarrant from "./pages/ApprovingWarrants/ApprovingWarrant";
 import ApplicationParameters from "./pages/Administration/ApplicationParameters";
 import UserRoles from "./pages/Administration/UserRoles/UserRoles";
 import CountryAdd from "./pages/Catalogs/Country/Item/CountryAdd";
@@ -43,7 +42,6 @@ import EmployeeAdd from "./pages/Catalogs/Employee/Item/EmployeeAdd";
 import EmployeeEdit from "./pages/Catalogs/Employee/Item/EmployeeEdit";
 import UserRoleAdd from "./pages/Administration/UserRoles/Item/UserRoleAdd";
 import UserRoleEdit from "./pages/Administration/UserRoles/Item/UserRoleEdit";
-import {UserRoleDelete} from "./pages/Administration/UserRoles/Item/UserRoleDelete";
 import InitialWarrantAdd from "./pages/PersonalWarrants/ItemInitial/InitialWarrantAdd";
 import InitialWarrantEdit from "./pages/PersonalWarrants/ItemInitial/InitialWarrantEdit";
 
@@ -56,12 +54,11 @@ function App() {
             <div className="container">
                 <Routes>
                     {/*Personal warrants*/}
-                    <Route path="/" element={<PersonalInitialWarrant/>}/>
-                    <Route path="/personal_warrant/:groupStatusCode" element={<PersonalInitialWarrant/>}/>
+                    <Route path="/" element={<PersonalWarrant/>}/>
+                    <Route path="/personal_warrant/:groupStatusCode" element={<PersonalWarrant/>}/>
 
                     {/*Warrants for approving*/}
-                    <Route path="/approving_initial" element={<ApprovingInitial/>}/>
-                    <Route path="/approving_calculation" element={<ApprovingCalculation/>}/>
+                    <Route path="/approving_warrant/:statusCode" element={<ApprovingWarrant/>}/>
 
                     {/*Crediting warrants*/}
                     <Route path="/crediting_advances" element={<CreditingAdvances/>}/>
@@ -107,9 +104,6 @@ function App() {
                     <Route path="/employee_edit/:id" element={<EmployeeEdit/>}/>
                     <Route path="/user_role_edit/:id" element={<UserRoleEdit/>}/>
                     <Route path="/initial_warrant_edit/:id" element={<InitialWarrantEdit/>}/>
-
-                    {/*Delete data routes*/}
-                    <Route path="/user_role_delete/:id" element={<UserRoleDelete/>}/>
 
                     {/*Security*/}
                     <Route path="/login" element={<Login/>}/>

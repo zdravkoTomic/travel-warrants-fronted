@@ -16,7 +16,7 @@ export default function AppNavbar() {
                         <Nav className="me-auto">
                             {isAuthorized(['ROLE_EMPLOYEE']) && (
                                 <NavDropdown title="Nalozi" id="basic-nav-dropdown">
-                                    <NavDropdown.Item as={Link} to="/personal_warrant/initial">Otvoreni</NavDropdown.Item>
+                                    <NavDropdown.Item as={Link} to="/personal_warrant/initial">Novi</NavDropdown.Item>
                                     <NavDropdown.Item as={Link} to="/personal_warrant/calculation">Obračun</NavDropdown.Item>
                                     <NavDropdown.Item as={Link} to="/personal_warrant/closed">Zatvoreni</NavDropdown.Item>
                                 </NavDropdown>
@@ -24,8 +24,8 @@ export default function AppNavbar() {
 
                             {isAuthorized(['ROLE_APPROVER', 'ROLE_ADMIN']) && (
                                 <NavDropdown title="Ovjeravanje" id="basic-nav-dropdown">
-                                    <NavDropdown.Item href="/approving_initial">Novi nalog</NavDropdown.Item>
-                                    <NavDropdown.Item href="/approving_calculation">Obračun</NavDropdown.Item>
+                                    <NavDropdown.Item href="/approving_warrant/approving">Novi nalog</NavDropdown.Item>
+                                    <NavDropdown.Item href="/approving_warrant/approving_calculation">Obračun</NavDropdown.Item>
                                 </NavDropdown>
                             )}
 

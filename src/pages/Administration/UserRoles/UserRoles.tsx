@@ -11,6 +11,7 @@ import DataTable from "react-data-table-component";
 import Spinner from "../../../components/Utils/Spinner";
 import {customStyles, paginationComponentOptions} from "../../../components/DataTableCustomStyle";
 import Unauthorized from "../../Security/Unauthorized";
+import {successToastMessage} from "../../../components/Utils/successToastMessage";
 
 export default function CatalogUserRole() {
     useHandleNonAuthenticated();
@@ -23,6 +24,8 @@ export default function CatalogUserRole() {
     const [orderQuery, setOrderQuery] = useState<String>();
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState<IUserRoleModalData>();
+    const [refresh, setRefresh] = useState(0);
+
 
     const toggleShowModal = (userRoleId: number) => {
         setLoading(true)
@@ -77,6 +80,30 @@ export default function CatalogUserRole() {
             });
     };
 
+    const deleteEmployeeRole = (employeeRoleId: number) => {
+        setLoading(true)
+        fetch(api.getUri() + `/employee-roles/${employeeRoleId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/ld+json',
+            },
+            credentials: 'include'
+        })
+            .then((response) => {
+                if (response.ok) {
+                    successToastMessage('Zapis uspješno obrisan')
+                }
+            })
+            .catch((error) => {
+                alertToastMessage(null);
+            })
+            .finally(() => {
+                    setLoading(false)
+                    setRefresh(prevState => prevState + 1)
+                }
+            )
+    };
+
     const columns = [
         {
             name: 'AKCIJA',
@@ -90,7 +117,7 @@ export default function CatalogUserRole() {
 
                 <Dropdown.Menu>
                     <Dropdown.Item as={Link} to={`/user_role_edit/${props.id}`}>Ažuriraj</Dropdown.Item>
-                    <Dropdown.Item as={Link} to={`/user_role_delete/${props.id}`}>Obriši</Dropdown.Item>
+                    <Dropdown.Item onClick={() => deleteEmployeeRole(props.id)}>Obriši</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>,
             ignoreRowClick: true,
@@ -179,7 +206,7 @@ export default function CatalogUserRole() {
 
     useEffect(() => {
         fetchData();
-    }, [datatablePage, perPage, orderQuery]);
+    }, [datatablePage, perPage, orderQuery, refresh]);
 
     return (
         <div>

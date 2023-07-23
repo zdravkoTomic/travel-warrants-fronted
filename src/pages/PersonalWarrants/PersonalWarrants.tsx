@@ -14,13 +14,13 @@ import Unauthorized from "../Security/Unauthorized";
 import {VehicleType, WarrantGroupStatus, WarrantStatus} from "../../components/Constants";
 import {successToastMessage} from "../../components/Utils/successToastMessage";
 
-export default function CatalogPersonalInitialWarrant() {
+export default function CatalogPersonalWarrant() {
     useHandleNonAuthenticated();
 
     const {groupStatusCode} = useParams<{ groupStatusCode: any }>();
     const location = useLocation();
 
-    const [personalInitialWarrants, setPersonalInitialWarrants] = useState<IInitialWarrant[]>([]);
+    const [personalWarrants, setPersonalWarrants] = useState<IInitialWarrant[]>([]);
     const [totalRows, setTotalRows] = useState(0);
     const [loading, setLoading] = useState(false);
     const [perPage, setPerPage] = useState(25);
@@ -30,10 +30,10 @@ export default function CatalogPersonalInitialWarrant() {
     const [modalData, setModalData] = useState<IInitialWarrantModalData>();
     const [refresh, setRefresh] = useState(0);
 
-    const toggleShowModal = (personalInitialWarrantId: number) => {
+    const toggleShowModal = (personalWarrantId: number) => {
         setLoading(true)
         fetch(
-            api.getUri() + `/warrants/${encodeURIComponent(personalInitialWarrantId)}`,
+            api.getUri() + `/warrants/${encodeURIComponent(personalWarrantId)}`,
             {credentials: 'include'}
         )
             .then(response => response.json())
@@ -127,10 +127,10 @@ export default function CatalogPersonalInitialWarrant() {
             });
     };
 
-    const sendToApprovement = (warrantId: number) => {
+    const changeWarrantStatus = (warrantId: number, statusCode: string) => {
         setLoading(true)
         fetch(
-            api.getUri() + `/warrant-statuses/code/${WarrantStatus.APPROVING}`,
+            api.getUri() + `/warrant-statuses/code/${statusCode}`,
             {
                 headers: {
                     'Content-Type': 'application/ld+json'
@@ -153,7 +153,7 @@ export default function CatalogPersonalInitialWarrant() {
                 })
                     .then((response) => {
                         if (response.ok) {
-                            successToastMessage('Poslano na odobravanje')
+                            successToastMessage('Status naloga uspješno promijenjen')
                         } else {
                             throw new Error('Server side error');
                         }
@@ -161,6 +161,30 @@ export default function CatalogPersonalInitialWarrant() {
                     .catch((error) => {
                         alertToastMessage(null);
                     });
+            })
+            .catch((error) => {
+                alertToastMessage(null);
+            })
+            .finally(() => {
+                    setLoading(false)
+                    setRefresh(prevState => prevState + 1)
+                }
+            )
+    };
+
+    const deleteWarrant = (warrantId: number) => {
+        setLoading(true)
+        fetch(api.getUri() + `/warrants/${warrantId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/ld+json',
+            },
+            credentials: 'include'
+        })
+            .then((response) => {
+                if (response.ok) {
+                    successToastMessage('Zapis uspješno obrisan')
+                }
             })
             .catch((error) => {
                 alertToastMessage(null);
@@ -189,11 +213,31 @@ export default function CatalogPersonalInitialWarrant() {
                             <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
                                 Ažuriraj
                             </Dropdown.Item>
-                            <Dropdown.Item onClick={() => sendToApprovement(props.id)}>
+                            <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.APPROVING)}>
                                 Pošalji na odobravanje
                             </Dropdown.Item>
                         </>
                     )}
+                    {((props.warrantStatusFlows.length > 1
+                        && props.status.code.toLowerCase() === WarrantStatus.NEW.toLowerCase())
+                        || (props.status.code.toLowerCase() === WarrantStatus.CALCULATION_EDIT.toLowerCase()))
+                        && (
+                            <>
+                                <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.CANCELLED)}>
+                                    Storniraj
+                                </Dropdown.Item>
+                            </>
+                        )}
+                    {props.warrantStatusFlows.length === 1
+                        && props.status.code.toLowerCase() === WarrantStatus.NEW.toLowerCase()
+                        && (
+                            <>
+                                <Dropdown.Item onClick={() => deleteWarrant(props.id)}>
+                                    Obriši
+                                </Dropdown.Item>
+                            </>
+                        )}
+
                     <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
                         Preuzmi PDF
                     </Dropdown.Item>
@@ -291,7 +335,7 @@ export default function CatalogPersonalInitialWarrant() {
                 )
                     .then(response => response.json())
                     .then(response => {
-                        setPersonalInitialWarrants(response['hydra:member'])
+                        setPersonalWarrants(response['hydra:member'])
                         setTotalRows(response['hydra:totalItems'])
                     })
                     .catch((error) => {
@@ -331,13 +375,14 @@ export default function CatalogPersonalInitialWarrant() {
         <div>
             {loading && <Spinner/>}
 
-            {isAuthorized(['ROLE_ADMIN', 'ROLE_PROCURATOR']) ? (
+            {isAuthorized(['ROLE_EMPLOYEE']) ? (
                 <div>
                     <BaseDetailsModal title="Putni nalog info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {
                                           setShowModal(false)
                                       }}/>
                     <DataTable
+                        style={{height: "600px"}}
                         title={
                             <>
                                 {groupStatusCode.toLowerCase() === WarrantGroupStatus.INITIAL.toLowerCase() &&
@@ -366,7 +411,7 @@ export default function CatalogPersonalInitialWarrant() {
                             </>
                         }
                         columns={columns}
-                        data={personalInitialWarrants}
+                        data={personalWarrants}
                         highlightOnHover
                         fixedHeader
                         fixedHeaderScrollHeight="550px"
