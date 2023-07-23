@@ -14,7 +14,7 @@ import Unauthorized from "../Security/Unauthorized";
 import {VehicleType, WarrantGroupStatus, WarrantStatus} from "../../components/Constants";
 import {successToastMessage} from "../../components/Utils/successToastMessage";
 
-export default function CatalogPersonalWarrant() {
+export default function PersonalWarrant() {
     useHandleNonAuthenticated();
 
     const {groupStatusCode} = useParams<{ groupStatusCode: any }>();
@@ -104,7 +104,7 @@ export default function CatalogPersonalWarrant() {
                             value: response.advancesRequired ? 'Da' : 'Ne'
                         },
                         advancesAmount: {
-                            title: 'Iznos traženne akontacije',
+                            title: 'Iznos tražene akontacije',
                             value: response.advancesAmount.toFixed(2)
                         },
                         createdAt: {
@@ -219,8 +219,8 @@ export default function CatalogPersonalWarrant() {
                         </>
                     )}
                     {((props.warrantStatusFlows.length > 1
-                        && props.status.code.toLowerCase() === WarrantStatus.NEW.toLowerCase())
-                        || (props.status.code.toLowerCase() === WarrantStatus.CALCULATION_EDIT.toLowerCase()))
+                                && props.status.code.toLowerCase() === WarrantStatus.NEW.toLowerCase())
+                            || (props.status.code.toLowerCase() === WarrantStatus.CALCULATION_EDIT.toLowerCase()))
                         && (
                             <>
                                 <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.CANCELLED)}>
