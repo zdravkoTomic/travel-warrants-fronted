@@ -1,3 +1,5 @@
+import {VehicleType} from "../../../components/Constants";
+
 export function initialWarrantFormErrors(values: any) {
     const errors: Partial<any> = {};
 
@@ -27,6 +29,10 @@ export function initialWarrantFormErrors(values: any) {
 
     if (!values.vehicleType) {
         errors.vehicleType = 'Obavezan unos';
+    }
+
+    if (values.vehicleType.code === VehicleType.OTHER && !values.vehicleDescription) {
+        errors.vehicleDescription = 'Obavezan unos ako je odbrana vrsta vozila "Ostalo"';
     }
 
     return errors;

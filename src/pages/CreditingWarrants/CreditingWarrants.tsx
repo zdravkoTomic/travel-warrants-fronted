@@ -13,6 +13,7 @@ import BaseDetailsModal from "../../components/BaseDetailsModal";
 import DataTable from "react-data-table-component";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Unauthorized from "../Security/Unauthorized";
+import {downloadPdf} from "../../components/Utils/downloadPdf";
 
 export default function CreditingWarrant() {
     useHandleNonAuthenticated();
@@ -105,7 +106,7 @@ export default function CreditingWarrant() {
                         },
                         advancesAmount: {
                             title: 'Iznos tražene akontacije',
-                            value: response.advancesAmount.toFixed(2)
+                            value: `${response.advancesAmount.toFixed(2)} ${response.advancesCurrency.code}`
                         },
                         createdAt: {
                             title: 'Kreirano',
@@ -233,7 +234,7 @@ export default function CreditingWarrant() {
                             </Dropdown.Item>
                         </>
 
-                    <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
+                    <Dropdown.Item onClick={() =>downloadPdf(props.id)}>
                         Preuzmi PDF
                     </Dropdown.Item>
                 </Dropdown.Menu>

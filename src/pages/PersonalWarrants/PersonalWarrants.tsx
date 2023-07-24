@@ -13,11 +13,12 @@ import {customStyles, paginationComponentOptions} from "../../components/DataTab
 import Unauthorized from "../Security/Unauthorized";
 import {VehicleType, WarrantGroupStatus, WarrantStatus} from "../../components/Constants";
 import {successToastMessage} from "../../components/Utils/successToastMessage";
+import {downloadPdf} from "../../components/Utils/downloadPdf";
 
 export default function PersonalWarrant() {
     useHandleNonAuthenticated();
 
-    const {groupStatusCode} = useParams<{ groupStatusCode: any }>();
+    const {groupStatusCode = WarrantGroupStatus.INITIAL} = useParams<{ groupStatusCode: any }>();
     const location = useLocation();
 
     const [personalWarrants, setPersonalWarrants] = useState<IInitialWarrant[]>([]);
@@ -65,7 +66,7 @@ export default function PersonalWarrant() {
                         },
                         wage: {
                             title: 'Iznos pojedinačne dnevnice',
-                            value: `${response.wageAmount} ${response.wageCurrency.code}`
+                            value: `${response.wageAmount.toFixed(2)} ${response.wageCurrency.code}`
                         },
                         vehicleType: {
                             title: 'Najavljena vrsta vozila',
@@ -105,7 +106,7 @@ export default function PersonalWarrant() {
                         },
                         advancesAmount: {
                             title: 'Iznos tražene akontacije',
-                            value: response.advancesAmount.toFixed(2)
+                            value: `${response.advancesAmount.toFixed(2)} ${response.advancesCurrency.code}`
                         },
                         createdAt: {
                             title: 'Kreirano',
@@ -128,7 +129,6 @@ export default function PersonalWarrant() {
     };
 
     const changeWarrantStatus = (warrantId: number, statusCode: string) => {
-        setLoading(true)
         fetch(
             api.getUri() + `/warrant-statuses/code/${statusCode}`,
             {
@@ -166,14 +166,12 @@ export default function PersonalWarrant() {
                 alertToastMessage(null);
             })
             .finally(() => {
-                    setLoading(false)
                     setRefresh(prevState => prevState + 1)
                 }
             )
     };
 
     const deleteWarrant = (warrantId: number) => {
-        setLoading(true)
         fetch(api.getUri() + `/warrants/${warrantId}`, {
             method: 'DELETE',
             headers: {
@@ -190,7 +188,6 @@ export default function PersonalWarrant() {
                 alertToastMessage(null);
             })
             .finally(() => {
-                    setLoading(false)
                     setRefresh(prevState => prevState + 1)
                 }
             )
@@ -248,7 +245,7 @@ export default function PersonalWarrant() {
                             </>
                         )}
 
-                    <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
+                    <Dropdown.Item onClick={() =>downloadPdf(props.id)}>
                         Preuzmi PDF
                     </Dropdown.Item>
                 </Dropdown.Menu>

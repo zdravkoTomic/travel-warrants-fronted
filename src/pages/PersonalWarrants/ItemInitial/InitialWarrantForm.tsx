@@ -149,7 +149,7 @@ export default function InitialWarrantForm(
                                 <div className="row">
                                     <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                         <label className="form-label form-label" htmlFor="name">
-                                            Očekivano trajanje putovanja:
+                                            Očekivano trajanje putovanja (u danima):
                                         </label>
                                         <Field id="floatingInput" className="form-control" type="number"
                                                name="expectedTravelDuration"/>
@@ -228,7 +228,7 @@ export default function InitialWarrantForm(
 
                                 <div className="row">
                                     <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                        <label className="form-label form-label" htmlFor="name">Iznos akontacije:</label>
+                                        <label className="form-label form-label" htmlFor="name">Iznos akontacije (EUR):</label>
                                         <Field id="floatingInput"
                                                className="form-control"
                                                type="number"

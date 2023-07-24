@@ -70,6 +70,11 @@ export interface IInitialWarrant {
     vehicleDescription: string,
     advancesRequired: boolean,
     advancesAmount: number,
+    advancesCurrency: {
+        '@id': string,
+        code: string,
+        name: string
+    },
     departureDate: string
 }
 

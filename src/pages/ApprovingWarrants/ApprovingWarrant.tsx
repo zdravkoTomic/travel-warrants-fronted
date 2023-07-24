@@ -13,6 +13,7 @@ import BaseDetailsModal from "../../components/BaseDetailsModal";
 import DataTable from "react-data-table-component";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Unauthorized from "../Security/Unauthorized";
+import {downloadPdf} from "../../components/Utils/downloadPdf";
 
 export default function ApprovingWarrant() {
     useHandleNonAuthenticated();
@@ -105,7 +106,7 @@ export default function ApprovingWarrant() {
                         },
                         advancesAmount: {
                             title: 'Iznos tražene akontacije',
-                            value: response.advancesAmount.toFixed(2)
+                            value: `${response.advancesAmount.toFixed(2)} ${response.advancesCurrency.code}`
                         },
                         createdAt: {
                             title: 'Kreirano',
@@ -193,7 +194,7 @@ export default function ApprovingWarrant() {
                                         props.advancesRequired ? WarrantStatus.APPROVING_ADVANCE_PAYMENT : WarrantStatus.CALCULATION_EDIT
                                     )
                                 }>
-                                    Odobri nalog
+                                    Odobri
                                 </Dropdown.Item>
                             </>
                         )}
@@ -215,7 +216,7 @@ export default function ApprovingWarrant() {
                             <>
                                 <Dropdown.Item onClick={() => changeWarrantStatus(
                                     props.id,
-                                    props.status.code.toLowerCase() === WarrantStatus.APPROVING ? WarrantStatus.NEW : WarrantStatus.CALCULATION_EDIT
+                                    props.status.code.toLowerCase() === WarrantStatus.APPROVING.toLowerCase() ? WarrantStatus.NEW : WarrantStatus.CALCULATION_EDIT
                                 )}>
                                     Odbij
                                 </Dropdown.Item>
@@ -231,7 +232,7 @@ export default function ApprovingWarrant() {
                                 </Dropdown.Item>
                             </>
                         )}
-                    <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
+                    <Dropdown.Item onClick={() =>downloadPdf(props.id)}>
                         Preuzmi PDF
                     </Dropdown.Item>
                 </Dropdown.Menu>

@@ -4,9 +4,13 @@ import api from "../../components/api";
 import {Field, Form, Formik} from "formik";
 import {IFormLoginValueErrors, IFormLoginValues} from "../../types/loginTypes";
 import {alertToastMessage} from "../../components/Utils/alertToastMessage";
+import {IFormEmployeeValueErrors} from "../Catalogs/Employee/employeeTypes";
+import {handleFormErrors} from "../../components/Utils/handleFormErrors";
 
 export default function Login() {
     const [errors, setErrors] = useState<IFormLoginValueErrors>();
+    const [serverSideErrors, setServerSideErrors] = useState<IFormEmployeeValueErrors>();
+
     const navigate = useNavigate();
 
 
@@ -34,7 +38,7 @@ export default function Login() {
             })
             .then((response) => {
                 if (response.error) {
-                    setErrors({email: response.error})
+                    setServerSideErrors({email: response.error})
                 } else {
                     localStorage.setItem('user', JSON.stringify(response.user))
 
@@ -87,7 +91,7 @@ export default function Login() {
                             <label className="form-label" htmlFor="code">Email:</label>
                             <Field id="floatingInput" className="form-control" type="email" placeholder="Email"
                                    name="email"/>
-                            {touched.email && errors?.email ? <span className="text-danger">{errors.email}</span> : ''}
+                            {handleFormErrors(errors?.email, serverSideErrors?.email, touched.email)}
                         </div>
                     </div>
 
