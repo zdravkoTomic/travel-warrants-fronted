@@ -3,10 +3,7 @@ import './App.css';
 import AppNavbar from "./AppNavbar";
 import PersonalWarrant from './pages/PersonalWarrants/PersonalWarrants';
 import Login from './pages/Security/Login';
-import CreditingAdvances from "./pages/CreditingWarrants/CreditingAdvances";
-import CreditingCalculations from "./pages/CreditingWarrants/CreditingCalculations";
-import CreditingPaidWarrants from "./pages/CreditingWarrants/CreditingPaidWarrants";
-import CreditingQueue from "./pages/CreditingWarrants/CreditingQueue";
+import CreditingWarrants from "./pages/CreditingWarrants/CreditingWarrants";
 import CatalogCountry from "./pages/Catalogs/Country/CatalogCountry";
 import CatalogDepartment from "./pages/Catalogs/Department/CatalogDepartment";
 import CatalogEmployee from "./pages/Catalogs/Employee/CatalogEmployee";
@@ -61,10 +58,7 @@ function App() {
                     <Route path="/approving_warrant/:statusCode" element={<ApprovingWarrant/>}/>
 
                     {/*Crediting warrants*/}
-                    <Route path="/crediting_advances" element={<CreditingAdvances/>}/>
-                    <Route path="/crediting_calculation" element={<CreditingCalculations/>}/>
-                    <Route path="/crediting_queue" element={<CreditingQueue/>}/>
-                    <Route path="/crediting_paid" element={<CreditingPaidWarrants/>}/>
+                    <Route path="/crediting_warrants/:statusCode" element={<CreditingWarrants/>}/>
 
                     {/*Catalogs*/}
                     <Route path="/catalog_countries" element={<CatalogCountry/>}/>

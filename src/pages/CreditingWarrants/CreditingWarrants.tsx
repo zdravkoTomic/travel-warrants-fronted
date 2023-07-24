@@ -1,23 +1,23 @@
 import {useHandleNonAuthenticated} from "../../components/Security/HandleNonAuthenticated";
-import React, {useEffect, useState} from "react";
-import {IInitialWarrant, IInitialWarrantModalData} from "./initialWarrantTypes";
-import api from "../../components/api";
-import {alertToastMessage} from "../../components/Utils/alertToastMessage";
-import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
 import {Link, useLocation, useParams} from "react-router-dom";
-import {getCurrentUser, isAuthorized} from "../../components/Security/UserAuth";
+import React, {useEffect, useState} from "react";
+import {IInitialWarrant, IInitialWarrantModalData} from "../PersonalWarrants/initialWarrantTypes";
+import api from "../../components/api";
+import {VehicleType, WarrantStatus} from "../../components/Constants";
+import {alertToastMessage} from "../../components/Utils/alertToastMessage";
+import {successToastMessage} from "../../components/Utils/successToastMessage";
+import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
+import Spinner from "../../components/Utils/Spinner";
+import {isAuthorized} from "../../components/Security/UserAuth";
 import BaseDetailsModal from "../../components/BaseDetailsModal";
 import DataTable from "react-data-table-component";
-import Spinner from "../../components/Utils/Spinner";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Unauthorized from "../Security/Unauthorized";
-import {VehicleType, WarrantGroupStatus, WarrantStatus} from "../../components/Constants";
-import {successToastMessage} from "../../components/Utils/successToastMessage";
 
-export default function PersonalWarrant() {
+export default function CreditingWarrant() {
     useHandleNonAuthenticated();
 
-    const {groupStatusCode} = useParams<{ groupStatusCode: any }>();
+    const {statusCode} = useParams<{ statusCode: any }>();
     const location = useLocation();
 
     const [personalWarrants, setPersonalWarrants] = useState<IInitialWarrant[]>([]);
@@ -172,30 +172,6 @@ export default function PersonalWarrant() {
             )
     };
 
-    const deleteWarrant = (warrantId: number) => {
-        setLoading(true)
-        fetch(api.getUri() + `/warrants/${warrantId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/ld+json',
-            },
-            credentials: 'include'
-        })
-            .then((response) => {
-                if (response.ok) {
-                    successToastMessage('Zapis uspješno obrisan')
-                }
-            })
-            .catch((error) => {
-                alertToastMessage(null);
-            })
-            .finally(() => {
-                    setLoading(false)
-                    setRefresh(prevState => prevState + 1)
-                }
-            )
-    };
-
     const columns = [
         {
             name: 'AKCIJA',
@@ -208,45 +184,54 @@ export default function PersonalWarrant() {
                 <Dropdown.Toggle split variant="primary" size="sm" id="dropdown-split-basic"/>
 
                 <Dropdown.Menu>
-                    {props.status.code === WarrantStatus.NEW && (
-                        <>
-                            <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
-                                Ažuriraj
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.APPROVING)}>
-                                Pošalji na odobravanje
-                            </Dropdown.Item>
-                        </>
-                    )}
-                    {props.status.code === WarrantStatus.CALCULATION_EDIT && (
-                        <>
-                            <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
-                                Ažuriraj
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.APPROVING_CALCULATION)}>
-                                Pošalji na odobravanje
-                            </Dropdown.Item>
-                        </>
-                    )}
-                    {((props.warrantStatusFlows.length > 1
-                                && props.status.code.toLowerCase() === WarrantStatus.NEW.toLowerCase())
-                            || (props.status.code.toLowerCase() === WarrantStatus.CALCULATION_EDIT.toLowerCase()))
+                    {props.status.code.toLowerCase() === WarrantStatus.APPROVING_ADVANCE_PAYMENT.toLowerCase()
                         && (
                             <>
-                                <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.CANCELLED)}>
-                                    Storniraj
+                                <Dropdown.Item onClick={
+                                    () => changeWarrantStatus(
+                                        props.id,
+                                        WarrantStatus.ADVANCE_IN_PAYMENT
+                                    )
+                                }>
+                                    Odobri Akontaciju
                                 </Dropdown.Item>
                             </>
                         )}
-                    {props.warrantStatusFlows.length === 1
-                        && props.status.code.toLowerCase() === WarrantStatus.NEW.toLowerCase()
+
+                    {props.status.code.toLowerCase() === WarrantStatus.APPROVING_CALCULATION_PAYMENT.toLowerCase()
                         && (
                             <>
-                                <Dropdown.Item onClick={() => deleteWarrant(props.id)}>
-                                    Obriši
+                                <Dropdown.Item onClick={
+                                    () => changeWarrantStatus(
+                                        props.id,
+                                        WarrantStatus.CALCULATION_IN_PAYMENT
+                                    )
+                                }>
+                                    Odobri Obračun
                                 </Dropdown.Item>
                             </>
                         )}
+
+                    {(props.status.code.toLowerCase() === WarrantStatus.APPROVING_CALCULATION_PAYMENT.toLowerCase()
+                            || props.status.code.toLowerCase() === WarrantStatus.APPROVING_ADVANCE_PAYMENT.toLowerCase())
+                        && (
+                            <>
+                                <Dropdown.Item onClick={() => changeWarrantStatus(
+                                    props.id,
+                                    props.status.code.toLowerCase() === WarrantStatus.APPROVING_CALCULATION_PAYMENT.toLowerCase()
+                                        ? WarrantStatus.APPROVING_CALCULATION
+                                        : WarrantStatus.APPROVING
+                                )}>
+                                    Odbij
+                                </Dropdown.Item>
+                            </>
+                        )}
+
+                        <>
+                            <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.CANCELLED)}>
+                                Storniraj
+                            </Dropdown.Item>
+                        </>
 
                     <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
                         Preuzmi PDF
@@ -266,21 +251,20 @@ export default function PersonalWarrant() {
             name: 'KOD',
             selector: (row: any) => row.code,
             sortable: true,
-            width: '90px'
+            width: '80px'
         },
         {
             id: 'travelType.name',
             name: 'TIP NALOGA',
             selector: (row: any) => row.travelType.name,
             sortable: true,
-            width: '140px'
+            width: '150px',
         },
         {
-            id: 'departurePoint',
-            name: 'MJESTO POLASKA',
-            selector: (row: any) => row.departurePoint,
+            id: 'employee.surname',
+            name: 'ZAPOSLENIK',
+            selector: (row: any) => `${row.employee.surname} ${row.employee.name} (${row.employee.code})`,
             sortable: true,
-            width: '180px'
         },
         {
             id: 'destination',
@@ -294,18 +278,13 @@ export default function PersonalWarrant() {
             name: 'DRŽAVA ODREDIŠTA',
             selector: (row: any) => row.destinationCountry.name,
             sortable: true,
-            width: '200px'
         },
         {
-            id: 'departureDate',
-            name: 'DATUM POLASKA',
-            selector: (row: any) => new Date(row.departureDate).toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-            }),
+            id: 'advancesRequired',
+            name: 'AKONTACIJA',
+            selector: (row: any) => row.advancesRequired ? 'Da' : 'Ne',
             sortable: true,
-            width: '200px'
+            width: '150px',
         },
         {
             id: 'status.name',
@@ -313,10 +292,7 @@ export default function PersonalWarrant() {
             selector: (row: any) => row.status.name,
             sortable: true,
         },
-
     ];
-
-    const currentUser = getCurrentUser();
 
     const fetchData = () => {
         setLoading(true);
@@ -324,7 +300,7 @@ export default function PersonalWarrant() {
         let order = !orderQuery ? '&order[createdAt]=desc' : orderQuery
 
         fetch(
-            api.getUri() + `/warrant-group-status/${groupStatusCode}`,
+            api.getUri() + `/warrant-statuses/code/${statusCode}`,
             {
                 headers: {
                     'Content-Type': 'application/ld+json'
@@ -336,7 +312,7 @@ export default function PersonalWarrant() {
             .then(response => {
                 fetch(
                     api.getUri()
-                    + `/employees/${currentUser.id}/warrant-group-statuses/${response.id}/warrants?page=${encodeURIComponent(datatablePage)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
+                    + `/warrant-statuses/${response.id}/warrants?page=${encodeURIComponent(datatablePage)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
                     {
                         headers: {
                             'Content-Type': 'application/json'
@@ -386,7 +362,7 @@ export default function PersonalWarrant() {
         <div>
             {loading && <Spinner/>}
 
-            {isAuthorized(['ROLE_EMPLOYEE']) ? (
+            {isAuthorized(['ROLE_PROCURATOR', 'ROLE_ADMIN']) ? (
                 <div>
                     <BaseDetailsModal title="Putni nalog info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {
@@ -396,27 +372,14 @@ export default function PersonalWarrant() {
                         style={{height: "600px"}}
                         title={
                             <>
-                                {groupStatusCode.toLowerCase() === WarrantGroupStatus.INITIAL.toLowerCase() &&
-                                    <h2 className="flex-display">Novi nalozi
-                                        <Link className="add-new-record-btn" to="/initial_warrant_add">
-                                            <Button variant="primary">
-                                                Novi nalog
-                                            </Button>
-                                        </Link>
-                                    </h2>
-                                }
-                                {groupStatusCode.toLowerCase() === WarrantGroupStatus.CALCULATION.toLowerCase() &&
-                                    <h2 className="flex-display">Obračun
-                                        <Link className="add-new-record-btn" to="/calculation_add">
-                                            <Button variant="primary">
-                                                Ispuni obračun
-                                            </Button>
-                                        </Link>
-                                    </h2>
-                                }
-                                {groupStatusCode.toLowerCase() === WarrantGroupStatus.CLOSED.toLowerCase() &&
+                                {statusCode.toLowerCase() === WarrantStatus.APPROVING_ADVANCE_PAYMENT.toLowerCase() &&
                                     <h2 className="flex-display">
-                                        Zatvoreni nalozi
+                                        Odobravanje akontacije za plaćanje
+                                    </h2>
+                                }
+                                {statusCode.toLowerCase() === WarrantStatus.APPROVING_CALCULATION_PAYMENT.toLowerCase() &&
+                                    <h2 className="flex-display">
+                                        Odobravanje obračuna za plaćanje
                                     </h2>
                                 }
                             </>

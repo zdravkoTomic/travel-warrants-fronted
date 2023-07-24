@@ -3,11 +3,11 @@ import {Link, useLocation, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {IInitialWarrant, IInitialWarrantModalData} from "../PersonalWarrants/initialWarrantTypes";
 import api from "../../components/api";
-import {VehicleType, WarrantGroupStatus, WarrantStatus} from "../../components/Constants";
+import {VehicleType, WarrantStatus} from "../../components/Constants";
 import {alertToastMessage} from "../../components/Utils/alertToastMessage";
 import {successToastMessage} from "../../components/Utils/successToastMessage";
 import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
-import {getCurrentUser, isAuthorized} from "../../components/Security/UserAuth";
+import {isAuthorized} from "../../components/Security/UserAuth";
 import Spinner from "../../components/Utils/Spinner";
 import BaseDetailsModal from "../../components/BaseDetailsModal";
 import DataTable from "react-data-table-component";
@@ -215,7 +215,7 @@ export default function ApprovingWarrant() {
                             <>
                                 <Dropdown.Item onClick={() => changeWarrantStatus(
                                     props.id,
-                                    WarrantStatus.APPROVING ? WarrantStatus.NEW : WarrantStatus.CALCULATION_EDIT
+                                    props.status.code.toLowerCase() === WarrantStatus.APPROVING ? WarrantStatus.NEW : WarrantStatus.CALCULATION_EDIT
                                 )}>
                                     Odbij
                                 </Dropdown.Item>
@@ -373,7 +373,7 @@ export default function ApprovingWarrant() {
         <div>
             {loading && <Spinner/>}
 
-            {isAuthorized(['ROLE_EMPLOYEE']) ? (
+                {isAuthorized(['ROLE_APPROVER', 'ROLE_ADMIN']) ? (
                 <div>
                     <BaseDetailsModal title="Putni nalog info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {

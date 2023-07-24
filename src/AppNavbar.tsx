@@ -31,8 +31,8 @@ export default function AppNavbar() {
 
                             {isAuthorized(['ROLE_PROCURATOR', 'ROLE_ADMIN']) && (
                                 <NavDropdown title="Knjiženje" id="basic-nav-dropdown">
-                                    <NavDropdown.Item href="/crediting_advances">Akontacija</NavDropdown.Item>
-                                    <NavDropdown.Item href="/crediting_calculation">Obračun</NavDropdown.Item>
+                                    <NavDropdown.Item href="/crediting_warrants/approving_advance_payment">Akontacija</NavDropdown.Item>
+                                    <NavDropdown.Item href="/crediting_warrants/approving_calculation_payment">Obračun</NavDropdown.Item>
                                     <NavDropdown.Item href="/crediting_queue">Red za plaćanje</NavDropdown.Item>
                                     <NavDropdown.Item href="/crediting_paid">Plaćeni</NavDropdown.Item>
                                 </NavDropdown>
