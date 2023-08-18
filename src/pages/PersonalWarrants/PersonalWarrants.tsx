@@ -207,7 +207,7 @@ export default function PersonalWarrant() {
                 <Dropdown.Menu>
                     {props.status.code === WarrantStatus.NEW && (
                         <>
-                            <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
+                            <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}/${props.id}`}>
                                 Ažuriraj
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.APPROVING)}>
@@ -215,10 +215,21 @@ export default function PersonalWarrant() {
                             </Dropdown.Item>
                         </>
                     )}
-                    {props.status.code === WarrantStatus.CALCULATION_EDIT && (
+                    {props.status.code === WarrantStatus.CALCULATION_EDIT
+                        && typeof props.warrantCalculation === "undefined"
+                        && (
+                            <>
+                                <Dropdown.Item as={Link} to={`/calculation_warrant_add/${props.id}/${props.travelType.code}`}>
+                                    Ispuni obračun
+                                </Dropdown.Item>
+                            </>
+                        )}
+                    {props.status.code === WarrantStatus.CALCULATION_EDIT
+                        && typeof props.warrantCalculation !== "undefined"
+                        && (
                         <>
-                            <Dropdown.Item as={Link} to={`/initial_warrant_edit/${props.id}`}>
-                                Ažuriraj
+                            <Dropdown.Item as={Link} to={`/calculation_warrant_edit/${props.warrantCalculation.id}/${props.id}/${props.travelType.code}`}>
+                                Ažuriraj obračun
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.APPROVING_CALCULATION)}>
                                 Pošalji na odobravanje
@@ -403,18 +414,10 @@ export default function PersonalWarrant() {
                                     </h2>
                                 }
                                 {groupStatusCode.toLowerCase() === WarrantGroupStatus.CALCULATION.toLowerCase() &&
-                                    <h2 className="flex-display">Obračun
-                                        <Link className="add-new-record-btn" to="/calculation_add">
-                                            <Button variant="primary">
-                                                Ispuni obračun
-                                            </Button>
-                                        </Link>
-                                    </h2>
+                                    <h2 className="flex-display">Obračun</h2>
                                 }
                                 {groupStatusCode.toLowerCase() === WarrantGroupStatus.CLOSED.toLowerCase() &&
-                                    <h2 className="flex-display">
-                                        Zatvoreni nalozi
-                                    </h2>
+                                    <h2 className="flex-display">Zatvoreni nalozi</h2>
                                 }
                             </>
                         }

@@ -313,7 +313,7 @@ export default function CreditingWarrant() {
             .then(response => {
                 fetch(
                     api.getUri()
-                    + `/warrant-statuses/${response.id}/warrants?page=${encodeURIComponent(datatablePage)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
+                    + `/warrant-statuses/${response.id}/crediting/warrants?page=${encodeURIComponent(datatablePage)}&itemsperpage=${encodeURIComponent(perPage)}${order}`,
                     {
                         headers: {
                             'Content-Type': 'application/json'

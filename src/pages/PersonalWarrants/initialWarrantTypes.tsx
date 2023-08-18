@@ -49,6 +49,7 @@ export interface IInitialWarrant {
         name: string
     }
     travelType: {
+        code: string
         name: string
     }
     destinationCountry: {
@@ -75,7 +76,11 @@ export interface IInitialWarrant {
         code: string,
         name: string
     },
-    departureDate: string
+    departureDate: string,
+    warrantCalculation: {
+        '@id': string
+        id: number
+    }
 }
 
 export interface IInitialWarrantModalData {

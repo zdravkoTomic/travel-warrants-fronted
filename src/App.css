@@ -40,3 +40,14 @@ div.fade.in.modal {
 .dJLoil {
     height: 500px;
 }
+
+.black-background {
+    background-color: black;
+    color: white;
+    padding-left: 2%;
+}
+
+.add-elements-button {
+    padding-left: 3%;
+    padding-right: 3%;
+}
