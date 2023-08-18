@@ -13,6 +13,7 @@ const BaseDetailsModal = ({show, onCloseButtonClick, title, modalData}: any) => 
             onHide={onCloseButtonClick}
             keyboard={false}
             centered
+            size="lg"
             aria-labelledby="contained-modal-title-vcenter"
         >
             <Modal.Header closeButton>

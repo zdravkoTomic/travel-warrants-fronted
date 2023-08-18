@@ -9,14 +9,13 @@ import CalculationWarrantForm from "./CalculationWarrantForm";
 
 export default function CalculationWarrantEdit() {
     const { id, warrantId, travelTypeCode } = useParams<{ id: any, warrantId: any, travelTypeCode: any }>();
-console.log(id);
+
     const [errors, setErrors] = useState<IFormCalculationWarrantValueErrors>();
     const [serverSideErrors, setServerSideErrors] = useState<IFormCalculationWarrantValueErrors>();
 
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormCalculationWarrantValues) => {
-        console.log(values)
         values.warrantCalculationExpenses = values.warrantCalculationExpenses.map((expense: any) => {
             const { '@id': _, '@type': __, ...rest } = expense;
             return rest;
@@ -32,7 +31,7 @@ console.log(id);
         if (!values.odometerEnd) {
             values.odometerEnd = null
         }
-        console.log(values)
+
         fetch(api.getUri() + `/warrant-calculations/${id}`, {
             method: 'PUT',
             headers: {

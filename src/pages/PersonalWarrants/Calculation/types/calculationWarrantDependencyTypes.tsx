@@ -1,11 +1,3 @@
-export interface IWarrantTravelItinerary {
-    country: string;
-    enteredDate: string;
-    exitedDate: string;
-    returningData: boolean;
-    timeSpent: number;
-}
-
 export interface IWarrantCalculationExpense {
     id?: any;
     expenseType: string;

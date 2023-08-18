@@ -214,7 +214,7 @@ export default function CalculationWarrantForm(
     if (!calculationWarrant && id) {
         return <Spinner/>;
     }
-    console.log(warrantCalculationExpenses)
+
     return (
         <>
             {isAuthorized(['ROLE_EMPLOYEE']) ? (
@@ -390,7 +390,7 @@ export default function CalculationWarrantForm(
                                                        className="form-select"
                                                        id="floatingInput"
                                                        name={`warrantTravelItineraries[${index}].country`}>
-                                                    <option value="">Odaberite vrstu troška</option>
+                                                    <option value="">Odaberite državu</option>
                                                     {countryCatalog?.map((country) => (
                                                         <option key={country.id} value={country["@id"]}>
                                                             {country.name}
@@ -475,7 +475,7 @@ export default function CalculationWarrantForm(
                                 <div className="row">
                                     <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                         <label className="form-label form-label" htmlFor="travelVehicleType">Vrsta
-                                            vozila putovanja:</label>
+                                            vozilo putovanja:</label>
                                         <Field id="floatingInput" className="form-select" name="travelVehicleType"
                                                as="select">
                                             <option value="">Odaberite vrstu vozila</option>

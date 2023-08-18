@@ -14,7 +14,7 @@ export default function CalculationWarrantAdd() {
     const [serverSideErrors, setServerSideErrors] = useState<IFormCalculationWarrantValueErrors>();
     const navigate = useNavigate();
 
-    const handleSubmit = (values: IFormCalculationWarrantValues) => {console.log(values)
+    const handleSubmit = (values: IFormCalculationWarrantValues) => {
         fetch(api.getUri() + '/warrant-calculations', {
             method: 'POST',
             headers: {

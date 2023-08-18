@@ -14,6 +14,7 @@ import Unauthorized from "../Security/Unauthorized";
 import {VehicleType, WarrantGroupStatus, WarrantStatus} from "../../components/Constants";
 import {successToastMessage} from "../../components/Utils/successToastMessage";
 import {downloadPdf} from "../../components/Utils/downloadPdf";
+import {IWarrantCalculationModalData} from "./Calculation/types/calculationWarrantTypes";
 
 export default function PersonalWarrant() {
     useHandleNonAuthenticated();
@@ -28,7 +29,9 @@ export default function PersonalWarrant() {
     const [datatablePage, setDatatablePage] = useState(1);
     const [orderQuery, setOrderQuery] = useState<String>();
     const [showModal, setShowModal] = useState(false);
+    const [showCalculationModal, setShowCalculationModal] = useState(false);
     const [modalData, setModalData] = useState<IInitialWarrantModalData>();
+    const [modalCalculationData, setModalCalculationData] = useState<IWarrantCalculationModalData>();
     const [refresh, setRefresh] = useState(0);
 
     const toggleShowModal = (personalWarrantId: number) => {
@@ -128,6 +131,146 @@ export default function PersonalWarrant() {
             });
     };
 
+    const toggleShowCalculationModal = (warrantCalculationId: number) => {
+        setLoading(true)
+        fetch(
+            api.getUri() + `/preview-warrant-calculations/${encodeURIComponent(warrantCalculationId)}`,
+            {credentials: 'include'}
+        )
+            .then(response => response.json())
+            .then(response => {
+                    const itineraryData: any = {};
+                    const wageData: any = {};
+
+                    response.warrantTravelItineraries.forEach((itinerary: any, index: number) => {
+                        itineraryData[`itineraryCountry${index}`] = {
+                            title: itinerary.returningData ? 'Zemlja putovanja od odredišta' : 'Zemlja putovanja do odredišta',
+                            value: `${itinerary.country.name} 
+                                (
+                                ${new Date(itinerary.enteredDate).toLocaleString('hr-HR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                            })} 
+                                -
+                                ${new Date(itinerary.exitedDate).toLocaleString('hr-HR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                            })}
+                            )
+                        `
+                        };
+                    });
+
+                    response.warrantCalculationWages.forEach((wage: any, index: number) => {
+                        wageData[`wage${index}`] = {
+                            title: 'Dnevnica',
+                            value: `${wage.country.name} ${wage.amount} ${wage.currency.code} 
+                            (Ukupan broj dnevnica: ${wage.numberOfWages})`
+                        };
+                    });
+
+                    setModalCalculationData({
+                        warrantCode: {
+                            title: 'Nalog',
+                            value: response.warrant.code
+                        },
+                        travelType: {
+                            title: 'Vrsta putovanja',
+                            value: response.warrant.travelType.name
+                        },
+                        wageType: {
+                            title: 'Vrsta dnevnice',
+                            value: response.wageType.name
+                        },
+                        departureDate: {
+                            title: 'Polazak',
+                            value: new Date(response.departureDate).toLocaleString('hr-HR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                            }),
+                        },
+                        returningDate: {
+                            title: 'Povratak',
+                            value: new Date(response.returningDate).toLocaleString('hr-HR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                            }),
+                        },
+                        domicileCountryLeavingDate: {
+                            title: 'Vrijeme napuštanje Hrvatske',
+                            value: new Date(response.domicileCountryLeavingDate).toLocaleString('hr-HR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                            }),
+                        },
+                        domicileCountryReturningDate: {
+                            title: 'Vrijeme povratka u Hrvatsku',
+                            value: new Date(response.domicileCountryReturningDate).toLocaleString('hr-HR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                            }),
+                        },
+                        ...itineraryData, ...wageData,
+                        travelVehicle: {
+                            title: 'Vrsta prijevoznog sredstva',
+                            value: response.travelVehicleType.name
+                        },
+                        travelVehicleDescription: {
+                            title: 'Opis prijevoznog sredstva',
+                            value: response.travelVehicleDescription
+                        },
+                        travelVehicleRegistration: {
+                            title: 'Registracija',
+                            value: response.travelVehicleRegistration
+                        },
+                        travelVehicleBrand: {
+                            title: 'Marka vozila',
+                            value: response.travelVehicleBrand
+                        },
+                        odometer: {
+                            title: 'Odometar',
+                            value: `${response.odometerStart}km - ${response.odometerEnd}km`
+                        },
+                        travelReport: {
+                            title: 'Izvještaj putovanja',
+                            value: response.travelReport
+                        },
+                    })
+                }
+            )
+            .then(() => {
+                setLoading(false)
+                setShowCalculationModal(!showCalculationModal);
+            })
+            .catch((error) => {
+                alertToastMessage(null);
+            });
+    };
+
     const changeWarrantStatus = (warrantId: number, statusCode: string) => {
         fetch(
             api.getUri() + `/warrant-statuses/code/${statusCode}`,
@@ -215,11 +358,15 @@ export default function PersonalWarrant() {
                             </Dropdown.Item>
                         </>
                     )}
+                    <Dropdown.Item onClick={event => toggleShowCalculationModal(props.warrantCalculation.id)}>
+                        Detalji obračuna
+                    </Dropdown.Item>
                     {props.status.code === WarrantStatus.CALCULATION_EDIT
                         && typeof props.warrantCalculation === "undefined"
                         && (
                             <>
-                                <Dropdown.Item as={Link} to={`/calculation_warrant_add/${props.id}/${props.travelType.code}`}>
+                                <Dropdown.Item as={Link}
+                                               to={`/calculation_warrant_add/${props.id}/${props.travelType.code}`}>
                                     Ispuni obračun
                                 </Dropdown.Item>
                             </>
@@ -227,15 +374,17 @@ export default function PersonalWarrant() {
                     {props.status.code === WarrantStatus.CALCULATION_EDIT
                         && typeof props.warrantCalculation !== "undefined"
                         && (
-                        <>
-                            <Dropdown.Item as={Link} to={`/calculation_warrant_edit/${props.warrantCalculation.id}/${props.id}/${props.travelType.code}`}>
-                                Ažuriraj obračun
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.APPROVING_CALCULATION)}>
-                                Pošalji na odobravanje
-                            </Dropdown.Item>
-                        </>
-                    )}
+                            <>
+                                <Dropdown.Item as={Link}
+                                               to={`/calculation_warrant_edit/${props.warrantCalculation.id}/${props.id}/${props.travelType.code}`}>
+                                    Ažuriraj obračun
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    onClick={() => changeWarrantStatus(props.id, WarrantStatus.APPROVING_CALCULATION)}>
+                                    Pošalji na odobravanje
+                                </Dropdown.Item>
+                            </>
+                        )}
                     {((props.warrantStatusFlows.length > 1
                                 && props.status.code.toLowerCase() === WarrantStatus.NEW.toLowerCase())
                             || (props.status.code.toLowerCase() === WarrantStatus.CALCULATION_EDIT.toLowerCase()))
@@ -256,7 +405,7 @@ export default function PersonalWarrant() {
                             </>
                         )}
 
-                    <Dropdown.Item onClick={() =>downloadPdf(props.id)}>
+                    <Dropdown.Item onClick={() => downloadPdf(props.id)}>
                         Preuzmi PDF
                     </Dropdown.Item>
                 </Dropdown.Menu>
@@ -399,6 +548,11 @@ export default function PersonalWarrant() {
                     <BaseDetailsModal title="Putni nalog info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {
                                           setShowModal(false)
+                                      }}/>
+                    <BaseDetailsModal title="Obračun info" show={showCalculationModal}
+                                      modalData={modalCalculationData}
+                                      onCloseButtonClick={() => {
+                                          setShowCalculationModal(false)
                                       }}/>
                     <DataTable
                         style={{height: "600px"}}

@@ -57,6 +57,7 @@ export interface ICalculationWarrant {
     warrantTravelItineraries: {
         country: {
             '@id': string,
+            code: string,
             name: string
         },
         enteredDate: string,
@@ -97,4 +98,26 @@ export interface ICalculationWarrant {
     travelPurposeDescription: string;
     vehicleDescription: string;
     advancesAmount: number;
+}
+
+export interface IWarrantCalculationModalData {
+    departureDate: {
+        title: string,
+        value: string
+    },
+    returningDate: {
+        title: string,
+        value: string
+    },
+    [key: string]: {
+        title: string,
+        value: string
+    }
+}
+
+export interface IWarrantItineraryModalData {
+    country: string;
+    enteredDate: string;
+    exitedDate: string;
+    returningData: boolean;
 }
