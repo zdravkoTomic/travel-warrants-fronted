@@ -1,11 +1,10 @@
 import {useHandleNonAuthenticated} from "../../components/Security/HandleNonAuthenticated";
-import {Link, useLocation, useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {IInitialWarrant, IInitialWarrantModalData} from "../PersonalWarrants/initialWarrantTypes";
 import api from "../../components/api";
-import {VehicleType, WarrantStatus} from "../../components/Constants";
+import {WarrantStatus} from "../../components/Constants";
 import {alertToastMessage} from "../../components/Utils/alertToastMessage";
-import {successToastMessage} from "../../components/Utils/successToastMessage";
 import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
 import Spinner from "../../components/Utils/Spinner";
 import {isAuthorized} from "../../components/Security/UserAuth";
@@ -14,6 +13,10 @@ import DataTable from "react-data-table-component";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Unauthorized from "../Security/Unauthorized";
 import {downloadPdf} from "../../components/Utils/downloadPdf";
+import {IWarrantCalculationModalData} from "../PersonalWarrants/Calculation/types/calculationWarrantTypes";
+import {toggleShowCalculationModal, toggleShowModal} from "../../components/modalHelper";
+import {changeWarrantStatus} from "../../components/warrantStatusAction";
+
 
 export default function CreditingWarrant() {
     useHandleNonAuthenticated();
@@ -29,156 +32,21 @@ export default function CreditingWarrant() {
     const [orderQuery, setOrderQuery] = useState<String>();
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState<IInitialWarrantModalData>();
+    const [modalCalculationData, setModalCalculationData] = useState<IWarrantCalculationModalData>();
+    const [showCalculationModal, setShowCalculationModal] = useState(false);
     const [refresh, setRefresh] = useState(0);
 
-    const toggleShowModal = (personalWarrantId: number) => {
-        setLoading(true)
-        fetch(
-            api.getUri() + `/warrants/${encodeURIComponent(personalWarrantId)}`,
-            {credentials: 'include'}
-        )
-            .then(response => response.json())
-            .then(response => {
-                    setModalData({
-                        code: {
-                            title: 'Kod naloga',
-                            value: response.code
-                        },
-                        status: {
-                            title: 'Status nalog',
-                            value: response.status.name
-                        },
-                        employee: {
-                            title: 'Zaposlenik',
-                            value: `${response.employee.surname} ${response.employee.surname}`
-                        },
-                        employeeWorkPosition: {
-                            title: 'Radno mjesto zaposlenika',
-                            value: response.employee.workPosition.name
-                        },
-                        warrantDepartment: {
-                            title: 'Organizacijski dio naloga',
-                            value: response.department.name
-                        },
-                        travelType: {
-                            title: 'Vrsta putovanja',
-                            value: response.travelType.name
-                        },
-                        wage: {
-                            title: 'Iznos pojedinačne dnevnice',
-                            value: `${response.wageAmount} ${response.wageCurrency.code}`
-                        },
-                        vehicleType: {
-                            title: 'Najavljena vrsta vozila',
-                            value: response.vehicleType.code === VehicleType.OTHER ? `${response.vehicleType.name} (${response.vehicleDescription})` : response.vehicleType.name
-                        },
-                        departurePoint: {
-                            title: 'Mjesto polaska',
-                            value: response.departurePoint
-                        },
-                        destination: {
-                            title: 'Odredište',
-                            value: response.destination
-                        },
-                        destinationCountry: {
-                            title: 'Zemlja odredišta',
-                            value: response.destinationCountry.name
-                        },
-                        departureDate: {
-                            title: 'Očekivani datum polaska',
-                            value: new Date(response.departureDate).toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric',
-                            }),
-                        },
-                        expectedTravelDuration: {
-                            title: 'Očekivano trajanje putovanja',
-                            value: response.expectedTravelDuration
-                        },
-                        travelPurpose: {
-                            title: 'Svrha putovanja',
-                            value: response.travelPurposeDescription
-                        },
-                        advancesRequired: {
-                            title: 'Potraživanje akontacije',
-                            value: response.advancesRequired ? 'Da' : 'Ne'
-                        },
-                        advancesAmount: {
-                            title: 'Iznos tražene akontacije',
-                            value: `${response.advancesAmount.toFixed(2)} ${response.advancesCurrency.code}`
-                        },
-                        createdAt: {
-                            title: 'Kreirano',
-                            value: new Date(response.createdAt).toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric',
-                            }),
-                        },
-                    })
-                }
-            )
-            .then(() => {
-                setLoading(false)
-                setShowModal(!showModal);
-            })
-            .catch((error) => {
-                alertToastMessage(null);
-            });
-    };
+    const handleToggleShowModal = toggleShowModal(setModalData, setShowModal, setLoading, showModal);
+    const handleToggleShowCalculationModal = toggleShowCalculationModal(setModalCalculationData, setShowCalculationModal, setLoading, showCalculationModal);
 
-    const changeWarrantStatus = (warrantId: number, statusCode: string) => {
-        setLoading(true)
-        fetch(
-            api.getUri() + `/warrant-statuses/code/${statusCode}`,
-            {
-                headers: {
-                    'Content-Type': 'application/ld+json'
-                },
-                credentials: 'include',
-            }
-        )
-            .then(response => response.json())
-            .then(response => {
-                const values = {
-                    "status": `/travel-warrants/public/api/warrant-statuses/${response.id}`
-                }
-                fetch(api.getUri() + `/warrants/${warrantId}/change_status`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(values),
-                    credentials: 'include',
-                })
-                    .then((response) => {
-                        if (response.ok) {
-                            successToastMessage('Status naloga uspješno promijenjen')
-                        } else {
-                            throw new Error('Server side error');
-                        }
-                    })
-                    .catch((error) => {
-                        alertToastMessage(null);
-                    });
-            })
-            .catch((error) => {
-                alertToastMessage(null);
-            })
-            .finally(() => {
-                    setLoading(false)
-                    setRefresh(prevState => prevState + 1)
-                }
-            )
-    };
+    const handleChangeWarrantStatus = changeWarrantStatus(setLoading, setRefresh);
 
     const columns = [
         {
             name: 'AKCIJA',
             id: 'id',
             cell: (props: any) => <Dropdown as={ButtonGroup}>
-                <Button onClick={event => toggleShowModal(props.id)}
+                <Button onClick={event => handleToggleShowModal(props.id)}
                         variant="primary"
                         size="sm">Detalji</Button>
 
@@ -189,7 +57,7 @@ export default function CreditingWarrant() {
                         && (
                             <>
                                 <Dropdown.Item onClick={
-                                    () => changeWarrantStatus(
+                                    () => handleChangeWarrantStatus(
                                         props.id,
                                         WarrantStatus.ADVANCE_IN_PAYMENT
                                     )
@@ -202,8 +70,12 @@ export default function CreditingWarrant() {
                     {props.status.code.toLowerCase() === WarrantStatus.APPROVING_CALCULATION_PAYMENT.toLowerCase()
                         && (
                             <>
+                                <Dropdown.Item
+                                    onClick={event => handleToggleShowCalculationModal(props.warrantCalculation.id)}>
+                                    Detalji obračuna
+                                </Dropdown.Item>
                                 <Dropdown.Item onClick={
-                                    () => changeWarrantStatus(
+                                    () => handleChangeWarrantStatus(
                                         props.id,
                                         WarrantStatus.CALCULATION_IN_PAYMENT
                                     )
@@ -217,7 +89,7 @@ export default function CreditingWarrant() {
                             || props.status.code.toLowerCase() === WarrantStatus.APPROVING_ADVANCE_PAYMENT.toLowerCase())
                         && (
                             <>
-                                <Dropdown.Item onClick={() => changeWarrantStatus(
+                                <Dropdown.Item onClick={() => handleChangeWarrantStatus(
                                     props.id,
                                     props.status.code.toLowerCase() === WarrantStatus.APPROVING_CALCULATION_PAYMENT.toLowerCase()
                                         ? WarrantStatus.APPROVING_CALCULATION
@@ -228,13 +100,13 @@ export default function CreditingWarrant() {
                             </>
                         )}
 
-                        <>
-                            <Dropdown.Item onClick={() => changeWarrantStatus(props.id, WarrantStatus.CANCELLED)}>
-                                Storniraj
-                            </Dropdown.Item>
-                        </>
+                    <>
+                        <Dropdown.Item onClick={() => handleChangeWarrantStatus(props.id, WarrantStatus.CANCELLED)}>
+                            Storniraj
+                        </Dropdown.Item>
+                    </>
 
-                    <Dropdown.Item onClick={() =>downloadPdf(props.id)}>
+                    <Dropdown.Item onClick={() => downloadPdf(props.id)}>
                         Preuzmi PDF
                     </Dropdown.Item>
                 </Dropdown.Menu>
@@ -368,6 +240,11 @@ export default function CreditingWarrant() {
                     <BaseDetailsModal title="Putni nalog info" show={showModal} modalData={modalData}
                                       onCloseButtonClick={() => {
                                           setShowModal(false)
+                                      }}/>
+                    <BaseDetailsModal title="Obračun info" show={showCalculationModal}
+                                      modalData={modalCalculationData}
+                                      onCloseButtonClick={() => {
+                                          setShowCalculationModal(false)
                                       }}/>
                     <DataTable
                         style={{height: "600px"}}
