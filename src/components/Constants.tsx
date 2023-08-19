@@ -21,4 +21,9 @@ export const WarrantStatus = {
     CANCELLED: 'CANCELLED',
 };
 
+export const travelType = {
+    DOMESTIC: 'DOMESTIC',
+    INTERNATIONAL: 'INTERNATIONAL'
+};
+
 export const PATH_URI = '/travel-warrants/public/api/';

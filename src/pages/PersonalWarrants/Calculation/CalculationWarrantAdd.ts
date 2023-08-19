@@ -8,13 +8,30 @@ import {calculationWarrantFormErrors} from "./calculationWarrantFormErrors";
 import CalculationWarrantForm from "./CalculationWarrantForm";
 
 export default function CalculationWarrantAdd() {
-    const { warrantId, travelTypeCode } = useParams<{ warrantId: any, travelTypeCode: any }>();
+    const {warrantId, travelTypeCode} = useParams<{ warrantId: any, travelTypeCode: any }>();
 
     const [errors, setErrors] = useState<IFormCalculationWarrantValueErrors>();
     const [serverSideErrors, setServerSideErrors] = useState<IFormCalculationWarrantValueErrors>();
     const navigate = useNavigate();
 
     const handleSubmit = (values: IFormCalculationWarrantValues) => {
+        values.warrantCalculationExpenses = values.warrantCalculationExpenses.map((expense: any) => {
+            const {'@id': _, '@type': __, ...rest} = expense;
+            return rest;
+        });
+        values.warrantTravelItineraries = values.warrantTravelItineraries.map((itinerary: any) => {
+            const {'@id': _, '@type': __, ...rest} = itinerary;
+            return rest;
+        });
+
+        if (!values.domicileCountryLeavingDate) {
+            values.domicileCountryLeavingDate = null
+        }
+
+        if (!values.domicileCountryReturningDate) {
+            values.domicileCountryReturningDate = null
+        }
+
         fetch(api.getUri() + '/warrant-calculations', {
             method: 'POST',
             headers: {
@@ -71,5 +88,5 @@ export default function CalculationWarrantAdd() {
         return errors;
     };
 
-    return CalculationWarrantForm(handleSubmit, validateForm, errors, serverSideErrors, warrantId, null)
+    return CalculationWarrantForm(handleSubmit, validateForm, errors, serverSideErrors, warrantId, travelTypeCode, null)
 }

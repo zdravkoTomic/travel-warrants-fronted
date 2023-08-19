@@ -7,8 +7,8 @@ export interface IFormCalculationWarrantValues {
     warrantCalculationExpenses: IWarrantCalculationExpense[];
     departureDate: string
     returningDate: string,
-    domicileCountryLeavingDate: string,
-    domicileCountryReturningDate: string,
+    domicileCountryLeavingDate: string | null,
+    domicileCountryReturningDate: string | null,
     travelVehicleDescription: string,
     travelVehicleRegistration: string,
     travelVehicleBrand: string,

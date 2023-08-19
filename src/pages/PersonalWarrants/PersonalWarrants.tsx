@@ -95,8 +95,7 @@ export default function PersonalWarrant() {
                                 </Dropdown.Item>
                             </>
                         )}
-                    {props.status.code === WarrantStatus.CALCULATION_EDIT
-                        && typeof props.warrantCalculation !== "undefined"
+                    {typeof props.warrantCalculation !== "undefined"
                         && (
                             <>
                                 <Dropdown.Item

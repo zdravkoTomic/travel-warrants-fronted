@@ -43,6 +43,8 @@ import InitialWarrantAdd from "./pages/PersonalWarrants/ItemInitial/InitialWarra
 import InitialWarrantEdit from "./pages/PersonalWarrants/ItemInitial/InitialWarrantEdit";
 import CalculationWarrantAdd from "./pages/PersonalWarrants/Calculation/CalculationWarrantAdd";
 import CalculationWarrantEdit from "./pages/PersonalWarrants/Calculation/CalculationWarrantEdit";
+import CreditingWarrantPayment from "./pages/CreditingWarrants/CreditingWarrantPayment";
+import CreditingWarrantPaid from "./pages/CreditingWarrants/CreditingWarrantPaid";
 
 function App() {
 
@@ -61,6 +63,10 @@ function App() {
 
                     {/*Crediting warrants*/}
                     <Route path="/crediting_warrants/:statusCode" element={<CreditingWarrants/>}/>
+
+                    {/*Payment*/}
+                    <Route path="/crediting_queue/:statusCode" element={<CreditingWarrantPayment/>}/>
+                    <Route path="/crediting_paid/:statusCode" element={<CreditingWarrantPaid/>}/>
 
                     {/*Catalogs*/}
                     <Route path="/catalog_countries" element={<CatalogCountry/>}/>
@@ -88,7 +94,8 @@ function App() {
                     <Route path="/employee_add" element={<EmployeeAdd/>}/>
                     <Route path="/user_role_add" element={<UserRoleAdd/>}/>
                     <Route path="/initial_warrant_add" element={<InitialWarrantAdd/>}/>
-                    <Route path="/calculation_warrant_add/:warrantId/:travelTypeCode" element={<CalculationWarrantAdd/>}/>
+                    <Route path="/calculation_warrant_add/:warrantId/:travelTypeCode"
+                           element={<CalculationWarrantAdd/>}/>
 
                     {/*Editing data routes*/}
                     <Route path="/country_edit/:id" element={<CountryEdit/>}/>
@@ -101,7 +108,8 @@ function App() {
                     <Route path="/employee_edit/:id" element={<EmployeeEdit/>}/>
                     <Route path="/user_role_edit/:id" element={<UserRoleEdit/>}/>
                     <Route path="/initial_warrant_edit/:id" element={<InitialWarrantEdit/>}/>
-                    <Route path="/calculation_warrant_edit/:id/:warrantId/:travelTypeCode" element={<CalculationWarrantEdit/>}/>
+                    <Route path="/calculation_warrant_edit/:id/:warrantId/:travelTypeCode"
+                           element={<CalculationWarrantEdit/>}/>
 
                     {/*Security*/}
                     <Route path="/login" element={<Login/>}/>

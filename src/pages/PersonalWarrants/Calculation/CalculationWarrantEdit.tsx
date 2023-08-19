@@ -8,7 +8,7 @@ import {calculationWarrantFormErrors} from "./calculationWarrantFormErrors";
 import CalculationWarrantForm from "./CalculationWarrantForm";
 
 export default function CalculationWarrantEdit() {
-    const { id, warrantId, travelTypeCode } = useParams<{ id: any, warrantId: any, travelTypeCode: any }>();
+    const {id, warrantId, travelTypeCode} = useParams<{ id: any, warrantId: any, travelTypeCode: any }>();
 
     const [errors, setErrors] = useState<IFormCalculationWarrantValueErrors>();
     const [serverSideErrors, setServerSideErrors] = useState<IFormCalculationWarrantValueErrors>();
@@ -17,13 +17,21 @@ export default function CalculationWarrantEdit() {
 
     const handleSubmit = (values: IFormCalculationWarrantValues) => {
         values.warrantCalculationExpenses = values.warrantCalculationExpenses.map((expense: any) => {
-            const { '@id': _, '@type': __, ...rest } = expense;
+            const {'@id': _, '@type': __, ...rest} = expense;
             return rest;
         });
         values.warrantTravelItineraries = values.warrantTravelItineraries.map((itinerary: any) => {
-            const { '@id': _, '@type': __, ...rest } = itinerary;
+            const {'@id': _, '@type': __, ...rest} = itinerary;
             return rest;
         });
+
+        if (!values.domicileCountryLeavingDate) {
+            values.domicileCountryLeavingDate = null
+        }
+
+        if (!values.domicileCountryReturningDate) {
+            values.domicileCountryReturningDate = null
+        }
 
         if (!values.odometerStart) {
             values.odometerStart = null
@@ -85,5 +93,5 @@ export default function CalculationWarrantEdit() {
         return errors;
     };
 
-    return CalculationWarrantForm(handleSubmit, validateForm, errors, serverSideErrors, warrantId, id)
+    return CalculationWarrantForm(handleSubmit, validateForm, errors, serverSideErrors, warrantId, travelTypeCode, id)
 }

@@ -118,6 +118,7 @@ export const toggleShowCalculationModal = (
         .then(response => response.json())
         .then(response => {
                 const itineraryData: any = {};
+                const calculationExpenseData: any = {};
                 const wageData: any = {};
 
                 response.warrantTravelItineraries.forEach((itinerary: any, index: number) => {
@@ -144,6 +145,17 @@ export const toggleShowCalculationModal = (
                         })}
                             )
                         `
+                    };
+                });
+
+                response.warrantCalculationExpenses.forEach((calculationExpense: any, index: number) => {
+                    calculationExpenseData[`calculationExpense${index}`] = {
+                        title: 'Trošak',
+                        value: `${calculationExpense.expenseType.name}
+                        (${calculationExpense.description}) 
+                        ${calculationExpense.amount} ${calculationExpense.currency.code}
+                         (${calculationExpense.originalAmount} ${calculationExpense.originalCurrency.code})
+                    `
                     };
                 });
 
@@ -192,25 +204,27 @@ export const toggleShowCalculationModal = (
                     },
                     domicileCountryLeavingDate: {
                         title: 'Vrijeme napuštanje Hrvatske',
-                        value: new Date(response.domicileCountryLeavingDate).toLocaleString('hr-HR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                        }),
+                        value: response.domicileCountryLeavingDate
+                            ? new Date(response.domicileCountryLeavingDate).toLocaleString('hr-HR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                            }) : '',
                     },
                     domicileCountryReturningDate: {
                         title: 'Vrijeme povratka u Hrvatsku',
-                        value: new Date(response.domicileCountryReturningDate).toLocaleString('hr-HR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                        }),
+                        value: response.domicileCountryReturningDate
+                            ? new Date(response.domicileCountryReturningDate).toLocaleString('hr-HR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                            }) : '',
                     },
                     ...itineraryData, ...wageData,
                     travelVehicle: {
@@ -233,10 +247,11 @@ export const toggleShowCalculationModal = (
                         title: 'Odometar',
                         value: `${response.odometerStart}km - ${response.odometerEnd}km`
                     },
+                    ...calculationExpenseData,
                     travelReport: {
                         title: 'Izvještaj putovanja',
                         value: response.travelReport
-                    },
+                    }
                 })
             }
         )

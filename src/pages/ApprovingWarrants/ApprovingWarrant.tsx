@@ -139,18 +139,18 @@ export default function ApprovingWarrant() {
             width: '160px'
         },
         {
-            id: 'destination',
-            name: 'ODREDIŠTE',
-            selector: (row: any) => row.destination,
+            id: 'employee.department.name',
+            name: 'ORG. DIO',
+            selector: (row: any) => row.employee.department.name,
             sortable: true,
-            width: '130px'
+            width: '150px'
         },
         {
-            id: 'destinationCountry.name',
-            name: 'DRŽAVA ODREDIŠTA',
-            selector: (row: any) => row.destinationCountry.name,
+            id: 'destination',
+            name: 'ODREDIŠTE',
+            selector: (row: any) => `${row.destination}, ${row.destinationCountry.name}`,
             sortable: true,
-            width: '200px'
+            width: '150px'
         },
         {
             id: 'departureDate',

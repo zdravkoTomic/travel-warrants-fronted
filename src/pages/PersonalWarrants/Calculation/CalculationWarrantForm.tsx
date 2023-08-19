@@ -8,14 +8,14 @@ import {ToastContainer} from "react-toastify";
 import {Field, FieldProps, Form, Formik} from "formik";
 import {handleFormErrors} from "../../../components/Utils/handleFormErrors";
 import Unauthorized from "../../Security/Unauthorized";
-import {PATH_URI} from "../../../components/Constants";
+import {PATH_URI, travelType} from "../../../components/Constants";
 import DateTimePicker from "react-datetime-picker";
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 import {IWarrantCalculationExpense, IWarrantTravelItinerary} from "./types/calculationWarrantDependencyTypes";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import { DateTime } from 'luxon';
+import {DateTime} from 'luxon';
 import {useNavigate} from "react-router-dom";
 
 export default function CalculationWarrantForm(
@@ -24,6 +24,7 @@ export default function CalculationWarrantForm(
     errors: any,
     serverSideErrors: any,
     warrantId: any,
+    travelTypeCode: any,
     id: any
 ) {
     const [calculationWarrant, setCalculationWarrant] = useState<ICalculationWarrant>();
@@ -47,10 +48,8 @@ export default function CalculationWarrantForm(
             currency: ''
         }];
 
-        // Set local state
         setWarrantCalculationExpenses(newExpenses);
 
-        // Update Formik's state for the field
         setFieldValue('warrantCalculationExpenses', newExpenses);
     };
 
@@ -282,7 +281,7 @@ export default function CalculationWarrantForm(
                                                         onChange={(date: any) => {
                                                             const localDate = DateTime.fromJSDate(date).setZone('Europe/Zagreb').toJSDate();
                                                             form.setFieldValue(field.name, localDate);
-                                                        }}                                                        className="form-control"
+                                                        }} className="form-control"
                                                         id="departureDate"
                                                     />)
                                             }}
@@ -306,7 +305,7 @@ export default function CalculationWarrantForm(
                                                         onChange={(date: any) => {
                                                             const localDate = DateTime.fromJSDate(date).setZone('Europe/Zagreb').toJSDate();
                                                             form.setFieldValue(field.name, localDate);
-                                                        }}                                                        className="form-control"
+                                                        }} className="form-control"
                                                         id="returningDate"
                                                     />)
                                             }}
@@ -316,96 +315,15 @@ export default function CalculationWarrantForm(
                                     </div>
                                 </div>
 
-                                <div className="row">
-                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                        <label className="form-label form-label" htmlFor="domicileCountryLeavingDate">
-                                            Datum napuštanja Hrvatske:
-                                        </label> <br/>
-                                        <Field id="floatingInput" name="domicileCountryLeavingDate">
-                                            {({field, form}: FieldProps) => {
-                                                const selectedDate = field.value ? new Date(field.value) : null;
-                                                return (
-                                                    <DateTimePicker
-                                                        value={selectedDate}
-                                                        onChange={(date: any) => {
-                                                            const localDate = DateTime.fromJSDate(date).setZone('Europe/Zagreb').toJSDate();
-                                                            form.setFieldValue(field.name, localDate);
-                                                        }}                                                        className="form-control"
-                                                        id="domicileCountryLeavingDate"
-                                                    />)
-                                            }}
-                                        </Field>
-                                        <br/>
-                                        {handleFormErrors(errors?.domicileCountryLeavingDate, serverSideErrors?.domicileCountryLeavingDate, touched.domicileCountryLeavingDate)}
-                                    </div>
-                                </div>
-
-                                <div className="row">
-                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                        <label className="form-label form-label" htmlFor="domicileCountryReturningDate">
-                                            Datum povratka u Hrvatsku:
-                                        </label> <br/>
-                                        <Field id="floatingInput" name="domicileCountryReturningDate">
-                                            {({field, form}: FieldProps) => {
-                                                const selectedDate = field.value ? new Date(field.value) : null;
-                                                return (
-                                                    <DateTimePicker
-                                                        value={selectedDate}
-                                                        onChange={(date: any) => {
-                                                            const localDate = DateTime.fromJSDate(date).setZone('Europe/Zagreb').toJSDate();
-                                                            form.setFieldValue(field.name, localDate);
-                                                        }}                                                        className="form-control"
-                                                        id="domicileCountryReturningDate"
-                                                    />)
-                                            }}
-                                        </Field>
-                                        <br/>
-                                        {handleFormErrors(errors?.domicileCountryReturningDate, serverSideErrors?.domicileCountryReturningDate, touched.domicileCountryReturningDate)}
-                                    </div>
-                                </div>
-
-                                {warrantTravelItineraries.map((itinerary, index) => (
-                                    <div key={index}>
-                                        <div className="row">
-                                            <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                                <hr/>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                                <b>Država putovanja do odredišta </b>
-                                                <button className="btn btn-danger btn-sm" type="button"
-                                                        onClick={() => removeItinerary(index, values, setFieldValue)}>Ukloni državu
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                                <label
-                                                    className="form-label form-label"
-                                                    htmlFor={`warrantTravelItineraries[${index}].country`}>
-                                                    Država:
-                                                </label>
-                                                <Field as="select"
-                                                       className="form-select"
-                                                       id="floatingInput"
-                                                       name={`warrantTravelItineraries[${index}].country`}>
-                                                    <option value="">Odaberite državu</option>
-                                                    {countryCatalog?.map((country) => (
-                                                        <option key={country.id} value={country["@id"]}>
-                                                            {country.name}
-                                                        </option>
-                                                    ))}
-                                                </Field>
-                                            </div>
-                                        </div>
+                                {travelTypeCode.toLowerCase() === travelType.INTERNATIONAL.toLowerCase() && (
+                                    <>
                                         <div className="row">
                                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                                 <label className="form-label form-label"
-                                                       htmlFor={`warrantTravelItineraries[${index}].enteredDate`}>
-                                                    Datum ulaska u državu:
+                                                       htmlFor="domicileCountryLeavingDate">
+                                                    Datum napuštanja Hrvatske:
                                                 </label> <br/>
-                                                <Field id="floatingInput" name={`warrantTravelItineraries[${index}].enteredDate`}>
+                                                <Field id="floatingInput" name="domicileCountryLeavingDate">
                                                     {({field, form}: FieldProps) => {
                                                         const selectedDate = field.value ? new Date(field.value) : null;
                                                         return (
@@ -414,21 +332,23 @@ export default function CalculationWarrantForm(
                                                                 onChange={(date: any) => {
                                                                     const localDate = DateTime.fromJSDate(date).setZone('Europe/Zagreb').toJSDate();
                                                                     form.setFieldValue(field.name, localDate);
-                                                                }}                                                                className="form-control"
-                                                                id={`warrantTravelItineraries[${index}].enteredDate`}
+                                                                }} className="form-control"
+                                                                id="domicileCountryLeavingDate"
                                                             />)
                                                     }}
                                                 </Field>
                                                 <br/>
+                                                {handleFormErrors(errors?.domicileCountryLeavingDate, serverSideErrors?.domicileCountryLeavingDate, touched.domicileCountryLeavingDate)}
                                             </div>
                                         </div>
+
                                         <div className="row">
                                             <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                                 <label className="form-label form-label"
-                                                       htmlFor={`warrantTravelItineraries[${index}].exitedDate`}>
-                                                    Datum izlaska iz države:
+                                                       htmlFor="domicileCountryReturningDate">
+                                                    Datum povratka u Hrvatsku:
                                                 </label> <br/>
-                                                <Field id="floatingInput" name={`warrantTravelItineraries[${index}].exitedDate`}>
+                                                <Field id="floatingInput" name="domicileCountryReturningDate">
                                                     {({field, form}: FieldProps) => {
                                                         const selectedDate = field.value ? new Date(field.value) : null;
                                                         return (
@@ -437,35 +357,123 @@ export default function CalculationWarrantForm(
                                                                 onChange={(date: any) => {
                                                                     const localDate = DateTime.fromJSDate(date).setZone('Europe/Zagreb').toJSDate();
                                                                     form.setFieldValue(field.name, localDate);
-                                                                }}                                                                className="form-control"
-                                                                id={`warrantTravelItineraries[${index}].exitedDate`}
+                                                                }} className="form-control"
+                                                                id="domicileCountryReturningDate"
                                                             />)
                                                     }}
                                                 </Field>
                                                 <br/>
+                                                {handleFormErrors(errors?.domicileCountryReturningDate, serverSideErrors?.domicileCountryReturningDate, touched.domicileCountryReturningDate)}
                                             </div>
                                         </div>
-                                        <div className="row">
-                                            <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
-                                                <label className="form-check-label"
-                                                       htmlFor={`warrantTravelItineraries[${index}].returningData`}>
-                                                    Zemlja povratka prema Hrvatskoj
-                                                </label>
-                                                <Field id="floatingInput" name={`warrantTravelItineraries[${index}].returningData`} type="checkbox"
-                                                       className="form-check-input"/>
+
+                                        {warrantTravelItineraries.map((itinerary, index) => (
+                                            <div key={index}>
+                                                <div className="row">
+                                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                                        <hr/>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                                        <b>Država putovanja do odredišta </b>
+                                                        <button className="btn btn-danger btn-sm" type="button"
+                                                                onClick={() => removeItinerary(index, values, setFieldValue)}>Ukloni
+                                                            državu
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                                        <label
+                                                            className="form-label form-label"
+                                                            htmlFor={`warrantTravelItineraries[${index}].country`}>
+                                                            Država:
+                                                        </label>
+                                                        <Field as="select"
+                                                               className="form-select"
+                                                               id="floatingInput"
+                                                               name={`warrantTravelItineraries[${index}].country`}>
+                                                            <option value="">Odaberite državu</option>
+                                                            {countryCatalog?.map((country) => (
+                                                                <option key={country.id} value={country["@id"]}>
+                                                                    {country.name}
+                                                                </option>
+                                                            ))}
+                                                        </Field>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                                        <label className="form-label form-label"
+                                                               htmlFor={`warrantTravelItineraries[${index}].enteredDate`}>
+                                                            Datum ulaska u državu:
+                                                        </label> <br/>
+                                                        <Field id="floatingInput"
+                                                               name={`warrantTravelItineraries[${index}].enteredDate`}>
+                                                            {({field, form}: FieldProps) => {
+                                                                const selectedDate = field.value ? new Date(field.value) : null;
+                                                                return (
+                                                                    <DateTimePicker
+                                                                        value={selectedDate}
+                                                                        onChange={(date: any) => {
+                                                                            const localDate = DateTime.fromJSDate(date).setZone('Europe/Zagreb').toJSDate();
+                                                                            form.setFieldValue(field.name, localDate);
+                                                                        }} className="form-control"
+                                                                        id={`warrantTravelItineraries[${index}].enteredDate`}
+                                                                    />)
+                                                            }}
+                                                        </Field>
+                                                        <br/>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                                        <label className="form-label form-label"
+                                                               htmlFor={`warrantTravelItineraries[${index}].exitedDate`}>
+                                                            Datum izlaska iz države:
+                                                        </label> <br/>
+                                                        <Field id="floatingInput"
+                                                               name={`warrantTravelItineraries[${index}].exitedDate`}>
+                                                            {({field, form}: FieldProps) => {
+                                                                const selectedDate = field.value ? new Date(field.value) : null;
+                                                                return (
+                                                                    <DateTimePicker
+                                                                        value={selectedDate}
+                                                                        onChange={(date: any) => {
+                                                                            const localDate = DateTime.fromJSDate(date).setZone('Europe/Zagreb').toJSDate();
+                                                                            form.setFieldValue(field.name, localDate);
+                                                                        }} className="form-control"
+                                                                        id={`warrantTravelItineraries[${index}].exitedDate`}
+                                                                    />)
+                                                            }}
+                                                        </Field>
+                                                        <br/>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3 form-check">
+                                                        <label className="form-check-label"
+                                                               htmlFor={`warrantTravelItineraries[${index}].returningData`}>
+                                                            Zemlja povratka prema Hrvatskoj
+                                                        </label>
+                                                        <Field id="floatingInput"
+                                                               name={`warrantTravelItineraries[${index}].returningData`}
+                                                               type="checkbox"
+                                                               className="form-check-input"/>
+                                                    </div>
+                                                </div>
                                             </div>
+                                        ))}
+
+                                        <div className="row add-elements-button">
+                                            <button className="mx-auto col-10 col-md-8 col-lg-6 mb-3"
+                                                    type="button" onClick={() => addItinerary(values, setFieldValue)}>
+                                                Dodaj zemlju putovanja
+                                            </button>
                                         </div>
-                                    </div>
-                                ))}
-
-                                <div className="row add-elements-button">
-                                    <button className="mx-auto col-10 col-md-8 col-lg-6 mb-3"
-                                            type="button" onClick={() => addItinerary(values, setFieldValue)}>
-                                        Dodaj zemlju putovanja
-                                    </button>
-                                </div>
-
-
+                                    </>
+                                )}
                                 <div className="row">
                                     <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                         <h2 className="black-background">Vozilo putovanja </h2>
@@ -581,17 +589,6 @@ export default function CalculationWarrantForm(
 
                                 <div className="row">
                                     <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
-                                        <label className="form-label form-label" htmlFor="travelReport">Izvještaj
-                                            putovanja:</label>
-                                        <Field id="floatingInput" className="form-control" type="text"
-                                               name="travelReport"/>
-                                        {handleFormErrors(errors?.travelReport, serverSideErrors?.travelReport, touched.travelReport)}
-                                    </div>
-                                </div>
-
-
-                                <div className="row">
-                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                         <h2 className="black-background">Troškovi </h2>
                                     </div>
                                 </div>
@@ -678,6 +675,17 @@ export default function CalculationWarrantForm(
                                     </button>
                                 </div>
 
+                                <div className="row">
+                                    <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
+                                        <label className="form-label form-label" htmlFor="travelReport">Izvještaj
+                                            putovanja:</label>
+
+                                        <Field id="floatingInput" className="form-control" as="textarea"  rows="5"
+                                               name="travelReport"/>
+
+                                        {handleFormErrors(errors?.travelReport, serverSideErrors?.travelReport, touched.travelReport)}
+                                    </div>
+                                </div>
 
                                 <br/>
                                 <Field type="hidden" name="warrant"/>
@@ -687,7 +695,8 @@ export default function CalculationWarrantForm(
                                     <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary"
                                             type="submit">Spremi
                                     </button>
-                                </div><br/>
+                                </div>
+                                <br/>
                                 <div className="row">
                                     <button className="mx-auto col-10 col-md-8 col-lg-2 btn btn-primary"
                                             onClick={() => back()}>Odustani
