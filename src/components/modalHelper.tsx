@@ -109,7 +109,7 @@ export const toggleShowCalculationModal = (
     setShowCalculationModal: any,
     setLoading: any,
     currentShowCalculationModal: any
-) => (warrantCalculationId: number) => {
+) => (warrantCalculationId: number) => {console.log(warrantCalculationId)
     setLoading(true)
     fetch(
         api.getUri() + `/preview-warrant-calculations/${encodeURIComponent(warrantCalculationId)}`,

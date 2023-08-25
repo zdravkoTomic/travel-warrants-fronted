@@ -35,6 +35,7 @@ export default function AppNavbar() {
                                     <NavDropdown.Item href="/crediting_warrants/approving_calculation_payment">Obračun</NavDropdown.Item>
                                     <NavDropdown.Item href="/crediting_queue/opened">Red za plaćanje</NavDropdown.Item>
                                     <NavDropdown.Item href="/crediting_paid/closed">Plaćeni</NavDropdown.Item>
+                                    <NavDropdown.Item href="/crediting_warrants/advance_refund">Povrat akontacije</NavDropdown.Item>
                                 </NavDropdown>
                             )}
 
@@ -44,9 +45,6 @@ export default function AppNavbar() {
                                     <NavDropdown.Item href="/catalog_country_wages">Dnevnice</NavDropdown.Item>
                                     <NavDropdown.Item href="/catalog_currencies">Valute</NavDropdown.Item>
                                     <NavDropdown.Item href="/catalog_expense_types">Troškovi</NavDropdown.Item>
-                                    <NavDropdown.Item href="/catalog_predefined_expenses">Predefinirani
-                                        troškovi</NavDropdown.Item>
-                                    <NavDropdown.Item href="/catalog_vehicle_types">Vrste prijevoza</NavDropdown.Item>
                                 </NavDropdown>
                             )}
 
@@ -57,8 +55,7 @@ export default function AppNavbar() {
                                         dijelovi</NavDropdown.Item>
                                     <NavDropdown.Item href="/user_roles">Dodjela prava</NavDropdown.Item>
                                     <NavDropdown.Item href="/catalog_work_positions">Radna mjesta</NavDropdown.Item>
-                                    <NavDropdown.Item href="/application_parameters">Parametri
-                                        aplikacije</NavDropdown.Item>
+                                    <NavDropdown.Item href="/warrants">Nalozi</NavDropdown.Item>
                                 </NavDropdown>
                             )}
                         </Nav>

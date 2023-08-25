@@ -101,8 +101,8 @@ export default function CreditingWarrant() {
                         )}
 
                     <>
-                        <Dropdown.Item onClick={() => handleChangeWarrantStatus(props.id, WarrantStatus.CANCELLED)}>
-                            Storniraj
+                        <Dropdown.Item onClick={() => handleChangeWarrantStatus(props.id, WarrantStatus.CLOSED)}>
+                            Zatvori
                         </Dropdown.Item>
                     </>
 

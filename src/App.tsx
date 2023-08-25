@@ -45,6 +45,7 @@ import CalculationWarrantAdd from "./pages/PersonalWarrants/Calculation/Calculat
 import CalculationWarrantEdit from "./pages/PersonalWarrants/Calculation/CalculationWarrantEdit";
 import CreditingWarrantPayment from "./pages/CreditingWarrants/CreditingWarrantPayment";
 import CreditingWarrantPaid from "./pages/CreditingWarrants/CreditingWarrantPaid";
+import Warrants from "./pages/Administration/Warrants";
 
 function App() {
 
@@ -82,6 +83,7 @@ function App() {
                     <Route path="/user_roles" element={<UserRoles/>}/>
                     <Route path="/catalog_work_positions" element={<CatalogWorkPosition/>}/>
                     <Route path="/application_parameters" element={<ApplicationParameters/>}/>
+                    <Route path="/warrants" element={<Warrants/>}/>
 
                     {/*Adding data routes*/}
                     <Route path="/country_add" element={<CountryAdd/>}/>
