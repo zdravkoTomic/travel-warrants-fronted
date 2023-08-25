@@ -51,3 +51,12 @@ div.fade.in.modal {
     padding-left: 3%;
     padding-right: 3%;
 }
+
+.data-table-heading-title-button {
+    margin-bottom: 7px;
+    margin-right: 7px;
+}
+
+.button-left-margin {
+    margin-left: 7px;
+}

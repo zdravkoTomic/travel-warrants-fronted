@@ -17,6 +17,7 @@ import DataTable from "react-data-table-component";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Unauthorized from "../Security/Unauthorized";
 import {formatDate} from "../../components/formatDateHelper";
+import {downloadExpenseReportExcel} from "../../components/Utils/downloadExpenseReportExcel";
 
 export default function CreditingWarrantPaid() {
     useHandleNonAuthenticated();
@@ -160,7 +161,7 @@ export default function CreditingWarrantPaid() {
     const fetchData = (paymentId: any) => {
         setLoading(true);
 
-        let paymentQuery = paymentId ? `&id=${paymentId}` : '';
+        let paymentQuery = paymentId ? `&warrantPayments.payment.id=${paymentId}` : '';
 
         let order = !orderQuery ? '&order[createdAt]=desc' : orderQuery
 
@@ -223,6 +224,7 @@ export default function CreditingWarrantPaid() {
     const handlePaymentChange = (paymentId: any) => {
         setSelectedPayment(paymentId);
 
+        setWarrants([]);
         fetchData(paymentId);
     };
 
@@ -235,7 +237,7 @@ export default function CreditingWarrantPaid() {
     };
 
     useEffect(() => {
-        fetch(api.getUri() + `/catalog/payments?order[code]=asc`,
+        fetch(api.getUri() + `/catalog/payments?order[id]=desc`,
             {
                 headers: {
                     'Content-Type': 'application/ld+json'
@@ -272,22 +274,36 @@ export default function CreditingWarrantPaid() {
                                           setShowCalculationModal(false)
                                       }}/>
                     <br/>
-                    <Dropdown onSelect={handlePaymentChange}>
-                        <Dropdown.Toggle className="dropdown-toggle-payment" variant="primary" id="dropdown-basic">
-                            {getDropdownPaymentLabel()}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item key="all" eventKey="">
-                                Svi periodi
-                            </Dropdown.Item>
-                            {paymentCatalog.map((payment: any) => (
-                                <Dropdown.Item key={payment.id} eventKey={payment.id}>
-                                    {formatDate(payment.createdAt)} - {formatDate(payment.closedAt)}
-                                    ({payment.closedBy.surname} {payment.closedBy.name})
+
+                        <Dropdown onSelect={handlePaymentChange}>
+                            <Dropdown.Toggle className="dropdown-toggle-payment" variant="primary" id="dropdown-basic">
+                                {getDropdownPaymentLabel()}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item key="all" eventKey="">
+                                    Svi periodi
                                 </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
+                                {paymentCatalog.map((payment: any) => (
+                                    <Dropdown.Item key={payment.id} eventKey={payment.id}>
+                                        {formatDate(payment.createdAt)} - {formatDate(payment.closedAt)}
+                                        ({payment.closedBy.surname} {payment.closedBy.name})
+                                    </Dropdown.Item>
+                                ))}
+                            </Dropdown.Menu>
+                            {!isNaN(Number(selectedPayment)) && selectedPayment !== null &&
+                                <Button
+                                    onClick={() => downloadExpenseReportExcel(selectedPayment)}
+                                    variant="primary"
+                                    className="button-left-margin"
+                                >
+                                    Preuzmi troškove
+                                </Button>
+                            }
+                        </Dropdown>
+
+
+
+
                     <DataTable
                         style={{height: "600px"}}
                         title={

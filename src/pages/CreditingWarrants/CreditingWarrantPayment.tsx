@@ -16,6 +16,8 @@ import BaseDetailsModal from "../../components/BaseDetailsModal";
 import DataTable from "react-data-table-component";
 import {customStyles, paginationComponentOptions} from "../../components/DataTableCustomStyle";
 import Unauthorized from "../Security/Unauthorized";
+import {downloadExpenseReportExcel} from "../../components/Utils/downloadExpenseReportExcel";
+import {closePayment} from "../../components/Utils/closePaymentAction";
 
 export default function CreditingWarrantPayment() {
     useHandleNonAuthenticated();
@@ -32,6 +34,7 @@ export default function CreditingWarrantPayment() {
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState<IInitialWarrantModalData>();
     const [modalCalculationData, setModalCalculationData] = useState<IWarrantCalculationModalData>();
+    const [paymentId, setPaymentId] = useState(0);
     const [showCalculationModal, setShowCalculationModal] = useState(false);
     const [refresh, setRefresh] = useState(0);
 
@@ -39,6 +42,8 @@ export default function CreditingWarrantPayment() {
     const handleToggleShowCalculationModal = toggleShowCalculationModal(setModalCalculationData, setShowCalculationModal, setLoading, showCalculationModal);
 
     const handleChangeWarrantStatus = changeWarrantStatus(setLoading, setRefresh);
+
+    const handleClosePayment = closePayment(setLoading, setRefresh);
 
     const flattenPayments = (payments: any) => {
         const flattened: any[] = [];
@@ -175,8 +180,11 @@ export default function CreditingWarrantPayment() {
                     .then(response => response.json())
                     .then(response => {
                         const flattenedData = flattenPayments(response['hydra:member']);
-                        setWarrants(flattenedData);
-                        setTotalRows(response['hydra:totalItems']);
+                        if (flattenedData.length > 0) {
+                            setWarrants(flattenedData);
+                            setPaymentId(flattenedData[0].id);
+                            setTotalRows(response['hydra:totalItems']);
+                        }
                     })
                     .catch((error) => {
                         alertToastMessage(null);
@@ -229,9 +237,31 @@ export default function CreditingWarrantPayment() {
                     <DataTable
                         style={{height: "600px"}}
                         title={
-                            <h2 className="flex-display">
-                                Nalozi za plaćanje
-                            </h2>
+                            <>
+                                <h2 className="flex-display">
+                                    Nalozi za plaćanje
+                                </h2>
+                                {warrants.length > 0 && (
+                                    <>
+                                        <Button
+                                            onClick={() => handleClosePayment(paymentId)}
+                                            variant="primary"
+                                            className="data-table-heading-title-button"
+                                            size="sm"
+                                        >
+                                            Zatvori plaćenje
+                                        </Button>
+                                        <Button
+                                            onClick={() => downloadExpenseReportExcel(paymentId)}
+                                            variant="primary"
+                                            className="data-table-heading-title-button"
+                                            size="sm"
+                                        >
+                                            Preuzmi troškove
+                                        </Button>
+                                    </>
+                                )}
+                            </>
                         }
                         columns={columns}
                         data={warrants}
