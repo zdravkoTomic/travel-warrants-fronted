@@ -95,21 +95,28 @@ export default function PersonalWarrant() {
                                 </Dropdown.Item>
                             </>
                         )}
-                    {typeof props.warrantCalculation !== "undefined"
+                    {typeof props.warrantCalculation !== "undefined" && WarrantGroupStatus.CALCULATION
                         && (
                             <>
                                 <Dropdown.Item
                                     onClick={event => handleToggleShowCalculationModal(props.warrantCalculation.id)}>
                                     Detalji obračuna
                                 </Dropdown.Item>
-                                <Dropdown.Item as={Link}
-                                               to={`/calculation_warrant_edit/${props.warrantCalculation.id}/${props.id}/${props.travelType.code}`}>
-                                    Ažuriraj obračun
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick={() => handleChangeWarrantStatus(props.id, WarrantStatus.APPROVING_CALCULATION)}>
-                                    Pošalji na odobravanje
-                                </Dropdown.Item>
+
+                                {props.status.code === WarrantStatus.CALCULATION_EDIT
+                                    && (
+                                        <>
+                                            <Dropdown.Item as={Link}
+                                                           to={`/calculation_warrant_edit/${props.warrantCalculation.id}/${props.id}/${props.travelType.code}`}>
+                                                Ažuriraj obračun
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                onClick={() => handleChangeWarrantStatus(props.id, WarrantStatus.APPROVING_CALCULATION)}>
+                                                Pošalji na odobravanje
+                                            </Dropdown.Item>
+                                        </>
+                                    )}
+
                             </>
                         )}
                     {((props.warrantStatusFlows.length > 1

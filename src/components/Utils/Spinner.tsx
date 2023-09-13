@@ -2,7 +2,7 @@ import React, {CSSProperties, useState} from "react";
 import {ClipLoader} from "react-spinners";
 
 export default function Spinner() {
-    let [loading, setLoading] = useState(true);
+    let [loading] = useState(true);
 
     const override: CSSProperties = {
         display: "block",

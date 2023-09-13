@@ -6,7 +6,7 @@ import {IWarrantCalculationModalData} from "../PersonalWarrants/Calculation/type
 import {toggleShowCalculationModal, toggleShowModal} from "../../components/modalHelper";
 import {changeWarrantStatus} from "../../components/warrantStatusAction";
 import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
-import {WarrantStatus} from "../../components/Constants";
+import {WarrantGroupStatus, WarrantStatus} from "../../components/Constants";
 import {downloadPdf} from "../../components/Utils/downloadPdf";
 import api from "../../components/api";
 import {alertToastMessage} from "../../components/Utils/alertToastMessage";
@@ -79,21 +79,6 @@ export default function CreditingWarrantPaid() {
                                 </Dropdown.Item>
                             </>
                         )}
-                    <>
-
-                        <Dropdown.Item onClick={() => handleChangeWarrantStatus(
-                            props.warrant.id,
-                            props.warrant.status.code.toLowerCase() === WarrantStatus.CALCULATION_IN_PAYMENT.toLowerCase()
-                                ? WarrantStatus.APPROVING_CALCULATION_PAYMENT
-                                : WarrantStatus.APPROVING_ADVANCE_PAYMENT
-                        )}>
-                            Odbij
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                            onClick={() => handleChangeWarrantStatus(props.warrant.id, WarrantStatus.CANCELLED)}>
-                            Storniraj
-                        </Dropdown.Item>
-                    </>
 
                     <Dropdown.Item onClick={() => downloadPdf(props.warrant.id)}>
                         Preuzmi PDF
@@ -237,7 +222,7 @@ export default function CreditingWarrantPaid() {
     };
 
     useEffect(() => {
-        fetch(api.getUri() + `/catalog/payments?order[id]=desc`,
+        fetch(api.getUri() + `/catalog/payments?order[id]=desc&warrantPaymentStatus.code=closed`,
             {
                 headers: {
                     'Content-Type': 'application/ld+json'
@@ -275,33 +260,31 @@ export default function CreditingWarrantPaid() {
                                       }}/>
                     <br/>
 
-                        <Dropdown onSelect={handlePaymentChange}>
-                            <Dropdown.Toggle className="dropdown-toggle-payment" variant="primary" id="dropdown-basic">
-                                {getDropdownPaymentLabel()}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item key="all" eventKey="">
-                                    Svi periodi
+                    <Dropdown onSelect={handlePaymentChange}>
+                        <Dropdown.Toggle className="dropdown-toggle-payment" variant="primary" id="dropdown-basic">
+                            {getDropdownPaymentLabel()}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item key="all" eventKey="">
+                                Svi periodi
+                            </Dropdown.Item>
+                            {paymentCatalog.map((payment: any) => (
+                                <Dropdown.Item key={payment.id} eventKey={payment.id}>
+                                    {formatDate(payment.createdAt)} - {formatDate(payment.closedAt)}
+                                    ({payment.closedBy.surname} {payment.closedBy.name})
                                 </Dropdown.Item>
-                                {paymentCatalog.map((payment: any) => (
-                                    <Dropdown.Item key={payment.id} eventKey={payment.id}>
-                                        {formatDate(payment.createdAt)} - {formatDate(payment.closedAt)}
-                                        ({payment.closedBy.surname} {payment.closedBy.name})
-                                    </Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                            {!isNaN(Number(selectedPayment)) && selectedPayment !== null &&
-                                <Button
-                                    onClick={() => downloadExpenseReportExcel(selectedPayment)}
-                                    variant="primary"
-                                    className="button-left-margin"
-                                >
-                                    Preuzmi troškove
-                                </Button>
-                            }
-                        </Dropdown>
-
-
+                            ))}
+                        </Dropdown.Menu>
+                        {!isNaN(Number(selectedPayment)) && selectedPayment !== null &&
+                            <Button
+                                onClick={() => downloadExpenseReportExcel(selectedPayment)}
+                                variant="primary"
+                                className="button-left-margin"
+                            >
+                                Preuzmi troškove
+                            </Button>
+                        }
+                    </Dropdown>
 
 
                     <DataTable

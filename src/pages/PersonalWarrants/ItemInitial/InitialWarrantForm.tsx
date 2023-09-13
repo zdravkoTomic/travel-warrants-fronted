@@ -213,7 +213,7 @@ export default function InitialWarrantForm(
                                 <div className="row">
                                     <div className="mx-auto col-10 col-md-8 col-lg-6 mb-3">
                                         <label className="form-label form-label" htmlFor="vehicleDescription">
-                                            planirano vozilo putovanja opis:
+                                            Planirano vozilo putovanja opis:
                                             <OverlayTrigger
                                                 placement="right"
                                                 overlay={<Tooltip id='tooltip-right'>Ispuniti samo ako je odabrana vrsta vozila "Ostalo"</Tooltip>}

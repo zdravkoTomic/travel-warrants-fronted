@@ -128,7 +128,7 @@ export default function UserRoleForm(
                                             <option value="">Odaberite zaposlenika</option>
                                             {employeeCatalog?.map((employee) => (
                                                 <option key={employee.id} value={employee["@id"]}>
-                                                    {employee.name}
+                                                    {employee.surname} {employee.name}
                                                 </option>
                                             ))}
                                         </Field>

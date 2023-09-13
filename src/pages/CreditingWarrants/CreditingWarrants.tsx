@@ -80,7 +80,7 @@ export default function CreditingWarrant() {
                                         WarrantStatus.CALCULATION_IN_PAYMENT
                                     )
                                 }>
-                                    Odobri Obračun
+                                    Odobri obračun
                                 </Dropdown.Item>
                             </>
                         )}
@@ -100,11 +100,15 @@ export default function CreditingWarrant() {
                             </>
                         )}
 
-                    <>
-                        <Dropdown.Item onClick={() => handleChangeWarrantStatus(props.id, WarrantStatus.CLOSED)}>
-                            Zatvori
-                        </Dropdown.Item>
-                    </>
+
+                        {(props.status.code.toLowerCase() === WarrantStatus.ADVANCE_REFUND)
+                            && (
+                                <Dropdown.Item onClick={() => handleChangeWarrantStatus(props.id, WarrantStatus.CLOSED)}>
+                                    Zatvori
+                                </Dropdown.Item>
+                            )}
+
+
 
                     <Dropdown.Item onClick={() => downloadPdf(props.id)}>
                         Preuzmi PDF

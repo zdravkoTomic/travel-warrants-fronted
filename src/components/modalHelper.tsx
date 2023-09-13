@@ -21,12 +21,12 @@ export const toggleShowModal = (
                         value: response.code
                     },
                     status: {
-                        title: 'Status nalog',
+                        title: 'Status naloga',
                         value: response.status.name
                     },
                     employee: {
                         title: 'Zaposlenik',
-                        value: `${response.employee.surname} ${response.employee.surname}`
+                        value: `${response.employee.surname} ${response.employee.name}`
                     },
                     employeeWorkPosition: {
                         title: 'Radno mjesto zaposlenika',
@@ -109,7 +109,7 @@ export const toggleShowCalculationModal = (
     setShowCalculationModal: any,
     setLoading: any,
     currentShowCalculationModal: any
-) => (warrantCalculationId: number) => {console.log(warrantCalculationId)
+) => (warrantCalculationId: number) => {
     setLoading(true)
     fetch(
         api.getUri() + `/preview-warrant-calculations/${encodeURIComponent(warrantCalculationId)}`,
@@ -262,4 +262,51 @@ export const toggleShowCalculationModal = (
         .catch((error) => {
             alertToastMessage(null);
         });
+};
+
+export const toggleShowWarrantFlowModal = (
+  setModalWarrantFlowData: any,
+  setShowWarrantFlowModal: any,
+  setLoading: any,
+  currentWarrantFlowModal: any
+) => (warrantId: number) => {
+    setLoading(true)
+    fetch(
+      api.getUri() + `/warrant-status-flows/?warrant.id=${encodeURIComponent(warrantId)}&order[createdAt]=asc`,
+      {credentials: 'include'}
+    )
+      .then(response => response.json())
+      .then(response => {
+            const dataCollection: any = {};
+
+          response['hydra:member'].forEach((data: any, index: number) => {
+                dataCollection[`${index}`] = {
+                    title: `Akcija ${index+1}`,
+                    value: `${data.warrantStatus.name} 
+                                (
+                                ${new Date(data.createdAt).toLocaleString('hr-HR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                    })} 
+                            ) - ${data.createdBy.surname} ${data.createdBy.name}
+                        `
+                };
+            });
+
+          setModalWarrantFlowData({
+              ...dataCollection
+            })
+        }
+      )
+      .then(() => {
+          setLoading(false)
+          setShowWarrantFlowModal(!currentWarrantFlowModal);
+      })
+      .catch((error) => {
+          alertToastMessage(null);
+      });
 };

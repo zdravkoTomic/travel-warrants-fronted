@@ -3,7 +3,7 @@ import {useLocation} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {IInitialWarrant, IInitialWarrantModalData} from "../PersonalWarrants/initialWarrantTypes";
 import {IWarrantCalculationModalData} from "../PersonalWarrants/Calculation/types/calculationWarrantTypes";
-import {toggleShowCalculationModal, toggleShowModal} from "../../components/modalHelper";
+import {toggleShowCalculationModal, toggleShowModal, toggleShowWarrantFlowModal} from "../../components/modalHelper";
 import {Button, ButtonGroup, Dropdown} from "react-bootstrap";
 import {downloadPdf} from "../../components/Utils/downloadPdf";
 import api from "../../components/api";
@@ -26,10 +26,13 @@ export default function Warrants() {
     const [perPage, setPerPage] = useState(25);
     const [datatablePage, setDatatablePage] = useState(1);
     const [orderQuery, setOrderQuery] = useState<String>();
-    const [showModal, setShowModal] = useState(false);
+
     const [modalData, setModalData] = useState<IInitialWarrantModalData>();
+    const [showModal, setShowModal] = useState(false);
     const [modalCalculationData, setModalCalculationData] = useState<IWarrantCalculationModalData>();
     const [showCalculationModal, setShowCalculationModal] = useState(false);
+    const [modalWarrantFlowData, setModalWarrantFlowData] = useState();
+    const [showWarrantFlowModal, setShowWarrantFlowModal] = useState(false);
 
     const [searchCode, setSearchCode] = useState('');
     const [searchTravelTypeName, setSearchTravelTypeName] = useState('');
@@ -40,6 +43,7 @@ export default function Warrants() {
 
     const handleToggleShowModal = toggleShowModal(setModalData, setShowModal, setLoading, showModal);
     const handleToggleShowCalculationModal = toggleShowCalculationModal(setModalCalculationData, setShowCalculationModal, setLoading, showCalculationModal);
+    const handleToggleShowWarrantFlowModal = toggleShowWarrantFlowModal(setModalWarrantFlowData, setShowWarrantFlowModal, setLoading, showWarrantFlowModal);
 
     const columns = [
         {
@@ -63,6 +67,10 @@ export default function Warrants() {
                             </>
                         )}
 
+                    <Dropdown.Item
+                      onClick={event => handleToggleShowWarrantFlowModal(props.id)}>
+                        Tijek naloga
+                    </Dropdown.Item>
                     <Dropdown.Item onClick={() => downloadPdf(props.id)}>
                         Preuzmi PDF
                     </Dropdown.Item>
@@ -210,53 +218,58 @@ export default function Warrants() {
                                       onCloseButtonClick={() => {
                                           setShowCalculationModal(false)
                                       }}/>
+                    <BaseDetailsModal title="Tijek naloga info" show={showWarrantFlowModal}
+                                      modalData={modalWarrantFlowData}
+                                      onCloseButtonClick={() => {
+                                          setShowWarrantFlowModal(false)
+                                      }}/>
                     <DataTable
                         style={{height: "600px"}}
                         title={
-                        <>
-                            <h2 className="flex-display">
-                                Nalozi
-                            </h2>
-                            <h5>
-                                Pretraga:
-                            </h5>
-                            <input
-                                placeholder="Kod naloga"
-                                className="search-fields"
-                                value={searchCode}
-                                onChange={e => setSearchCode(e.target.value)}
-                            />
-                            <input
-                                placeholder="Tip naloga"
-                                className="search-fields"
-                                value={searchTravelTypeName}
-                                onChange={e => setSearchTravelTypeName(e.target.value)}
-                            /> <br/>
-                            <input
-                                placeholder="Prezime zaposlenika"
-                                className="search-fields"
-                                value={searchEmployeeSurname}
-                                onChange={e => setSearchEmployeeSurname(e.target.value)}
-                            />
-                            <input
-                                placeholder="Organizacijski dio"
-                                className="search-fields"
-                                value={searchDepartmentName}
-                                onChange={e => setSearchDepartmentName(e.target.value)}
-                            /><br/>
-                            <input
-                                placeholder="Odredište"
-                                className="search-fields"
-                                value={searchDestination}
-                                onChange={e => setSearchDestination(e.target.value)}
-                            />
-                            <input
-                                placeholder="Status"
-                                className="search-fields"
-                                value={searchStatusName}
-                                onChange={e => setSearchStatusName(e.target.value)}
-                            />
-                        </>
+                            <>
+                                <h2 className="flex-display">Nalozi</h2>
+                                <h5>Pretraga:</h5>
+                                <div className="flex-display">
+                                    <input
+                                      placeholder="Kod naloga"
+                                      className="search-fields"
+                                      value={searchCode}
+                                      onChange={e => setSearchCode(e.target.value)}
+                                    />
+                                    <input
+                                      placeholder="Tip naloga"
+                                      className="search-fields"
+                                      value={searchTravelTypeName}
+                                      onChange={e => setSearchTravelTypeName(e.target.value)}
+                                    />
+                                    <input
+                                      placeholder="Prezime zaposlenika"
+                                      className="search-fields"
+                                      value={searchEmployeeSurname}
+                                      onChange={e => setSearchEmployeeSurname(e.target.value)}
+                                    />
+                                </div>
+                                <div className="flex-display">
+                                    <input
+                                      placeholder="Organizacijski dio"
+                                      className="search-fields"
+                                      value={searchDepartmentName}
+                                      onChange={e => setSearchDepartmentName(e.target.value)}
+                                    />
+                                    <input
+                                      placeholder="Odredište"
+                                      className="search-fields"
+                                      value={searchDestination}
+                                      onChange={e => setSearchDestination(e.target.value)}
+                                    />
+                                    <input
+                                      placeholder="Status"
+                                      className="search-fields"
+                                      value={searchStatusName}
+                                      onChange={e => setSearchStatusName(e.target.value)}
+                                    />
+                                </div>
+                            </>
 
                         }
                         columns={columns}

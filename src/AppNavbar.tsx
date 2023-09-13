@@ -1,7 +1,7 @@
 import React from "react";
 import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
 import {Link} from "react-router-dom";
-import {isAuthorized, isFullyAuthenticated} from "./components/Security/UserAuth";
+import {getCurrentUser, isAuthorized, isFullyAuthenticated} from "./components/Security/UserAuth";
 
 export default function AppNavbar() {
 
@@ -23,7 +23,7 @@ export default function AppNavbar() {
                             )}
 
                             {isAuthorized(['ROLE_APPROVER', 'ROLE_ADMIN']) && (
-                                <NavDropdown title="Ovjeravanje" id="basic-nav-dropdown">
+                                <NavDropdown title="Odobravanje" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/approving_warrant/approving">Novi nalog</NavDropdown.Item>
                                     <NavDropdown.Item href="/approving_warrant/approving_calculation">Obračun</NavDropdown.Item>
                                 </NavDropdown>
@@ -61,11 +61,16 @@ export default function AppNavbar() {
                         </Nav>
                         )}
                         {isAuthorized(['ROLE_EMPLOYEE']) && (
-                            <Nav className="ml-auto">
-                                <Nav.Link as={Link} to="/logout">
-                                    Logout
-                                </Nav.Link>
-                            </Nav>
+                            <>
+                                <Nav className="ml-auto">
+                                    Korisnik: { getCurrentUser().username } -
+                                </Nav>
+                                <Nav className="ml-auto">
+                                    <Nav.Link as={Link} to="/logout">
+                                        Logout
+                                    </Nav.Link>
+                                </Nav>
+                            </>
                         )}
                     </>
                 </Navbar.Collapse>
